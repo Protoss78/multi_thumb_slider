@@ -83,6 +83,11 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
   /// When false (default), thumbs can be dragged normally.
   final bool readOnly;
 
+  /// All possible values for the slider (required for enum types)
+  /// This parameter is mandatory when T is an enum type to provide
+  /// all possible enum values for proper slider functionality
+  final List<T>? allPossibleValues;
+
   /// Creates a multi-thumb slider.
   ///
   /// The [values] parameter must not be empty, and all values must be within
@@ -99,6 +104,7 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     this.thumbColor = Colors.white,
     this.thumbRadius = 14.0,
     this.readOnly = false,
+    this.allPossibleValues,
   });
 
   /// Creates a multi-thumb slider with int values and default min/max range.
@@ -133,6 +139,40 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     );
   }
 
+  /// Creates a multi-thumb slider with enum values.
+  ///
+  /// This is a convenience constructor for enum types that requires
+  /// the allPossibleValues parameter to be passed explicitly.
+  static CustomMultiThumbSlider<T> withEnum<T extends Enum>({
+    Key? key,
+    required List<T> values,
+    required ValueChanged<List<T>> onChanged,
+    required T min,
+    required T max,
+    required List<T> allPossibleValues,
+    double height = 45.0,
+    Color trackColor = const Color(0xFFE0E0E0),
+    List<Color> rangeColors = const [Colors.greenAccent, Colors.blueAccent, Colors.orangeAccent, Colors.redAccent],
+    Color thumbColor = Colors.white,
+    double thumbRadius = 14.0,
+    bool readOnly = false,
+  }) {
+    return CustomMultiThumbSlider<T>(
+      key: key,
+      values: values,
+      onChanged: onChanged,
+      min: min,
+      max: max,
+      height: height,
+      trackColor: trackColor,
+      rangeColors: rangeColors,
+      thumbColor: thumbColor,
+      thumbRadius: thumbRadius,
+      readOnly: readOnly,
+      allPossibleValues: allPossibleValues,
+    );
+  }
+
   @override
   State<CustomMultiThumbSlider<T>> createState() => _CustomMultiThumbSliderState<T>();
 }
@@ -143,6 +183,9 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
   /// Normalized positions of thumbs (values between 0.0 and 1.0).
   late List<double> _normalizedPositions;
+
+  /// Global key for the slider container to get accurate positioning.
+  final GlobalKey _sliderKey = GlobalKey();
 
   @override
   void initState() {
@@ -182,18 +225,113 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
         return (value - min) / (max - min);
       }).toList();
     } else {
-      // For non-numeric types like enums, treat them as indices
+      // For non-numeric types like enums, calculate positions based on their order
+      final Enum minEnum = widget.min as Enum;
+      final Enum maxEnum = widget.max as Enum;
+
+      final int minIndex = minEnum.index;
+      final int maxIndex = maxEnum.index;
       _normalizedPositions = widget.values.map((v) {
-        // Simple approach: treat each value as an index in the range
-        return 0.5; // Default to middle position for now
+        final Enum enumValue = v as Enum;
+        final int index = enumValue.index;
+        if (index == -1) return 0.5; // Fallback if value not found
+        return index / (maxIndex - minIndex - 1);
       }).toList();
     }
   }
 
   /// Gets all possible values for non-numeric types (like enums).
   List<T> _getAllPossibleValues() {
-    // For now, just return min and max
+    if (widget.min is Enum && widget.max is Enum) {
+      // For enums, we need to create a list of all possible enum values
+      // Since we can't easily get all enum values at runtime in Dart,
+      // we'll use the enum indices to create a proper range
+      final Enum minEnum = widget.min as Enum;
+      final Enum maxEnum = widget.max as Enum;
+
+      final int minIndex = minEnum.index;
+      final int maxIndex = maxEnum.index;
+      final int startIndex = minIndex < maxIndex ? minIndex : maxIndex;
+      final int endIndex = minIndex < maxIndex ? maxIndex : minIndex;
+
+      // For enums, we need to use the allPossibleValues parameter
+      // since Dart doesn't provide generic access to enum values
+      if (widget.allPossibleValues != null) {
+        // Filter to only include values in the specified range
+        final List<T> filteredValues = [];
+        for (final value in widget.allPossibleValues!) {
+          final Enum enumValue = value as Enum;
+          if (enumValue.index >= startIndex && enumValue.index <= endIndex) {
+            filteredValues.add(value);
+          }
+        }
+        return filteredValues;
+      } else {
+        // Fallback: just return min and max if allPossibleValues not provided
+        final List<T> fallbackValues = [];
+        fallbackValues.add(minEnum as T);
+        if (startIndex != endIndex) {
+          fallbackValues.add(maxEnum as T);
+        }
+        return fallbackValues;
+      }
+    }
+    // For other non-numeric types, just return min and max
     return [widget.min, widget.max];
+  }
+
+  /// Calculates the normalized position (0.0-1.0) from a global position.
+  /// This method provides accurate positioning relative to the slider track.
+  double _calculateNormalizedPosition(Offset globalPosition) {
+    final RenderBox? renderBox = _sliderKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox == null) return 0.0;
+
+    // Convert global position to local position relative to the slider
+    final Offset localPosition = renderBox.globalToLocal(globalPosition);
+
+    // Calculate normalized position (0.0 to 1.0)
+    final double normalizedPosition = localPosition.dx / renderBox.size.width;
+
+    // Clamp to valid range
+    return normalizedPosition.clamp(0.0, 1.0);
+  }
+
+  /// Finds the index of the thumb closest to a given normalized position.
+  int _findNearestThumbIndex(double normalizedPosition) {
+    int nearestIndex = 0;
+    double minDistance = double.infinity;
+
+    for (int i = 0; i < _normalizedPositions.length; i++) {
+      final double distance = (normalizedPosition - _normalizedPositions[i]).abs();
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestIndex = i;
+      }
+    }
+
+    return nearestIndex;
+  }
+
+  /// Moves a thumb to a specific normalized position while respecting boundaries.
+  void _moveThumbToPosition(int thumbIndex, double targetPosition) {
+    // Determine allowed boundaries from neighboring thumbs
+    final double lowerBound = thumbIndex == 0 ? 0.0 : _normalizedPositions[thumbIndex - 1];
+    final double upperBound = thumbIndex == _normalizedPositions.length - 1
+        ? 1.0
+        : _normalizedPositions[thumbIndex + 1];
+
+    // Clamp the target position to valid boundaries
+    final double clampedPosition = targetPosition.clamp(lowerBound, upperBound);
+
+    // Create new list with updated values
+    List<T> newValues = List.from(widget.values);
+    final T newValue = _unnormalize(clampedPosition);
+
+    // Only update if the value actually changed
+    if (newValue != widget.values[thumbIndex]) {
+      newValues[thumbIndex] = newValue;
+      widget.onChanged(newValues);
+    }
   }
 
   /// Converts a normalized position (0.0-1.0) back to an absolute value.
@@ -206,6 +344,8 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
       // Convert back to the original type T
       if (T == int) {
+        // For int types, round to nearest integer but ensure we don't jump too much
+        // This helps with smooth dragging
         return value.round() as T;
       } else if (T == double) {
         return value as T;
@@ -213,9 +353,22 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
         // For other numeric types, try to convert appropriately
         return value as T;
       }
+    } else if (widget.min is Enum && widget.max is Enum) {
+      // For enums, work exactly like int sliders
+      // Get all possible enum values and use the calculated index to select from the list
+      final List<T> allEnumValues = _getAllPossibleValues();
+
+      // Calculate the target index (0 to list.length-1)
+      final int targetIndex = (normalized * (allEnumValues.length - 1)).round();
+
+      // Clamp to valid range and return the selected enum value
+      final int clampedIndex = targetIndex.clamp(0, allEnumValues.length - 1);
+      return allEnumValues[clampedIndex];
     } else {
-      // For non-numeric types like enums
+      // For other non-numeric types
       final List<T> allValues = _getAllPossibleValues();
+      if (allValues.length == 1) return allValues[0];
+
       final int index = (normalized * (allValues.length - 1)).round();
       return allValues[index.clamp(0, allValues.length - 1)];
     }
@@ -228,15 +381,28 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
         final double totalWidth = constraints.maxWidth;
 
         return SizedBox(
+          key: _sliderKey,
           height: widget.height,
           width: totalWidth,
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // Background track
-              Container(
-                height: 8.0,
-                decoration: BoxDecoration(color: widget.trackColor, borderRadius: BorderRadius.circular(4.0)),
+              // Background track with click-to-position functionality
+              GestureDetector(
+                onTapDown: widget.readOnly
+                    ? null
+                    : (details) {
+                        // Find the nearest thumb to the tap position
+                        final double tapPosition = _calculateNormalizedPosition(details.globalPosition);
+                        final int nearestThumbIndex = _findNearestThumbIndex(tapPosition);
+
+                        // Move the nearest thumb to the tap position
+                        _moveThumbToPosition(nearestThumbIndex, tapPosition);
+                      },
+                child: Container(
+                  height: 8.0,
+                  decoration: BoxDecoration(color: widget.trackColor, borderRadius: BorderRadius.circular(4.0)),
+                ),
               ),
 
               // Colored range segments
@@ -313,27 +479,29 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
               ? null
               : (details) {
                   if (_draggedThumbIndex == index) {
-                    // 1. Calculate new position in pixels
-                    final newPosition = _normalizedPositions[index] * totalWidth + details.delta.dx;
+                    // 1. Calculate the exact normalized position from global mouse position
+                    final double newNormalizedPosition = _calculateNormalizedPosition(details.globalPosition);
 
                     // 2. Determine allowed boundaries from neighboring thumbs
-                    final double lowerBound = index == 0 ? 0.0 : _normalizedPositions[index - 1] * totalWidth;
+                    final double lowerBound = index == 0 ? 0.0 : _normalizedPositions[index - 1];
                     final double upperBound = index == _normalizedPositions.length - 1
-                        ? totalWidth
-                        : _normalizedPositions[index + 1] * totalWidth;
+                        ? 1.0
+                        : _normalizedPositions[index + 1];
 
-                    // 3. Clamp the new position to valid boundaries
-                    final clampedPosition = newPosition.clamp(lowerBound, upperBound);
+                    // 3. Clamp the normalized position to valid boundaries
+                    final double clampedNormalizedPosition = newNormalizedPosition.clamp(lowerBound, upperBound);
 
-                    // 4. Convert valid pixel position back to normalized value
-                    final newNormalizedPosition = clampedPosition / totalWidth;
-
-                    // 5. Create new list with updated values
+                    // 4. Create new list with updated values
                     List<T> newValues = List.from(widget.values);
-                    newValues[index] = _unnormalize(newNormalizedPosition);
+                    final T newValue = _unnormalize(clampedNormalizedPosition);
 
-                    // 6. Call callback to update state in parent component
-                    widget.onChanged(newValues);
+                    // 5. Only update if the value actually changed (helps with smoothness for int types)
+                    if (newValue != widget.values[index]) {
+                      newValues[index] = newValue;
+
+                      // 6. Call callback to update state in parent component
+                      widget.onChanged(newValues);
+                    }
                   }
                 },
           // Visual element of the thumb

@@ -1,8 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:multi_thumb_slider/multi_thumb_slider.dart';
 
-// Example enum for demonstration
-enum Difficulty { easy, medium, hard, expert }
+// Example enum for Dan belt ranking system (martial arts)
+enum DanRank {
+  firstDan, // 1st Dan (Shodan)
+  secondDan, // 2nd Dan (Nidan)
+  thirdDan, // 3rd Dan (Sandan)
+  fourthDan, // 4th Dan (Yondan)
+  fifthDan, // 5th Dan (Godan)
+  sixthDan, // 6th Dan (Rokudan)
+  seventhDan, // 7th Dan (Shichidan/Nanadan)
+  eighthDan, // 8th Dan (Hachidan)
+  ninthDan, // 9th Dan (Kudan)
+  tenthDan, // 10th Dan (Judan)
+}
+
+// Extension to provide display names for Dan ranks
+extension DanRankExtension on DanRank {
+  String get displayName {
+    switch (this) {
+      case DanRank.firstDan:
+        return '1st Dan';
+      case DanRank.secondDan:
+        return '2nd Dan';
+      case DanRank.thirdDan:
+        return '3rd Dan';
+      case DanRank.fourthDan:
+        return '4th Dan';
+      case DanRank.fifthDan:
+        return '5th Dan';
+      case DanRank.sixthDan:
+        return '6th Dan';
+      case DanRank.seventhDan:
+        return '7th Dan';
+      case DanRank.eighthDan:
+        return '8th Dan';
+      case DanRank.ninthDan:
+        return '9th Dan';
+      case DanRank.tenthDan:
+        return '10th Dan';
+    }
+  }
+
+  String get japaneseName {
+    switch (this) {
+      case DanRank.firstDan:
+        return 'Shodan';
+      case DanRank.secondDan:
+        return 'Nidan';
+      case DanRank.thirdDan:
+        return 'Sandan';
+      case DanRank.fourthDan:
+        return 'Yondan';
+      case DanRank.fifthDan:
+        return 'Godan';
+      case DanRank.sixthDan:
+        return 'Rokudan';
+      case DanRank.seventhDan:
+        return 'Nanadan';
+      case DanRank.eighthDan:
+        return 'Hachidan';
+      case DanRank.ninthDan:
+        return 'Kudan';
+      case DanRank.tenthDan:
+        return 'Judan';
+    }
+  }
+}
 
 void main() {
   runApp(const MultiThumbSliderExampleApp());
@@ -70,9 +134,9 @@ class _ExamplesScreenState extends State<ExamplesScreen> {
 
             // Enum Example
             _buildExampleCard(
-              title: 'Enum Values Slider',
-              description: 'Slider using enum values for categorical selection',
-              child: const EnumExample(),
+              title: 'Dan Belt Ranking Slider',
+              description: 'Martial arts belt ranking system from 1st Dan to 10th Dan',
+              child: const DanRankExample(),
             ),
 
             const SizedBox(height: 20),
@@ -244,24 +308,25 @@ class _DoubleExampleState extends State<DoubleExample> {
   }
 }
 
-class EnumExample extends StatefulWidget {
-  const EnumExample({super.key});
+class DanRankExample extends StatefulWidget {
+  const DanRankExample({super.key});
 
   @override
-  State<EnumExample> createState() => _EnumExampleState();
+  State<DanRankExample> createState() => _DanRankExampleState();
 }
 
-class _EnumExampleState extends State<EnumExample> {
-  List<Difficulty> _values = [Difficulty.easy, Difficulty.medium, Difficulty.hard];
+class _DanRankExampleState extends State<DanRankExample> {
+  List<DanRank> _values = [DanRank.fifthDan, DanRank.eighthDan];
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CustomMultiThumbSlider<Difficulty>(
+        CustomMultiThumbSlider.withEnum<DanRank>(
           values: _values,
-          min: Difficulty.easy,
-          max: Difficulty.expert,
+          min: DanRank.firstDan,
+          max: DanRank.tenthDan,
+          allPossibleValues: DanRank.values,
           onChanged: (newValues) {
             setState(() {
               _values = newValues;
@@ -270,12 +335,64 @@ class _EnumExampleState extends State<EnumExample> {
         ),
         const SizedBox(height: 20),
 
+        // Display the selected Dan ranks with both English and Japanese names
         Text(
-          'Values: ${_values.map((v) => v.name).join(", ")}',
-          style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+          'Selected Ranks: ${_values.map((v) => v.displayName).join(", ")}',
+          style: TextStyle(fontSize: 16, color: Colors.grey[700], fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Japanese Names: ${_values.map((v) => v.japaneseName).join(", ")}',
+          style: TextStyle(fontSize: 14, color: Colors.grey[600], fontStyle: FontStyle.italic),
+        ),
+        const SizedBox(height: 12),
+
+        // Visual indicators for the rankings
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: _values.map((rank) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: _getDanColor(rank),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    rank.displayName,
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  Text(rank.japaneseName, style: const TextStyle(fontSize: 10, color: Colors.white70)),
+                ],
+              ),
+            );
+          }).toList(),
         ),
       ],
     );
+  }
+
+  Color _getDanColor(DanRank rank) {
+    // Different colors for different Dan levels
+    switch (rank) {
+      case DanRank.firstDan:
+      case DanRank.secondDan:
+        return Colors.brown.shade600; // Junior Dan ranks
+      case DanRank.thirdDan:
+      case DanRank.fourthDan:
+      case DanRank.fifthDan:
+        return Colors.red.shade600; // Intermediate Dan ranks
+      case DanRank.sixthDan:
+      case DanRank.seventhDan:
+        return Colors.purple.shade600; // Senior Dan ranks
+      case DanRank.eighthDan:
+      case DanRank.ninthDan:
+      case DanRank.tenthDan:
+        return Colors.black; // Master Dan ranks
+    }
   }
 }
 
