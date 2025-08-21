@@ -8,9 +8,7 @@ enum TestDifficulty { easy, medium, hard, expert }
 void main() {
   group('CustomMultiThumbSlider Integration Tests', () {
     group('Basic Functionality', () {
-      testWidgets('renders with int values correctly', (WidgetTester tester) async {
-        List<int> values = [20, 50, 80];
-
+      testWidgets('renders with int values without errors', (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -19,12 +17,10 @@ void main() {
                   width: 300,
                   height: 200,
                   child: CustomMultiThumbSlider<int>(
-                    values: values,
+                    values: [20, 50, 80],
                     min: 0,
                     max: 100,
-                    onChanged: (newValues) {
-                      values = newValues;
-                    },
+                    onChanged: (newValues) {},
                   ),
                 ),
               ),
@@ -35,13 +31,12 @@ void main() {
         // Wait for widget to render completely
         await tester.pumpAndSettle();
         
-        // Verify the slider renders
+        // Verify the slider renders without errors
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
+        expect(tester.takeException(), isNull);
       });
 
-      testWidgets('renders with double values correctly', (WidgetTester tester) async {
-        List<double> values = [20.5, 50.0, 80.7];
-
+      testWidgets('renders with double values without errors', (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -50,12 +45,10 @@ void main() {
                   width: 300,
                   height: 200,
                   child: CustomMultiThumbSlider<double>(
-                    values: values,
+                    values: [20.5, 50.0, 80.7],
                     min: 0.0,
                     max: 100.0,
-                    onChanged: (newValues) {
-                      values = newValues;
-                    },
+                    onChanged: (newValues) {},
                   ),
                 ),
               ),
@@ -66,13 +59,12 @@ void main() {
         // Wait for layout to complete
         await tester.pumpAndSettle();
         
-        // Verify the slider renders
+        // Verify the slider renders without errors
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
+        expect(tester.takeException(), isNull);
       });
 
-      testWidgets('renders with enum values correctly', (WidgetTester tester) async {
-        List<TestDifficulty> values = [TestDifficulty.easy, TestDifficulty.medium, TestDifficulty.hard];
-
+      testWidgets('renders with enum values without errors', (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -81,13 +73,11 @@ void main() {
                   width: 300,
                   height: 200,
                   child: CustomMultiThumbSlider<TestDifficulty>(
-                    values: values,
+                    values: [TestDifficulty.easy, TestDifficulty.medium, TestDifficulty.hard],
                     min: TestDifficulty.easy,
                     max: TestDifficulty.expert,
                     allPossibleValues: TestDifficulty.values,
-                    onChanged: (newValues) {
-                      values = newValues;
-                    },
+                    onChanged: (newValues) {},
                   ),
                 ),
               ),
@@ -98,13 +88,14 @@ void main() {
         // Wait for layout to complete
         await tester.pumpAndSettle();
         
-        // Verify the slider renders
+        // Verify the slider renders without errors
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
+        expect(tester.takeException(), isNull);
       });
     });
 
     group('Styling and Customization', () {
-      testWidgets('applies custom colors correctly', (WidgetTester tester) async {
+      testWidgets('custom colors render without errors', (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -130,11 +121,12 @@ void main() {
         // Wait for layout to complete
         await tester.pumpAndSettle();
         
-        // Verify the slider renders
+        // Verify the slider renders without errors
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
+        expect(tester.takeException(), isNull);
       });
 
-      testWidgets('applies custom dimensions correctly', (WidgetTester tester) async {
+      testWidgets('custom dimensions render without errors', (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -159,11 +151,12 @@ void main() {
         // Wait for layout to complete
         await tester.pumpAndSettle();
         
-        // Verify the slider renders
+        // Verify the slider renders without errors
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
+        expect(tester.takeException(), isNull);
       });
 
-      testWidgets('uses default styling when not specified', (WidgetTester tester) async {
+      testWidgets('default styling renders without errors', (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -186,11 +179,12 @@ void main() {
         // Wait for layout to complete
         await tester.pumpAndSettle();
         
-        // Verify the slider renders
+        // Verify the slider renders without errors
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
+        expect(tester.takeException(), isNull);
       });
 
-      testWidgets('handles tickmarks correctly', (WidgetTester tester) async {
+      testWidgets('tickmarks render without errors', (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -214,11 +208,12 @@ void main() {
         // Wait for layout to complete
         await tester.pumpAndSettle();
         
-        // Verify the slider renders
+        // Verify the slider renders without errors
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
+        expect(tester.takeException(), isNull);
       });
 
-      testWidgets('handles tickmark color customization', (WidgetTester tester) async {
+      testWidgets('custom tickmark color renders without errors', (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -243,13 +238,14 @@ void main() {
         // Wait for layout to complete
         await tester.pumpAndSettle();
         
-        // Verify the slider renders
+        // Verify the slider renders without errors
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
+        expect(tester.takeException(), isNull);
       });
     });
 
     group('Value Constraints and Validation', () {
-      testWidgets('handles single value correctly', (WidgetTester tester) async {
+      testWidgets('single value renders without errors', (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -272,11 +268,12 @@ void main() {
         // Wait for layout to complete
         await tester.pumpAndSettle();
         
-        // Verify the slider renders
+        // Verify the slider renders without errors
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
+        expect(tester.takeException(), isNull);
       });
 
-      testWidgets('handles many values correctly', (WidgetTester tester) async {
+      testWidgets('many values render without errors', (WidgetTester tester) async {
         final manyValues = List.generate(10, (index) => index * 10);
         
         await tester.pumpWidget(
@@ -301,11 +298,12 @@ void main() {
         // Wait for layout to complete
         await tester.pumpAndSettle();
         
-        // Verify the slider renders
+        // Verify the slider renders without errors
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
+        expect(tester.takeException(), isNull);
       });
 
-      testWidgets('handles edge values correctly', (WidgetTester tester) async {
+      testWidgets('edge values render without errors', (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -328,15 +326,14 @@ void main() {
         // Wait for layout to complete
         await tester.pumpAndSettle();
         
-        // Verify the slider renders
+        // Verify the slider renders without errors
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
+        expect(tester.takeException(), isNull);
       });
     });
 
     group('Enum-specific Functionality', () {
-      testWidgets('requires allPossibleValues for enum types', (WidgetTester tester) async {
-        // This test verifies that the widget can be constructed with enum values
-        // The actual validation would happen at runtime
+      testWidgets('enum with allPossibleValues renders without errors', (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -360,11 +357,12 @@ void main() {
         // Wait for layout to complete
         await tester.pumpAndSettle();
         
-        // Verify the slider renders
+        // Verify the slider renders without errors
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
+        expect(tester.takeException(), isNull);
       });
 
-      testWidgets('handles enum range correctly', (WidgetTester tester) async {
+      testWidgets('enum range renders without errors', (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -388,15 +386,16 @@ void main() {
         // Wait for layout to complete
         await tester.pumpAndSettle();
         
-        // Verify the slider renders
+        // Verify the slider renders without errors
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
+        expect(tester.takeException(), isNull);
       });
     });
 
     group('Error Handling and Edge Cases', () {
-      testWidgets('handles empty values list gracefully', (WidgetTester tester) async {
-        // Note: This might cause an error in the actual implementation
-        // but we're testing that the widget can be constructed
+      testWidgets('empty values list handles gracefully', (WidgetTester tester) async {
+        // This test verifies that the widget can be constructed with empty values
+        // The actual validation would happen at runtime
         expect(() async {
           await tester.pumpWidget(
             MaterialApp(
@@ -419,7 +418,7 @@ void main() {
         }, returnsNormally);
       });
 
-      testWidgets('handles min equals max', (WidgetTester tester) async {
+      testWidgets('min equals max renders without errors', (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -442,11 +441,12 @@ void main() {
         // Wait for layout to complete
         await tester.pumpAndSettle();
         
-        // Verify the slider renders
+        // Verify the slider renders without errors
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
+        expect(tester.takeException(), isNull);
       });
 
-      testWidgets('handles reversed min/max values', (WidgetTester tester) async {
+      testWidgets('reversed min/max renders without errors', (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -469,13 +469,14 @@ void main() {
         // Wait for layout to complete
         await tester.pumpAndSettle();
         
-        // Verify the slider renders
+        // Verify the slider renders without errors
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
+        expect(tester.takeException(), isNull);
       });
     });
 
     group('Widget Tree Structure', () {
-      testWidgets('contains expected child widgets', (WidgetTester tester) async {
+      testWidgets('widget tree structure is correct', (WidgetTester tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -505,7 +506,7 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('handles different screen sizes', (WidgetTester tester) async {
+      testWidgets('different screen sizes render without errors', (WidgetTester tester) async {
         // Test with different screen sizes
         await tester.binding.setSurfaceSize(const Size(300, 200));
         
@@ -531,7 +532,9 @@ void main() {
         // Wait for layout to complete
         await tester.pumpAndSettle();
         
+        // Verify the slider renders without errors
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
+        expect(tester.takeException(), isNull);
         
         // Reset surface size
         await tester.binding.setSurfaceSize(null);
