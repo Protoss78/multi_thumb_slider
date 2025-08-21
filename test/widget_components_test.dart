@@ -4,9 +4,9 @@ import 'package:multi_thumb_slider/multi_thumb_slider.dart';
 
 void main() {
   group('CustomMultiThumbSlider Component Tests', () {
-    group('Basic Construction', () {
-      testWidgets('Widget can be constructed with single value', (WidgetTester tester) async {
-        // Test if the widget can be constructed at all
+    group('Basic Instantiation', () {
+      test('Widget can be instantiated with single value', () {
+        // Test if the widget can be instantiated at all
         expect(() {
           CustomMultiThumbSlider<int>(
             values: [50],
@@ -17,8 +17,8 @@ void main() {
         }, returnsNormally);
       });
 
-      testWidgets('Widget can be constructed with two values', (WidgetTester tester) async {
-        // Test if the widget can be constructed with multiple values
+      test('Widget can be instantiated with two values', () {
+        // Test if the widget can be instantiated with multiple values
         expect(() {
           CustomMultiThumbSlider<int>(
             values: [25, 75],

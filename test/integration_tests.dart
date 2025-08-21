@@ -4,9 +4,9 @@ import 'package:multi_thumb_slider/multi_thumb_slider.dart';
 
 void main() {
   group('CustomMultiThumbSlider Integration Tests', () {
-    group('Basic Construction', () {
-      testWidgets('Widget can be constructed with single value', (WidgetTester tester) async {
-        // Test if the widget can be constructed at all
+    group('Basic Instantiation', () {
+      test('Widget can be instantiated with single value', () {
+        // Test if the widget can be instantiated at all
         expect(() {
           CustomMultiThumbSlider<int>(
             values: [50],
@@ -17,8 +17,8 @@ void main() {
         }, returnsNormally);
       });
 
-      testWidgets('Widget can be constructed with two values', (WidgetTester tester) async {
-        // Test if the widget can be constructed with multiple values
+      test('Widget can be instantiated with two values', () {
+        // Test if the widget can be instantiated with multiple values
         expect(() {
           CustomMultiThumbSlider<int>(
             values: [25, 75],
@@ -29,8 +29,8 @@ void main() {
         }, returnsNormally);
       });
 
-      testWidgets('Widget can be constructed with three values', (WidgetTester tester) async {
-        // Test if the widget can be constructed with three values
+      test('Widget can be instantiated with three values', () {
+        // Test if the widget can be instantiated with three values
         expect(() {
           CustomMultiThumbSlider<int>(
             values: [20, 50, 80],
@@ -83,7 +83,7 @@ void main() {
     });
 
     group('Parameter Validation', () {
-      testWidgets('Widget validates non-empty values list', (WidgetTester tester) async {
+      test('Widget validates non-empty values list', () {
         // Test that the widget properly validates the values list
         expect(() {
           CustomMultiThumbSlider<int>(
@@ -95,8 +95,8 @@ void main() {
         }, throwsAssertionError);
       });
 
-      testWidgets('Widget validates min and max values', (WidgetTester tester) async {
-        // Test that the widget can be constructed with valid min/max
+      test('Widget validates min and max values', () {
+        // Test that the widget can be instantiated with valid min/max
         expect(() {
           CustomMultiThumbSlider<int>(
             values: [50],
