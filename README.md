@@ -2,6 +2,12 @@
 
 A customizable Flutter widget that provides a multi-thumb slider with draggable thumbs for defining ranges, breakpoints, or multiple selection points.
 
+## 🚀 Live Example
+
+Try the interactive example app: **[Live Demo](https://yourusername.github.io/multi_thumb_slider/)**
+
+The live demo showcases all the features of the multi-thumb slider with interactive examples you can test in your browser.
+
 ## Features
 
 - **Multiple Thumbs**: Set multiple values on a single slider track
