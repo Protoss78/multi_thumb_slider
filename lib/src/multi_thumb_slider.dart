@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 /// A customizable multi-thumb slider widget that allows users to set multiple values
 /// on a single slider track.
@@ -293,6 +294,19 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
 }
 
 class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
+  /// Logger instance for debug logging
+  static final Logger _logger = Logger(
+    level: Level.debug,
+    printer: PrettyPrinter(
+      methodCount: 0,
+      errorMethodCount: 8,
+      lineLength: 120,
+      colors: true,
+      printEmojis: true,
+      dateTimeFormat: DateTimeFormat.none,
+    ),
+  );
+
   /// Index of the thumb currently being dragged.
   int? _draggedThumbIndex;
 
@@ -492,7 +506,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
   /// Determines whether tickmarks should be shown based on the value type
   bool _shouldShowTickmarks() {
     final bool shouldShow = widget.min is int || widget.min is Enum;
-    print(
+    _logger.d(
       '_shouldShowTickmarks: $shouldShow, min type: ${widget.min.runtimeType}, showTickmarks: ${widget.showTickmarks}',
     );
     return shouldShow;
@@ -504,7 +518,6 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
     if (widget.min is int && widget.max is int) {
       // For int types, the valueIndex is the actual int value
-      final int min = widget.min as int;
       targetValue = valueIndex as T;
     } else if (widget.min is Enum && widget.max is Enum && widget.allPossibleValues != null) {
       // For enum types, valueIndex is the index in the allPossibleValues list
@@ -572,15 +585,15 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
   List<Widget> _buildTickmarks(double totalWidth) {
     final List<Widget> tickmarks = [];
 
-    print('_buildTickmarks called with totalWidth: $totalWidth');
-    print('min type: ${widget.min.runtimeType}, max type: ${widget.max.runtimeType}');
+    _logger.d('_buildTickmarks called with totalWidth: $totalWidth');
+    _logger.d('min type: ${widget.min.runtimeType}, max type: ${widget.max.runtimeType}');
 
     if (widget.min is int && widget.max is int) {
       // For int types, show tickmarks for each integer value
       final int min = widget.min as int;
       final int max = widget.max as int;
 
-      print('Building int tickmarks from $min to $max');
+      _logger.d('Building int tickmarks from $min to $max');
 
       for (int i = min; i <= max; i++) {
         // Always show tickmarks for min and max values, and for values at the specified interval
@@ -602,7 +615,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
             leftPosition = normalizedPosition * totalWidth - 1.0;
           }
 
-          print('Int tickmark $i at position $leftPosition');
+          _logger.d('Int tickmark $i at position $leftPosition');
 
           tickmarks.add(
             Positioned(
@@ -638,7 +651,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
       // For enum types, show tickmarks for each possible enum value
       final List<T> allValues = widget.allPossibleValues!;
 
-      print('Building enum tickmarks for ${allValues.length} values');
+      _logger.d('Building enum tickmarks for ${allValues.length} values');
 
       // Use the same logic as _updateNormalizedPositions for consistency
       final Enum minEnum = widget.min as Enum;
@@ -670,8 +683,8 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
             leftPosition = normalizedPosition * totalWidth - 1.0;
           }
 
-          print(
-            'Enum tickmark $i (${currentEnum}) at index $currentIndex, normalized: $normalizedPosition, position: $leftPosition',
+          _logger.d(
+            'Enum tickmark $i ($currentEnum) at index $currentIndex, normalized: $normalizedPosition, position: $leftPosition',
           );
 
           tickmarks.add(
@@ -706,7 +719,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
       }
     }
 
-    print('Built ${tickmarks.length} tickmarks');
+    _logger.d('Built ${tickmarks.length} tickmarks');
     return tickmarks;
   }
 
@@ -808,10 +821,8 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
           String labelText;
           if (widget.valueFormatter != null) {
             labelText = widget.valueFormatter!(value);
-          } else if (value is Enum) {
-            labelText = value.toString().split('.').last;
           } else {
-            labelText = value.toString();
+            labelText = value.toString().split('.').last;
           }
 
           labels.add(
