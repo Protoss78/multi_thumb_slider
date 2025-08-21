@@ -95,7 +95,7 @@ git push origin main
 ### Change Flutter Version
 Update the `flutter-version` in all workflow files:
 ```yaml
-flutter-version: '3.19.0'  # Change this to your preferred version
+flutter-version: '3.35.1'  # Change this to your preferred version
 ```
 
 ### Modify Build Commands
