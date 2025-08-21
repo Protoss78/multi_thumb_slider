@@ -88,6 +88,17 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
   /// all possible enum values for proper slider functionality
   final List<T>? allPossibleValues;
 
+  /// Whether to display tickmarks for all possible values
+  /// This option is only available for int and enum value types
+  /// When true, small tickmarks will be shown on the track for each possible value
+  final bool showTickmarks;
+
+  /// The color of the tickmarks when showTickmarks is true
+  final Color tickmarkColor;
+
+  /// The size of the tickmarks (width and height)
+  final double tickmarkSize;
+
   /// Creates a multi-thumb slider.
   ///
   /// The [values] parameter must not be empty, and all values must be within
@@ -105,6 +116,9 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     this.thumbRadius = 14.0,
     this.readOnly = false,
     this.allPossibleValues,
+    this.showTickmarks = false,
+    this.tickmarkColor = Colors.grey,
+    this.tickmarkSize = 8.0,
   });
 
   /// Creates a multi-thumb slider with int values and default min/max range.
@@ -123,6 +137,9 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     Color thumbColor = Colors.white,
     double thumbRadius = 14.0,
     bool readOnly = false,
+    bool showTickmarks = false,
+    Color tickmarkColor = Colors.grey,
+    double tickmarkSize = 8.0,
   }) {
     return CustomMultiThumbSlider<int>(
       key: key,
@@ -136,6 +153,9 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       thumbColor: thumbColor,
       thumbRadius: thumbRadius,
       readOnly: readOnly,
+      showTickmarks: showTickmarks,
+      tickmarkColor: tickmarkColor,
+      tickmarkSize: tickmarkSize,
     );
   }
 
@@ -156,6 +176,9 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     Color thumbColor = Colors.white,
     double thumbRadius = 14.0,
     bool readOnly = false,
+    bool showTickmarks = false,
+    Color tickmarkColor = Colors.grey,
+    double tickmarkSize = 8.0,
   }) {
     return CustomMultiThumbSlider<T>(
       key: key,
@@ -170,6 +193,9 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       thumbRadius: thumbRadius,
       readOnly: readOnly,
       allPossibleValues: allPossibleValues,
+      showTickmarks: showTickmarks,
+      tickmarkColor: tickmarkColor,
+      tickmarkSize: tickmarkSize,
     );
   }
 
@@ -235,7 +261,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
         final Enum enumValue = v as Enum;
         final int index = enumValue.index;
         if (index == -1) return 0.5; // Fallback if value not found
-        return index / (maxIndex - minIndex - 1);
+        return (index - minIndex) / (maxIndex - minIndex);
       }).toList();
     }
   }
@@ -374,6 +400,123 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
     }
   }
 
+  /// Determines whether tickmarks should be shown based on the value type
+  bool _shouldShowTickmarks() {
+    final bool shouldShow = widget.min is int || widget.min is Enum;
+    print(
+      '_shouldShowTickmarks: $shouldShow, min type: ${widget.min.runtimeType}, showTickmarks: ${widget.showTickmarks}',
+    );
+    return shouldShow;
+  }
+
+  /// Builds tickmarks for all possible values
+  List<Widget> _buildTickmarks(double totalWidth) {
+    final List<Widget> tickmarks = [];
+
+    print('_buildTickmarks called with totalWidth: $totalWidth');
+    print('min type: ${widget.min.runtimeType}, max type: ${widget.max.runtimeType}');
+
+    if (widget.min is int && widget.max is int) {
+      // For int types, show tickmarks for each integer value
+      final int min = widget.min as int;
+      final int max = widget.max as int;
+
+      print('Building int tickmarks from $min to $max');
+
+      for (int i = min; i <= max; i++) {
+        final double normalizedPosition = (i - min) / (max - min);
+        double leftPosition;
+
+        // Adjust positioning for edge tickmarks to connect with the track
+        if (i == min) {
+          // Min tickmark: position to connect with track's left edge (accounting for rounded corner)
+          leftPosition = 2.0; // 2px from left edge to connect with track
+        } else if (i == max) {
+          // Max tickmark: position to connect with track's right edge (accounting for rounded corner)
+          leftPosition = totalWidth - 4.0; // 4px from right edge to connect with track
+        } else {
+          // All other tickmarks: center the 2px wide line
+          leftPosition = normalizedPosition * totalWidth - 1.0;
+        }
+
+        print('Int tickmark $i at position $leftPosition');
+
+        tickmarks.add(
+          Positioned(
+            left: leftPosition,
+            top:
+                widget.height / 2 +
+                4.0, // Position below the track (track is centered, so half height + half track height)
+            child: Container(
+              width: 2.0, // Thin vertical line
+              height: widget.tickmarkSize,
+              decoration: BoxDecoration(
+                color: widget.tickmarkColor,
+                borderRadius: BorderRadius.circular(1.0), // Slightly rounded corners
+              ),
+            ),
+          ),
+        );
+      }
+    } else if (widget.min is Enum && widget.max is Enum && widget.allPossibleValues != null) {
+      // For enum types, show tickmarks for each possible enum value
+      final List<T> allValues = widget.allPossibleValues!;
+
+      print('Building enum tickmarks for ${allValues.length} values');
+
+      // Use the same logic as _updateNormalizedPositions for consistency
+      final Enum minEnum = widget.min as Enum;
+      final Enum maxEnum = widget.max as Enum;
+      final int minIndex = minEnum.index;
+      final int maxIndex = maxEnum.index;
+
+      for (int i = 0; i < allValues.length; i++) {
+        final Enum currentEnum = allValues[i] as Enum;
+        final int currentIndex = currentEnum.index;
+
+        // Calculate normalized position using the same logic as thumbs
+        final double normalizedPosition = (currentIndex - minIndex) / (maxIndex - minIndex);
+        double leftPosition;
+
+        // Adjust positioning for edge tickmarks to connect with the track
+        if (i == 0) {
+          // First enum tickmark: position to connect with track's left edge
+          leftPosition = 2.0; // 2px from left edge to connect with track
+        } else if (i == allValues.length - 1) {
+          // Last enum tickmark: position to connect with track's right edge
+          leftPosition = totalWidth - 4.0; // 4px from right edge to connect with track
+        } else {
+          // All other tickmarks: center the 2px wide line
+          leftPosition = normalizedPosition * totalWidth - 1.0;
+        }
+
+        print(
+          'Enum tickmark $i (${currentEnum}) at index $currentIndex, normalized: $normalizedPosition, position: $leftPosition',
+        );
+
+        tickmarks.add(
+          Positioned(
+            left: leftPosition,
+            top:
+                widget.height / 2 +
+                4.0, // Position below the track (track is centered, so half height + half track height)
+            child: Container(
+              width: 2.0, // Thin vertical line
+              height: widget.tickmarkSize,
+              decoration: BoxDecoration(
+                color: widget.tickmarkColor,
+                borderRadius: BorderRadius.circular(1.0), // Slightly rounded corners
+              ),
+            ),
+          ),
+        );
+      }
+    }
+
+    print('Built ${tickmarks.length} tickmarks');
+    return tickmarks;
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -386,6 +529,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
           width: totalWidth,
           child: Stack(
             alignment: Alignment.center,
+            clipBehavior: Clip.none, // Allow tickmarks to extend beyond bounds
             children: [
               // Background track with click-to-position functionality
               GestureDetector(
@@ -407,6 +551,10 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
               // Colored range segments
               ..._buildRanges(totalWidth),
+
+              // Tickmarks for all possible values (only for int and enum types)
+              // Positioned after ranges so they appear above the track
+              if (widget.showTickmarks && _shouldShowTickmarks()) ..._buildTickmarks(totalWidth),
 
               // Draggable thumbs
               ..._buildThumbs(totalWidth),

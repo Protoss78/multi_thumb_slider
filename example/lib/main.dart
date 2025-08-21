@@ -249,6 +249,9 @@ class _BasicExampleState extends State<BasicExample> {
           values: _values,
           min: 0,
           max: 100,
+          showTickmarks: true,
+          tickmarkColor: Colors.grey.shade600,
+          tickmarkSize: 10.0,
           onChanged: (newValues) {
             setState(() {
               _values = newValues;
@@ -327,6 +330,9 @@ class _DanRankExampleState extends State<DanRankExample> {
           min: DanRank.firstDan,
           max: DanRank.tenthDan,
           allPossibleValues: DanRank.values,
+          showTickmarks: true,
+          tickmarkColor: Colors.orange.shade600,
+          tickmarkSize: 8.0,
           onChanged: (newValues) {
             setState(() {
               _values = newValues;
