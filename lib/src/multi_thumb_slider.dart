@@ -99,6 +99,21 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
   /// The size of the tickmarks (width and height)
   final double tickmarkSize;
 
+  /// Whether to display labels on tickmarks
+  /// When true, labels will be shown below tickmarks using the valueFormatter
+  final bool showTickmarkLabels;
+
+  /// The interval for showing tickmark labels
+  /// Labels are shown every N tickmarks (e.g., interval: 5 shows labels every 5th tickmark)
+  /// Min and max values always show labels regardless of interval
+  final int tickmarkLabelInterval;
+
+  /// The color of the tickmark labels
+  final Color tickmarkLabelColor;
+
+  /// The size of the tickmark label text
+  final double tickmarkLabelSize;
+
   /// Whether to display tooltips when thumbs are being dragged
   /// When true, a tooltip will appear above the thumb showing the current value
   final bool showTooltip;
@@ -112,10 +127,11 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
   /// The size of the tooltip text
   final double tooltipTextSize;
 
-  /// Optional custom function to format the tooltip text
+  /// Optional custom function to format both tooltip text and tickmark labels
   /// If provided, this function will be used instead of the default formatting
   /// The function receives the current value and should return the formatted string
-  final String Function(T value)? tooltipFormatter;
+  /// Used for both tooltips (when dragging thumbs) and tickmark labels (when enabled)
+  final String Function(T value)? valueFormatter;
 
   /// Creates a multi-thumb slider.
   ///
@@ -137,11 +153,15 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     this.showTickmarks = false,
     this.tickmarkColor = Colors.grey,
     this.tickmarkSize = 8.0,
+    this.showTickmarkLabels = false,
+    this.tickmarkLabelInterval = 5,
+    this.tickmarkLabelColor = Colors.grey,
+    this.tickmarkLabelSize = 10.0,
     this.showTooltip = false,
     this.tooltipColor = Colors.black87,
     this.tooltipTextColor = Colors.white,
     this.tooltipTextSize = 12.0,
-    this.tooltipFormatter,
+    this.valueFormatter,
   });
 
   /// Creates a multi-thumb slider with int values and default min/max range.
@@ -163,11 +183,15 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     bool showTickmarks = false,
     Color tickmarkColor = Colors.grey,
     double tickmarkSize = 8.0,
+    bool showTickmarkLabels = false,
+    int tickmarkLabelInterval = 5,
+    Color tickmarkLabelColor = Colors.grey,
+    double tickmarkLabelSize = 10.0,
     bool showTooltip = false,
     Color tooltipColor = Colors.black87,
     Color tooltipTextColor = Colors.white,
     double tooltipTextSize = 12.0,
-    String Function(int value)? tooltipFormatter,
+    String Function(int value)? valueFormatter,
   }) {
     return CustomMultiThumbSlider<int>(
       key: key,
@@ -184,11 +208,15 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       showTickmarks: showTickmarks,
       tickmarkColor: tickmarkColor,
       tickmarkSize: tickmarkSize,
+      showTickmarkLabels: showTickmarkLabels,
+      tickmarkLabelInterval: tickmarkLabelInterval,
+      tickmarkLabelColor: tickmarkLabelColor,
+      tickmarkLabelSize: tickmarkLabelSize,
       showTooltip: showTooltip,
       tooltipColor: tooltipColor,
       tooltipTextColor: tooltipTextColor,
       tooltipTextSize: tooltipTextSize,
-      tooltipFormatter: tooltipFormatter,
+      valueFormatter: valueFormatter,
     );
   }
 
@@ -212,11 +240,15 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     bool showTickmarks = false,
     Color tickmarkColor = Colors.grey,
     double tickmarkSize = 8.0,
+    bool showTickmarkLabels = false,
+    int tickmarkLabelInterval = 5,
+    Color tickmarkLabelColor = Colors.grey,
+    double tickmarkLabelSize = 10.0,
     bool showTooltip = false,
     Color tooltipColor = Colors.black87,
     Color tooltipTextColor = Colors.white,
     double tooltipTextSize = 12.0,
-    String Function(T value)? tooltipFormatter,
+    String Function(T value)? valueFormatter,
   }) {
     return CustomMultiThumbSlider<T>(
       key: key,
@@ -234,11 +266,15 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       showTickmarks: showTickmarks,
       tickmarkColor: tickmarkColor,
       tickmarkSize: tickmarkSize,
+      showTickmarkLabels: showTickmarkLabels,
+      tickmarkLabelInterval: tickmarkLabelInterval,
+      tickmarkLabelColor: tickmarkLabelColor,
+      tickmarkLabelSize: tickmarkLabelSize,
       showTooltip: showTooltip,
       tooltipColor: tooltipColor,
       tooltipTextColor: tooltipTextColor,
       tooltipTextSize: tooltipTextSize,
-      tooltipFormatter: tooltipFormatter,
+      valueFormatter: valueFormatter,
     );
   }
 
@@ -452,6 +488,76 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
     return shouldShow;
   }
 
+  /// Handles clicks on tickmarks, moving the closest thumb to the clicked value
+  void _onTickmarkClicked(int valueIndex) {
+    T targetValue;
+
+    if (widget.min is int && widget.max is int) {
+      // For int types, the valueIndex is the actual int value
+      final int min = widget.min as int;
+      targetValue = valueIndex as T;
+    } else if (widget.min is Enum && widget.max is Enum && widget.allPossibleValues != null) {
+      // For enum types, valueIndex is the index in the allPossibleValues list
+      final List<T> allValues = widget.allPossibleValues!;
+      if (valueIndex >= 0 && valueIndex < allValues.length) {
+        targetValue = allValues[valueIndex];
+      } else {
+        return; // Invalid index
+      }
+    } else {
+      return; // Unsupported type
+    }
+
+    // Convert the target value to normalized position
+    double normalizedPosition;
+    if (widget.min is num && widget.max is num) {
+      final num min = widget.min as num;
+      final num max = widget.max as num;
+      final num value = targetValue as num;
+      normalizedPosition = (value - min) / (max - min);
+    } else if (widget.min is Enum && widget.max is Enum) {
+      final Enum minEnum = widget.min as Enum;
+      final Enum maxEnum = widget.max as Enum;
+      final Enum targetEnum = targetValue as Enum;
+      final int minIndex = minEnum.index;
+      final int maxIndex = maxEnum.index;
+      final int targetIndex = targetEnum.index;
+      normalizedPosition = (targetIndex - minIndex) / (maxIndex - minIndex);
+    } else {
+      return; // Unsupported type
+    }
+
+    // Find the closest thumb and move it to this position
+    final int nearestThumbIndex = _findNearestThumbIndex(normalizedPosition);
+    _moveThumbToPosition(nearestThumbIndex, normalizedPosition);
+  }
+
+  /// Handles clicks on tickmark labels, moving the closest thumb to the clicked value
+  void _onTickmarkLabelClicked(T targetValue) {
+    // Convert the target value to normalized position
+    double normalizedPosition;
+    if (widget.min is num && widget.max is num) {
+      final num min = widget.min as num;
+      final num max = widget.max as num;
+      final num value = targetValue as num;
+      normalizedPosition = (value - min) / (max - min);
+    } else if (widget.min is Enum && widget.max is Enum) {
+      final Enum minEnum = widget.min as Enum;
+      final Enum maxEnum = widget.max as Enum;
+      final Enum targetEnum = targetValue as Enum;
+      final int minIndex = minEnum.index;
+      final int maxIndex = maxEnum.index;
+      final int targetIndex = targetEnum.index;
+      normalizedPosition = (targetIndex - minIndex) / (maxIndex - minIndex);
+    } else {
+      return; // Unsupported type
+    }
+
+    // Find the closest thumb and move it to this position
+    final int nearestThumbIndex = _findNearestThumbIndex(normalizedPosition);
+    _moveThumbToPosition(nearestThumbIndex, normalizedPosition);
+  }
+
   /// Builds tickmarks for all possible values
   List<Widget> _buildTickmarks(double totalWidth) {
     final List<Widget> tickmarks = [];
@@ -490,12 +596,24 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
             top:
                 widget.height / 2 +
                 4.0, // Position below the track (track is centered, so half height + half track height)
-            child: Container(
-              width: 2.0, // Thin vertical line
-              height: widget.tickmarkSize,
-              decoration: BoxDecoration(
-                color: widget.tickmarkColor,
-                borderRadius: BorderRadius.circular(1.0), // Slightly rounded corners
+            child: GestureDetector(
+              onTap: widget.readOnly
+                  ? null
+                  : () {
+                      _onTickmarkClicked(i);
+                    },
+              child: Container(
+                width: 8.0, // Wider clickable area than visual width
+                height: widget.tickmarkSize + 4.0, // Taller clickable area
+                alignment: Alignment.center,
+                child: Container(
+                  width: 2.0, // Thin vertical line (visual)
+                  height: widget.tickmarkSize,
+                  decoration: BoxDecoration(
+                    color: widget.tickmarkColor,
+                    borderRadius: BorderRadius.circular(1.0), // Slightly rounded corners
+                  ),
+                ),
               ),
             ),
           ),
@@ -543,12 +661,24 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
             top:
                 widget.height / 2 +
                 4.0, // Position below the track (track is centered, so half height + half track height)
-            child: Container(
-              width: 2.0, // Thin vertical line
-              height: widget.tickmarkSize,
-              decoration: BoxDecoration(
-                color: widget.tickmarkColor,
-                borderRadius: BorderRadius.circular(1.0), // Slightly rounded corners
+            child: GestureDetector(
+              onTap: widget.readOnly
+                  ? null
+                  : () {
+                      _onTickmarkClicked(i);
+                    },
+              child: Container(
+                width: 8.0, // Wider clickable area than visual width
+                height: widget.tickmarkSize + 4.0, // Taller clickable area
+                alignment: Alignment.center,
+                child: Container(
+                  width: 2.0, // Thin vertical line (visual)
+                  height: widget.tickmarkSize,
+                  decoration: BoxDecoration(
+                    color: widget.tickmarkColor,
+                    borderRadius: BorderRadius.circular(1.0), // Slightly rounded corners
+                  ),
+                ),
               ),
             ),
           ),
@@ -558,6 +688,142 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
     print('Built ${tickmarks.length} tickmarks');
     return tickmarks;
+  }
+
+  /// Builds labels for tickmarks when enabled.
+  List<Widget> _buildTickmarkLabels(double totalWidth) {
+    if (!widget.showTickmarks || !widget.showTickmarkLabels || !_shouldShowTickmarks()) {
+      return [];
+    }
+
+    final List<Widget> labels = [];
+
+    if (widget.min is int && widget.max is int) {
+      // For int types, show labels for each integer value at the specified interval
+      final int min = widget.min as int;
+      final int max = widget.max as int;
+
+      for (int i = min; i <= max; i++) {
+        // Always show labels for min and max values, and for values at the specified interval
+        final bool shouldShowLabel = i == min || i == max || (i % widget.tickmarkLabelInterval == 0);
+
+        if (shouldShowLabel) {
+          final double normalizedPosition = (i - min) / (max - min);
+          double leftPosition;
+
+          // Adjust positioning for edge labels to align with tickmarks
+          if (i == min) {
+            leftPosition = 2.0;
+          } else if (i == max) {
+            leftPosition = totalWidth - 4.0;
+          } else {
+            leftPosition = normalizedPosition * totalWidth - 1.0;
+          }
+
+          // Format the label text using the valueFormatter if provided
+          String labelText;
+          if (widget.valueFormatter != null) {
+            labelText = widget.valueFormatter!(i as T);
+          } else {
+            labelText = i.toString();
+          }
+
+          labels.add(
+            Positioned(
+              left: leftPosition - 20, // Center the label over the tickmark
+              top: widget.height / 2 + 8.0 + widget.tickmarkSize, // Position below the tickmark
+              child: GestureDetector(
+                onTap: widget.readOnly
+                    ? null
+                    : () {
+                        _onTickmarkLabelClicked(i as T);
+                      },
+                child: SizedBox(
+                  width: 40, // Fixed width for centering
+                  child: Text(
+                    labelText,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: widget.tickmarkLabelColor,
+                      fontSize: widget.tickmarkLabelSize,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+      }
+    } else if (widget.min is Enum && widget.max is Enum && widget.allPossibleValues != null) {
+      // For enum types, show labels for each possible enum value at the specified interval
+      final List<T> allValues = widget.allPossibleValues!;
+      final Enum minEnum = widget.min as Enum;
+      final Enum maxEnum = widget.max as Enum;
+      final int minIndex = minEnum.index;
+      final int maxIndex = maxEnum.index;
+
+      for (int i = 0; i < allValues.length; i++) {
+        final T value = allValues[i];
+
+        // Always show labels for first and last enum values, and for values at the specified interval
+        final bool shouldShowLabel = i == 0 || i == allValues.length - 1 || (i % widget.tickmarkLabelInterval == 0);
+
+        if (shouldShowLabel) {
+          final Enum currentEnum = value as Enum;
+          final int currentIndex = currentEnum.index;
+          final double normalizedPosition = (currentIndex - minIndex) / (maxIndex - minIndex);
+          double leftPosition;
+
+          // Adjust positioning for edge labels to align with tickmarks
+          if (i == 0) {
+            leftPosition = 2.0;
+          } else if (i == allValues.length - 1) {
+            leftPosition = totalWidth - 4.0;
+          } else {
+            leftPosition = normalizedPosition * totalWidth - 1.0;
+          }
+
+          // Format the label text using the valueFormatter if provided
+          String labelText;
+          if (widget.valueFormatter != null) {
+            labelText = widget.valueFormatter!(value);
+          } else if (value is Enum) {
+            labelText = value.toString().split('.').last;
+          } else {
+            labelText = value.toString();
+          }
+
+          labels.add(
+            Positioned(
+              left: leftPosition - 20, // Center the label over the tickmark
+              top: widget.height / 2 + 8.0 + widget.tickmarkSize, // Position below the tickmark
+              child: GestureDetector(
+                onTap: widget.readOnly
+                    ? null
+                    : () {
+                        _onTickmarkLabelClicked(value);
+                      },
+                child: SizedBox(
+                  width: 40, // Fixed width for centering
+                  child: Text(
+                    labelText,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: widget.tickmarkLabelColor,
+                      fontSize: widget.tickmarkLabelSize,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+      }
+    }
+
+    return labels;
   }
 
   @override
@@ -598,6 +864,10 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
                 // Tickmarks for all possible values (only for int and enum types)
                 // Positioned after ranges so they appear above the track
                 if (widget.showTickmarks && _shouldShowTickmarks()) ..._buildTickmarks(totalWidth),
+
+                // Tickmark labels (only when enabled)
+                if (widget.showTickmarks && widget.showTickmarkLabels && _shouldShowTickmarks())
+                  ..._buildTickmarkLabels(totalWidth),
 
                 // Draggable thumbs
                 ..._buildThumbs(totalWidth),
@@ -655,8 +925,8 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
     // Format the tooltip text using custom formatter if provided, otherwise use default formatting
     String tooltipText;
-    if (widget.tooltipFormatter != null) {
-      tooltipText = widget.tooltipFormatter!(currentValue);
+    if (widget.valueFormatter != null) {
+      tooltipText = widget.valueFormatter!(currentValue);
     } else if (currentValue is num) {
       tooltipText = currentValue.toString();
     } else if (currentValue is Enum) {

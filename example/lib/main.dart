@@ -252,11 +252,15 @@ class _BasicExampleState extends State<BasicExample> {
           showTickmarks: true,
           tickmarkColor: Colors.grey.shade600,
           tickmarkSize: 10.0,
+          showTickmarkLabels: true,
+          tickmarkLabelInterval: 10,
+          tickmarkLabelColor: Colors.grey.shade700,
+          tickmarkLabelSize: 11.0,
           showTooltip: true,
           tooltipColor: Colors.teal.shade700,
           tooltipTextColor: Colors.white,
           tooltipTextSize: 14.0,
-          tooltipFormatter: (value) => '$value%',
+          valueFormatter: (value) => '$value%',
           onChanged: (newValues) {
             setState(() {
               _values = newValues;
@@ -303,7 +307,7 @@ class _DoubleExampleState extends State<DoubleExample> {
           tooltipColor: Colors.blue.shade700,
           tooltipTextColor: Colors.white,
           tooltipTextSize: 13.0,
-          tooltipFormatter: (value) => value.toStringAsFixed(2),
+          valueFormatter: (value) => value.toStringAsFixed(2),
           onChanged: (newValues) {
             setState(() {
               _values = newValues;
@@ -343,11 +347,15 @@ class _DanRankExampleState extends State<DanRankExample> {
           showTickmarks: true,
           tickmarkColor: Colors.orange.shade600,
           tickmarkSize: 8.0,
+          showTickmarkLabels: true,
+          tickmarkLabelInterval: 2,
+          tickmarkLabelColor: Colors.orange.shade700,
+          tickmarkLabelSize: 11.0,
           showTooltip: true,
           tooltipColor: Colors.orange.shade700,
           tooltipTextColor: Colors.white,
           tooltipTextSize: 12.0,
-          tooltipFormatter: (value) => value.displayName,
+          valueFormatter: (value) => value.displayName,
           onChanged: (newValues) {
             setState(() {
               _values = newValues;
@@ -440,7 +448,7 @@ class _PriceRangeExampleState extends State<PriceRangeExample> {
           tooltipColor: Colors.green.shade700,
           tooltipTextColor: Colors.white,
           tooltipTextSize: 13.0,
-          tooltipFormatter: (value) => '\$$value',
+          valueFormatter: (value) => '\$$value',
           onChanged: (newValues) {
             setState(() {
               _values = newValues;
@@ -479,7 +487,7 @@ class _WeightClassExampleState extends State<WeightClassExample> {
           tooltipColor: Colors.purple.shade700,
           tooltipTextColor: Colors.white,
           tooltipTextSize: 14.0,
-          tooltipFormatter: (value) => '${value}kg',
+          valueFormatter: (value) => '${value}kg',
           onChanged: (newValues) {
             setState(() {
               _values = newValues;
@@ -524,7 +532,7 @@ class _CustomStylingExampleState extends State<CustomStylingExample> {
           tooltipColor: Colors.blue.shade700,
           tooltipTextColor: Colors.white,
           tooltipTextSize: 13.0,
-          tooltipFormatter: (value) => 'Value: $value',
+          valueFormatter: (value) => 'Value: $value',
           onChanged: (newValues) {
             setState(() {
               _values = newValues;
