@@ -31,7 +31,7 @@
 https://yourusername.github.io/multi_thumb_slider/
 ```
 
-You need to replace `yourusername` with your actual GitHub username and ensure the repository name matches.
+You need to replace `yourusername` with your actual GitHub username and ensure the repository name matches. The correct link should be `https://protoss78.github.io/multi_thumb_slider/`.
 
 ### 2. Enable GitHub Pages
 1. Go to your repository on GitHub
@@ -56,7 +56,7 @@ git push origin main
 
 1. **Every Push/PR**: Tests run automatically
 2. **On Main Branch**: After successful tests, example app deploys to GitHub Pages
-3. **Live Demo**: Available at `https://yourusername.github.io/multi_thumb_slider/`
+3. **Live Demo**: Available at `https://protoss78.github.io/multi_thumb_slider/`
 
 ## 📋 Prerequisites Met ✅
 
