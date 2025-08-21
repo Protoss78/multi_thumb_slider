@@ -99,6 +99,11 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
   /// The size of the tickmarks (width and height)
   final double tickmarkSize;
 
+  /// The interval for showing tickmarks
+  /// Tickmarks are shown every N values (e.g., interval: 5 shows every 5th tickmark)
+  /// Min and max values always show tickmarks regardless of interval
+  final int tickmarkInterval;
+
   /// Whether to display labels on tickmarks
   /// When true, labels will be shown below tickmarks using the valueFormatter
   final bool showTickmarkLabels;
@@ -153,6 +158,7 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     this.showTickmarks = false,
     this.tickmarkColor = Colors.grey,
     this.tickmarkSize = 8.0,
+    this.tickmarkInterval = 1,
     this.showTickmarkLabels = false,
     this.tickmarkLabelInterval = 5,
     this.tickmarkLabelColor = Colors.grey,
@@ -183,6 +189,7 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     bool showTickmarks = false,
     Color tickmarkColor = Colors.grey,
     double tickmarkSize = 8.0,
+    int tickmarkInterval = 1,
     bool showTickmarkLabels = false,
     int tickmarkLabelInterval = 5,
     Color tickmarkLabelColor = Colors.grey,
@@ -208,6 +215,7 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       showTickmarks: showTickmarks,
       tickmarkColor: tickmarkColor,
       tickmarkSize: tickmarkSize,
+      tickmarkInterval: tickmarkInterval,
       showTickmarkLabels: showTickmarkLabels,
       tickmarkLabelInterval: tickmarkLabelInterval,
       tickmarkLabelColor: tickmarkLabelColor,
@@ -240,6 +248,7 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     bool showTickmarks = false,
     Color tickmarkColor = Colors.grey,
     double tickmarkSize = 8.0,
+    int tickmarkInterval = 1,
     bool showTickmarkLabels = false,
     int tickmarkLabelInterval = 5,
     Color tickmarkLabelColor = Colors.grey,
@@ -266,6 +275,7 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       showTickmarks: showTickmarks,
       tickmarkColor: tickmarkColor,
       tickmarkSize: tickmarkSize,
+      tickmarkInterval: tickmarkInterval,
       showTickmarkLabels: showTickmarkLabels,
       tickmarkLabelInterval: tickmarkLabelInterval,
       tickmarkLabelColor: tickmarkLabelColor,
@@ -573,51 +583,56 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
       print('Building int tickmarks from $min to $max');
 
       for (int i = min; i <= max; i++) {
-        final double normalizedPosition = (i - min) / (max - min);
-        double leftPosition;
+        // Always show tickmarks for min and max values, and for values at the specified interval
+        final bool shouldShowTickmark = i == min || i == max || (i % widget.tickmarkInterval == 0);
 
-        // Adjust positioning for edge tickmarks to connect with the track
-        if (i == min) {
-          // Min tickmark: position to connect with track's left edge (accounting for rounded corner)
-          leftPosition = 2.0; // 2px from left edge to connect with track
-        } else if (i == max) {
-          // Max tickmark: position to connect with track's right edge (accounting for rounded corner)
-          leftPosition = totalWidth - 4.0; // 4px from right edge to connect with track
-        } else {
-          // All other tickmarks: center the 2px wide line
-          leftPosition = normalizedPosition * totalWidth - 1.0;
-        }
+        if (shouldShowTickmark) {
+          final double normalizedPosition = (i - min) / (max - min);
+          double leftPosition;
 
-        print('Int tickmark $i at position $leftPosition');
+          // Adjust positioning for edge tickmarks to connect with the track
+          if (i == min) {
+            // Min tickmark: position to connect with track's left edge (accounting for rounded corner)
+            leftPosition = 2.0; // 2px from left edge to connect with track
+          } else if (i == max) {
+            // Max tickmark: position to connect with track's right edge (accounting for rounded corner)
+            leftPosition = totalWidth - 4.0; // 4px from right edge to connect with track
+          } else {
+            // All other tickmarks: center the 2px wide line
+            leftPosition = normalizedPosition * totalWidth - 1.0;
+          }
 
-        tickmarks.add(
-          Positioned(
-            left: leftPosition,
-            top:
-                widget.height / 2 +
-                4.0, // Position below the track (track is centered, so half height + half track height)
-            child: GestureDetector(
-              onTap: widget.readOnly
-                  ? null
-                  : () {
-                      _onTickmarkClicked(i);
-                    },
-              child: Container(
-                width: 8.0, // Wider clickable area than visual width
-                height: widget.tickmarkSize + 4.0, // Taller clickable area
-                alignment: Alignment.center,
+          print('Int tickmark $i at position $leftPosition');
+
+          tickmarks.add(
+            Positioned(
+              left: leftPosition,
+              top:
+                  widget.height / 2 +
+                  4.0, // Position below the track (track is centered, so half height + half track height)
+              child: GestureDetector(
+                onTap: widget.readOnly
+                    ? null
+                    : () {
+                        _onTickmarkClicked(i);
+                      },
                 child: Container(
-                  width: 2.0, // Thin vertical line (visual)
-                  height: widget.tickmarkSize,
-                  decoration: BoxDecoration(
-                    color: widget.tickmarkColor,
-                    borderRadius: BorderRadius.circular(1.0), // Slightly rounded corners
+                  width: 8.0, // Wider clickable area than visual width
+                  height: widget.tickmarkSize + 4.0, // Taller clickable area
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: 2.0, // Thin vertical line (visual)
+                    height: widget.tickmarkSize,
+                    decoration: BoxDecoration(
+                      color: widget.tickmarkColor,
+                      borderRadius: BorderRadius.circular(1.0), // Slightly rounded corners
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        );
+          );
+        }
       }
     } else if (widget.min is Enum && widget.max is Enum && widget.allPossibleValues != null) {
       // For enum types, show tickmarks for each possible enum value
@@ -632,57 +647,62 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
       final int maxIndex = maxEnum.index;
 
       for (int i = 0; i < allValues.length; i++) {
-        final Enum currentEnum = allValues[i] as Enum;
-        final int currentIndex = currentEnum.index;
+        // Always show tickmarks for first and last enum values, and for values at the specified interval
+        final bool shouldShowTickmark = i == 0 || i == allValues.length - 1 || (i % widget.tickmarkInterval == 0);
 
-        // Calculate normalized position using the same logic as thumbs
-        final double normalizedPosition = (currentIndex - minIndex) / (maxIndex - minIndex);
-        double leftPosition;
+        if (shouldShowTickmark) {
+          final Enum currentEnum = allValues[i] as Enum;
+          final int currentIndex = currentEnum.index;
 
-        // Adjust positioning for edge tickmarks to connect with the track
-        if (i == 0) {
-          // First enum tickmark: position to connect with track's left edge
-          leftPosition = 2.0; // 2px from left edge to connect with track
-        } else if (i == allValues.length - 1) {
-          // Last enum tickmark: position to connect with track's right edge
-          leftPosition = totalWidth - 4.0; // 4px from right edge to connect with track
-        } else {
-          // All other tickmarks: center the 2px wide line
-          leftPosition = normalizedPosition * totalWidth - 1.0;
-        }
+          // Calculate normalized position using the same logic as thumbs
+          final double normalizedPosition = (currentIndex - minIndex) / (maxIndex - minIndex);
+          double leftPosition;
 
-        print(
-          'Enum tickmark $i (${currentEnum}) at index $currentIndex, normalized: $normalizedPosition, position: $leftPosition',
-        );
+          // Adjust positioning for edge tickmarks to connect with the track
+          if (i == 0) {
+            // First enum tickmark: position to connect with track's left edge
+            leftPosition = 2.0; // 2px from left edge to connect with track
+          } else if (i == allValues.length - 1) {
+            // Last enum tickmark: position to connect with track's right edge
+            leftPosition = totalWidth - 4.0; // 4px from right edge to connect with track
+          } else {
+            // All other tickmarks: center the 2px wide line
+            leftPosition = normalizedPosition * totalWidth - 1.0;
+          }
 
-        tickmarks.add(
-          Positioned(
-            left: leftPosition,
-            top:
-                widget.height / 2 +
-                4.0, // Position below the track (track is centered, so half height + half track height)
-            child: GestureDetector(
-              onTap: widget.readOnly
-                  ? null
-                  : () {
-                      _onTickmarkClicked(i);
-                    },
-              child: Container(
-                width: 8.0, // Wider clickable area than visual width
-                height: widget.tickmarkSize + 4.0, // Taller clickable area
-                alignment: Alignment.center,
+          print(
+            'Enum tickmark $i (${currentEnum}) at index $currentIndex, normalized: $normalizedPosition, position: $leftPosition',
+          );
+
+          tickmarks.add(
+            Positioned(
+              left: leftPosition,
+              top:
+                  widget.height / 2 +
+                  4.0, // Position below the track (track is centered, so half height + half track height)
+              child: GestureDetector(
+                onTap: widget.readOnly
+                    ? null
+                    : () {
+                        _onTickmarkClicked(i);
+                      },
                 child: Container(
-                  width: 2.0, // Thin vertical line (visual)
-                  height: widget.tickmarkSize,
-                  decoration: BoxDecoration(
-                    color: widget.tickmarkColor,
-                    borderRadius: BorderRadius.circular(1.0), // Slightly rounded corners
+                  width: 8.0, // Wider clickable area than visual width
+                  height: widget.tickmarkSize + 4.0, // Taller clickable area
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: 2.0, // Thin vertical line (visual)
+                    height: widget.tickmarkSize,
+                    decoration: BoxDecoration(
+                      color: widget.tickmarkColor,
+                      borderRadius: BorderRadius.circular(1.0), // Slightly rounded corners
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        );
+          );
+        }
       }
     }
 
