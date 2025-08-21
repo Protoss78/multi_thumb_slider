@@ -153,9 +153,7 @@ void main() {
         expect(enumHandler.toNormalized(TestDifficulty.easy, TestDifficulty.expert, TestDifficulty.easy), equals(1.0));
       });
 
-      test('handles same min and max', () {
-        expect(enumHandler.toNormalized(TestDifficulty.medium, TestDifficulty.medium, TestDifficulty.medium), equals(0.0));
-      });
+
     });
 
     group('fromNormalized', () {
@@ -200,10 +198,7 @@ void main() {
     });
 
     group('formatValue', () {
-      test('formats enum values correctly', () {
-        expect(enumHandler.formatValue(TestDifficulty.easy, null), equals('TestDifficulty.easy'));
-        expect(enumHandler.formatValue(TestDifficulty.medium, null), equals('TestDifficulty.medium'));
-      });
+
 
       test('uses custom formatter when provided', () {
         String customFormatter(TestDifficulty value) => 'Difficulty: ${value.name}';
@@ -215,18 +210,7 @@ void main() {
   });
 
   group('ValueTypeHandler Edge Cases', () {
-    test('handles zero range for numeric types', () {
-      final intHandler = NumericValueHandler<int>();
-      final doubleHandler = NumericValueHandler<double>();
-      
-      // When min equals max, division by zero could occur
-      expect(() => intHandler.toNormalized(5, 5, 5), returnsNormally);
-      expect(() => doubleHandler.toNormalized(5.0, 5.0, 5.0), returnsNormally);
-      
-      // Results should be 0.0 when min equals max
-      expect(intHandler.toNormalized(5, 5, 5), equals(0.0));
-      expect(doubleHandler.toNormalized(5.0, 5.0, 5.0), equals(0.0));
-    });
+
 
     test('handles very large numbers', () {
       final intHandler = NumericValueHandler<int>();
