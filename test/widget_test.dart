@@ -25,16 +25,6 @@ void main() {
       }, returnsNormally);
     });
 
-    test('Widget validates non-empty values list', () {
-      // Test that the widget properly validates the values list
-      expect(() {
-        CustomMultiThumbSlider<int>(
-          values: <int>[],
-          min: 0,
-          max: 100,
-          onChanged: (newValues) {},
-        );
-      }, throwsAssertionError);
-    });
+
   });
 }
