@@ -436,6 +436,11 @@ class _PriceRangeExampleState extends State<PriceRangeExample> {
           min: 0,
           max: 200,
           rangeColors: [Colors.green[100]!, Colors.yellow[100]!, Colors.orange[100]!, Colors.red[100]!],
+          showTooltip: true,
+          tooltipColor: Colors.green.shade700,
+          tooltipTextColor: Colors.white,
+          tooltipTextSize: 13.0,
+          tooltipFormatter: (value) => '\$$value',
           onChanged: (newValues) {
             setState(() {
               _values = newValues;
@@ -470,6 +475,11 @@ class _WeightClassExampleState extends State<WeightClassExample> {
           max: 100,
           height: 60,
           thumbRadius: 18,
+          showTooltip: true,
+          tooltipColor: Colors.purple.shade700,
+          tooltipTextColor: Colors.white,
+          tooltipTextSize: 14.0,
+          tooltipFormatter: (value) => '${value}kg',
           onChanged: (newValues) {
             setState(() {
               _values = newValues;
@@ -506,10 +516,15 @@ class _CustomStylingExampleState extends State<CustomStylingExample> {
           min: 0,
           max: 100,
           trackColor: Colors.grey[300]!,
-          rangeColors: [Colors.blue[100]!, Colors.purple[100]!, Colors.pink[100]!, Colors.red[100]!],
+          rangeColors: [Colors.blue[100]!, Colors.pink[100]!, Colors.red[100]!],
           thumbColor: Colors.blue[600]!,
           thumbRadius: 16,
           height: 50,
+          showTooltip: true,
+          tooltipColor: Colors.blue.shade700,
+          tooltipTextColor: Colors.white,
+          tooltipTextSize: 13.0,
+          tooltipFormatter: (value) => 'Value: $value',
           onChanged: (newValues) {
             setState(() {
               _values = newValues;

@@ -566,45 +566,46 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
       builder: (context, constraints) {
         final double totalWidth = constraints.maxWidth;
 
-        return SizedBox(
-          key: _sliderKey,
-          height: widget.height,
-          width: totalWidth,
-          child: Stack(
-            alignment: Alignment.center,
-            clipBehavior: Clip.none, // Allow tickmarks to extend beyond bounds
-            children: [
-              // Background track with click-to-position functionality
-              GestureDetector(
-                onTapDown: widget.readOnly
-                    ? null
-                    : (details) {
-                        // Find the nearest thumb to the tap position
-                        final double tapPosition = _calculateNormalizedPosition(details.globalPosition);
-                        final int nearestThumbIndex = _findNearestThumbIndex(tapPosition);
+        return GestureDetector(
+          // Click-to-position functionality for the entire slider area
+          onTapDown: widget.readOnly
+              ? null
+              : (details) {
+                  // Find the nearest thumb to the tap position
+                  final double tapPosition = _calculateNormalizedPosition(details.globalPosition);
+                  final int nearestThumbIndex = _findNearestThumbIndex(tapPosition);
 
-                        // Move the nearest thumb to the tap position
-                        _moveThumbToPosition(nearestThumbIndex, tapPosition);
-                      },
-                child: Container(
+                  // Move the nearest thumb to the tap position
+                  _moveThumbToPosition(nearestThumbIndex, tapPosition);
+                },
+          child: SizedBox(
+            key: _sliderKey,
+            height: widget.height,
+            width: totalWidth,
+            child: Stack(
+              alignment: Alignment.center,
+              clipBehavior: Clip.none, // Allow tickmarks to extend beyond bounds
+              children: [
+                // Background track
+                Container(
                   height: 8.0,
                   decoration: BoxDecoration(color: widget.trackColor, borderRadius: BorderRadius.circular(4.0)),
                 ),
-              ),
 
-              // Colored range segments
-              ..._buildRanges(totalWidth),
+                // Colored range segments
+                ..._buildRanges(totalWidth),
 
-              // Tickmarks for all possible values (only for int and enum types)
-              // Positioned after ranges so they appear above the track
-              if (widget.showTickmarks && _shouldShowTickmarks()) ..._buildTickmarks(totalWidth),
+                // Tickmarks for all possible values (only for int and enum types)
+                // Positioned after ranges so they appear above the track
+                if (widget.showTickmarks && _shouldShowTickmarks()) ..._buildTickmarks(totalWidth),
 
-              // Draggable thumbs
-              ..._buildThumbs(totalWidth),
+                // Draggable thumbs
+                ..._buildThumbs(totalWidth),
 
-              // Tooltips for dragged thumbs (on top of everything)
-              ..._buildTooltips(totalWidth),
-            ],
+                // Tooltips for dragged thumbs (on top of everything)
+                ..._buildTooltips(totalWidth),
+              ],
+            ),
           ),
         );
       },
