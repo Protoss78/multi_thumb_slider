@@ -121,6 +121,13 @@ class _ExamplesScreenState extends State<ExamplesScreen> {
   List<Map<String, dynamic>> _getExampleData() {
     return [
       {
+        'title': 'Minimal Multi-Thumb Slider',
+        'description':
+            'Basic slider with only required parameters and default styling. '
+            'Demonstrates the simplest possible implementation.',
+        'widget': const MinimalExampleWidget(),
+      },
+      {
         'title': 'Basic Multi-Thumb Slider (Int)',
         'description':
             'Simple slider with three thumbs for range selection using int values. '
