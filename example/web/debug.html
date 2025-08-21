@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug - Multi-Thumb Slider</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .status {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+    .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover { background-color: #0056b3; }
+    .file-list {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+    .file-item {
+      padding: 5px 0;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .file-item:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 Multi-Thumb Slider Debug Page</h1>
+    <p>This page helps diagnose why the Flutter web app might not be loading.</p>
+    
+    <div id="status-container">
+      <div class="status info">Checking Flutter web app files...</div>
+    </div>
+    
+    <div id="file-check">
+      <h3>📁 File Availability Check</h3>
+      <div id="file-results"></div>
+    </div>
+    
+    <div id="actions">
+      <h3>🛠️ Debug Actions</h3>
+      <button onclick="checkFiles()">Check Files Again</button>
+      <button onclick="testFlutter()">Test Flutter Loading</button>
+      <button onclick="showConsole()">Show Console</button>
+      <button onclick="location.reload()">Reload Page</button>
+    </div>
+    
+    <div id="console-output" style="display: none;">
+      <h3>📋 Console Output</h3>
+      <div id="console-content" style="background: #000; color: #0f0; padding: 15px; border-radius: 4px; font-family: monospace; max-height: 300px; overflow-y: auto;"></div>
+    </div>
+  </div>
+
+  <script>
+    // Console capture
+    const originalLog = console.log;
+    const originalError = console.error;
+    const originalWarn = console.warn;
+    
+    function captureConsole(type, args) {
+      const consoleContent = document.getElementById('console-content');
+      if (consoleContent) {
+        const timestamp = new Date().toLocaleTimeString();
+        const message = Array.from(args).map(arg => 
+          typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+        ).join(' ');
+        consoleContent.innerHTML += `[${timestamp}] ${type.toUpperCase()}: ${message}\n`;
+        consoleContent.scrollTop = consoleContent.scrollHeight;
+      }
+    }
+    
+    console.log = function(...args) {
+      captureConsole('log', args);
+      originalLog.apply(console, args);
+    };
+    
+    console.error = function(...args) {
+      captureConsole('error', args);
+      originalError.apply(console, args);
+    };
+    
+    console.warn = function(...args) {
+      captureConsole('warn', args);
+      originalWarn.apply(console, args);
+    };
+    
+    // File checking
+    const requiredFiles = [
+      'flutter.js',
+      'main.dart.js',
+      'index.html',
+      'manifest.json',
+      'favicon.png'
+    ];
+    
+    const optionalFiles = [
+      'flutter_service_worker.js',
+      'canvaskit/canvaskit.js',
+      'canvaskit/profiling/canvaskit.js'
+    ];
+    
+    async function checkFile(url) {
+      try {
+        const response = await fetch(url, { method: 'HEAD' });
+        return response.ok;
+      } catch (error) {
+        return false;
+      }
+    }
+    
+    async function checkFiles() {
+      const fileResults = document.getElementById('file-results');
+      fileResults.innerHTML = '<div class="status info">Checking files...</div>';
+      
+      let results = '<h4>Required Files:</h4>';
+      
+      for (const file of requiredFiles) {
+        const exists = await checkFile(file);
+        const statusClass = exists ? 'success' : 'error';
+        const statusText = exists ? '✅ Found' : '❌ Missing';
+        results += `<div class="file-item ${statusClass}">${file}: ${statusText}</div>`;
+      }
+      
+      results += '<h4>Optional Files:</h4>';
+      
+      for (const file of optionalFiles) {
+        const exists = await checkFile(file);
+        const statusClass = exists ? 'success' : 'warning';
+        const statusText = exists ? '✅ Found' : '⚠️ Missing (optional)';
+        results += `<div class="file-item ${statusClass}">${file}: ${statusText}</div>`;
+      }
+      
+      fileResults.innerHTML = results;
+      
+      // Update main status
+      const statusContainer = document.getElementById('status-container');
+      const missingRequired = requiredFiles.filter(async file => !(await checkFile(file))).length;
+      
+      if (missingRequired === 0) {
+        statusContainer.innerHTML = '<div class="status success">✅ All required files are present!</div>';
+      } else {
+        statusContainer.innerHTML = `<div class="status error">❌ ${missingRequired} required files are missing. Check the file list below.</div>`;
+      }
+    }
+    
+    function testFlutter() {
+      console.log('Testing Flutter loading...');
+      
+      // Try to load Flutter.js
+      const flutterScript = document.createElement('script');
+      flutterScript.src = 'flutter.js';
+      flutterScript.onload = function() {
+        console.log('Flutter.js loaded successfully');
+        if (typeof _flutter !== 'undefined') {
+          console.log('_flutter object available:', _flutter);
+        } else {
+          console.log('_flutter object not available');
+        }
+      };
+      flutterScript.onerror = function() {
+        console.error('Failed to load flutter.js');
+      };
+      document.head.appendChild(flutterScript);
+    }
+    
+    function showConsole() {
+      const consoleOutput = document.getElementById('console-output');
+      consoleOutput.style.display = consoleOutput.style.display === 'none' ? 'block' : 'none';
+    }
+    
+    // Auto-check files on page load
+    window.addEventListener('load', function() {
+      checkFiles();
+      console.log('Debug page loaded');
+    });
+  </script>
+</body>
+</html>

@@ -43,7 +43,7 @@ This guide will help you set up the GitHub Actions workflow and GitHub Pages for
 
 The workflow will deploy your example to:
 ```
-https://yourusername.github.io/multi_thumb_slider/
+https://protoss78.github.io/multi_thumb_slider/
 ```
 
 **Important**: Update the link in `README.md` to match your actual GitHub username and repository name.

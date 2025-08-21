@@ -5,9 +5,11 @@ A customizable Flutter widget that provides a multi-thumb slider with draggable 
 <!-- Trigger deployment -->
 ## 🚀 Live Example
 
-Try the interactive example app: **[Live Demo](https://yourusername.github.io/multi_thumb_slider/)**
+Try the interactive example app: **[Live Demo](https://protoss78.github.io/multi_thumb_slider/)**
 
 The live demo showcases all the features of the multi-thumb slider with interactive examples you can test in your browser.
+
+**Having issues with the live demo?** Check out our [Debug Page](https://protoss78.github.io/multi_thumb_slider/debug.html) to troubleshoot common problems.
 
 ## Features
 
@@ -297,6 +299,24 @@ The widget automatically enforces that:
 - Thumbs cannot overlap or cross each other
 - At least one value must be provided
 
+## Troubleshooting
+
+### White Page Issue
+
+If you're seeing a white page when visiting the live demo:
+
+1. **Check the Debug Page**: Visit [https://protoss78.github.io/multi_thumb_slider/debug.html](https://protoss78.github.io/multi_thumb_slider/debug.html) to see what files are missing
+2. **Check Browser Console**: Open Developer Tools (F12) and look for error messages
+3. **Clear Browser Cache**: Try refreshing with Ctrl+F5 or clear your browser cache
+4. **Check Network Tab**: Look for failed requests to Flutter web files
+
+### Common Issues
+
+- **Missing Flutter.js**: The main Flutter web runtime file is not loading
+- **Missing main.dart.js**: The compiled Dart code is not available
+- **CORS Issues**: Some browsers may block local file loading
+- **Build Incomplete**: The GitHub Action may not have completed successfully
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
@@ -309,7 +329,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you encounter any issues or have questions, please:
 
-1. Check the [existing issues](https://github.com/yourusername/multi_thumb_slider/issues)
+1. Check the [existing issues](https://github.com/protoss78/multi_thumb_slider/issues)
 2. Create a new issue with a detailed description
 3. Include your Flutter version and device information
 
