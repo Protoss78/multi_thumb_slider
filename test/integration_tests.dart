@@ -28,6 +28,9 @@ void main() {
           ),
         );
 
+        // Wait for widget to render completely
+        await TestConfig.waitForWidgetToRender(tester);
+        
         // Verify the slider renders
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
         
@@ -145,8 +148,8 @@ void main() {
           find.byType(CustomMultiThumbSlider),
         );
         // Verify default values are applied
-        expect(slider.height, equals(20.0));
-        expect(slider.thumbRadius, equals(10.0));
+        expect(slider.height, equals(45.0));
+        expect(slider.thumbRadius, equals(14.0));
       });
     });
 

@@ -31,7 +31,7 @@ class TestConfig {
   static const double testThumbRadius = 15.0;
   static const double testWidth = 300.0;
 
-  /// Creates a test MaterialApp wrapper
+  /// Creates a test MaterialApp wrapper with proper configuration
   static Widget createTestApp({
     required Widget child,
     ThemeData? theme,
@@ -39,7 +39,12 @@ class TestConfig {
     return MaterialApp(
       theme: theme ?? ThemeData(),
       home: Scaffold(
-        body: child,
+        body: Center(
+          child: SizedBox(
+            width: testWidth,
+            child: child,
+          ),
+        ),
       ),
     );
   }
@@ -77,6 +82,12 @@ class TestConfig {
       velocity: velocity ?? const Velocity(pixelsPerSecond: Offset(100, 0)),
     );
   }
+
+  /// Helper method to wait for widget to be fully rendered
+  static Future<void> waitForWidgetToRender(WidgetTester tester) async {
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+  }
 }
 
 /// Test enum for difficulty levels
@@ -99,7 +110,7 @@ extension WidgetTesterExtensions on WidgetTester {
     expect(find.byType(type), findsNWidgets(count));
   }
 
-  /// Simulates a complete drag gesture
+  /// Simulates a complete drag gesture with proper timing
   Future<void> dragWidget(
     Widget widget, {
     Offset? start,
@@ -114,6 +125,12 @@ extension WidgetTesterExtensions on WidgetTester {
     await moveBy(endPosition - startPosition);
     await endGesture();
     await pumpAndSettle();
+  }
+
+  /// Helper method to wait for gestures to complete
+  Future<void> waitForGestureCompletion() async {
+    await pump();
+    await pump(const Duration(milliseconds: 50));
   }
 }
 

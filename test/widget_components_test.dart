@@ -56,14 +56,17 @@ void main() {
 
       // Simulate pan start
       await tester.startGesture(const Offset(100, 100));
+      await tester.pump(); // Allow the gesture to be processed
       expect(panStartCalled, isTrue);
 
       // Simulate pan update
       await tester.moveBy(const Offset(50, 0));
+      await tester.pump(); // Allow the gesture to be processed
       expect(panUpdateCalled, isTrue);
 
       // Simulate pan end
       await tester.endGesture();
+      await tester.pump(); // Allow the gesture to be processed
       expect(panEndCalled, isTrue);
     });
 

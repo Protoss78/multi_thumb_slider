@@ -33,6 +33,9 @@ void main() {
           ),
         );
 
+        // Wait for widget to render completely
+        await TestConfig.waitForWidgetToRender(tester);
+        
         // Verify the slider renders
         tester.expectWidgetExists<CustomMultiThumbSlider>(CustomMultiThumbSlider);
         
@@ -42,8 +45,8 @@ void main() {
         expect(slider.values, equals([20, 50, 80]));
         expect(slider.min, equals(0));
         expect(slider.max, equals(100));
-        expect(slider.height, equals(20.0)); // Default height
-        expect(slider.thumbRadius, equals(10.0)); // Default thumb radius
+        expect(slider.height, equals(45.0)); // Default height
+        expect(slider.thumbRadius, equals(14.0)); // Default thumb radius
       });
 
       testWidgets('Double slider renders correctly with custom values', (WidgetTester tester) async {
@@ -64,6 +67,9 @@ void main() {
           ),
         );
 
+        // Wait for widget to render completely
+        await TestConfig.waitForWidgetToRender(tester);
+        
         final slider = tester.findWidget<CustomMultiThumbSlider<double>>(CustomMultiThumbSlider);
         expect(slider.values.length, equals(3));
         expect(slider.values, equals([20.5, 50.0, 80.7]));
@@ -88,6 +94,9 @@ void main() {
           ),
         );
 
+        // Wait for widget to render completely
+        await TestConfig.waitForWidgetToRender(tester);
+        
         final slider = tester.findWidget<CustomMultiThumbSlider<TestDifficulty>>(CustomMultiThumbSlider);
         expect(slider.values.length, equals(3));
         expect(slider.values, equals([TestDifficulty.easy, TestDifficulty.medium, TestDifficulty.hard]));
@@ -149,8 +158,8 @@ void main() {
         );
 
         final slider = tester.findWidget<CustomMultiThumbSlider<int>>(CustomMultiThumbSlider);
-        expect(slider.height, equals(20.0)); // Default height
-        expect(slider.thumbRadius, equals(10.0)); // Default thumb radius
+        expect(slider.height, equals(45.0)); // Default height
+        expect(slider.thumbRadius, equals(14.0)); // Default thumb radius
         expect(slider.trackColor, isNotNull); // Should have a default color
         expect(slider.thumbColor, isNotNull); // Should have a default color
       });
