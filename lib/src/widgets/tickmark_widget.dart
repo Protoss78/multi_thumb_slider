@@ -7,7 +7,7 @@ class TickmarkWidget extends StatelessWidget {
   final Color color;
   final VoidCallback? onTap;
   final bool isReadOnly;
-  
+
   const TickmarkWidget({
     super.key,
     required this.position,
@@ -16,12 +16,13 @@ class TickmarkWidget extends StatelessWidget {
     this.onTap,
     required this.isReadOnly,
   });
-  
+
+  // TODO: Improve tickmark positioning and size handling
   @override
   Widget build(BuildContext context) {
     return Positioned(
       left: position,
-      top: 4.0,
+      bottom: size * 2, // Position closer to track (moved up from bottom)
       child: GestureDetector(
         onTap: isReadOnly ? null : onTap,
         child: Container(
@@ -31,10 +32,7 @@ class TickmarkWidget extends StatelessWidget {
           child: Container(
             width: 2.0,
             height: size,
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(1.0),
-            ),
+            decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(1.0)),
           ),
         ),
       ),

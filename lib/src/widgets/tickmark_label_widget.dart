@@ -8,7 +8,7 @@ class TickmarkLabelWidget extends StatelessWidget {
   final double fontSize;
   final VoidCallback? onTap;
   final bool isReadOnly;
-  
+
   const TickmarkLabelWidget({
     super.key,
     required this.position,
@@ -18,12 +18,12 @@ class TickmarkLabelWidget extends StatelessWidget {
     this.onTap,
     required this.isReadOnly,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: position - 20,
-      top: 8.0,
+      left: position - 16, // Adjusted to center relative to tickmark (position + 4 - 20 = position - 16)
+      bottom: -5.0, // Position below tickmarks, closer to them
       child: GestureDetector(
         onTap: isReadOnly ? null : onTap,
         child: SizedBox(
@@ -31,11 +31,7 @@ class TickmarkLabelWidget extends StatelessWidget {
           child: Text(
             text,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: color,
-              fontSize: fontSize,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(color: color, fontSize: fontSize, fontWeight: FontWeight.w500),
           ),
         ),
       ),

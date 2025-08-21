@@ -526,7 +526,13 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
                 },
           child: SizedBox(
             key: _sliderKey,
-            height: widget.height,
+            height:
+                widget.height +
+                (widget.showTickmarks && widget.showTickmarkLabels
+                    ? 35.0
+                    : widget.showTickmarks
+                    ? 15.0
+                    : 0.0), // Increased height to accommodate tickmarks and labels below
             width: totalWidth,
             child: Stack(
               alignment: Alignment.center,
@@ -541,15 +547,15 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
                 // Colored range segments
                 ..._buildRanges(totalWidth),
 
+                // Draggable thumbs
+                ..._buildThumbs(totalWidth),
+
                 // Tickmarks for all possible values (only for int and enum types)
-                // Positioned after ranges so they appear above the track
+                // Positioned after thumbs so they appear below the track
                 ..._buildTickmarks(totalWidth),
 
                 // Tickmark labels (only when enabled)
                 ..._buildTickmarkLabels(totalWidth),
-
-                // Draggable thumbs
-                ..._buildThumbs(totalWidth),
 
                 // Tooltips for dragged thumbs (on top of everything)
                 ..._buildTooltips(totalWidth),

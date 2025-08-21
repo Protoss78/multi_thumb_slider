@@ -80,7 +80,7 @@ class _BasicExampleWidgetState extends State<BasicExampleWidget> {
       max: ExampleData.basicIntMax,
       showTickmarks: true,
       tickmarkColor: Colors.grey.shade600,
-      tickmarkSize: 10.0,
+      tickmarkSize: 15.0,
       tickmarkInterval: 5,
       showTickmarkLabels: true,
       tickmarkLabelInterval: 10,

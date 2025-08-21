@@ -49,7 +49,7 @@ class _DanRankExampleWidgetState extends State<DanRankExampleWidget> {
       tickmarkSize: 8.0,
       tickmarkInterval: 1,
       showTickmarkLabels: true,
-      tickmarkLabelInterval: 2,
+      tickmarkLabelInterval: 1,
       tickmarkLabelColor: SliderColorSchemes.danTooltipColor,
       tickmarkLabelSize: 11.0,
       showTooltip: true,
