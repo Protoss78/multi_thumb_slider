@@ -99,6 +99,24 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
   /// The size of the tickmarks (width and height)
   final double tickmarkSize;
 
+  /// Whether to display tooltips when thumbs are being dragged
+  /// When true, a tooltip will appear above the thumb showing the current value
+  final bool showTooltip;
+
+  /// The color of the tooltip background
+  final Color tooltipColor;
+
+  /// The color of the tooltip text
+  final Color tooltipTextColor;
+
+  /// The size of the tooltip text
+  final double tooltipTextSize;
+
+  /// Optional custom function to format the tooltip text
+  /// If provided, this function will be used instead of the default formatting
+  /// The function receives the current value and should return the formatted string
+  final String Function(T value)? tooltipFormatter;
+
   /// Creates a multi-thumb slider.
   ///
   /// The [values] parameter must not be empty, and all values must be within
@@ -119,6 +137,11 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     this.showTickmarks = false,
     this.tickmarkColor = Colors.grey,
     this.tickmarkSize = 8.0,
+    this.showTooltip = false,
+    this.tooltipColor = Colors.black87,
+    this.tooltipTextColor = Colors.white,
+    this.tooltipTextSize = 12.0,
+    this.tooltipFormatter,
   });
 
   /// Creates a multi-thumb slider with int values and default min/max range.
@@ -140,6 +163,11 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     bool showTickmarks = false,
     Color tickmarkColor = Colors.grey,
     double tickmarkSize = 8.0,
+    bool showTooltip = false,
+    Color tooltipColor = Colors.black87,
+    Color tooltipTextColor = Colors.white,
+    double tooltipTextSize = 12.0,
+    String Function(int value)? tooltipFormatter,
   }) {
     return CustomMultiThumbSlider<int>(
       key: key,
@@ -156,6 +184,11 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       showTickmarks: showTickmarks,
       tickmarkColor: tickmarkColor,
       tickmarkSize: tickmarkSize,
+      showTooltip: showTooltip,
+      tooltipColor: tooltipColor,
+      tooltipTextColor: tooltipTextColor,
+      tooltipTextSize: tooltipTextSize,
+      tooltipFormatter: tooltipFormatter,
     );
   }
 
@@ -179,6 +212,11 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     bool showTickmarks = false,
     Color tickmarkColor = Colors.grey,
     double tickmarkSize = 8.0,
+    bool showTooltip = false,
+    Color tooltipColor = Colors.black87,
+    Color tooltipTextColor = Colors.white,
+    double tooltipTextSize = 12.0,
+    String Function(T value)? tooltipFormatter,
   }) {
     return CustomMultiThumbSlider<T>(
       key: key,
@@ -196,6 +234,11 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       showTickmarks: showTickmarks,
       tickmarkColor: tickmarkColor,
       tickmarkSize: tickmarkSize,
+      showTooltip: showTooltip,
+      tooltipColor: tooltipColor,
+      tooltipTextColor: tooltipTextColor,
+      tooltipTextSize: tooltipTextSize,
+      tooltipFormatter: tooltipFormatter,
     );
   }
 
@@ -558,6 +601,9 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
               // Draggable thumbs
               ..._buildThumbs(totalWidth),
+
+              // Tooltips for dragged thumbs (on top of everything)
+              ..._buildTooltips(totalWidth),
             ],
           ),
         );
@@ -594,6 +640,52 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
       );
     }
     return ranges;
+  }
+
+  /// Builds tooltips for thumbs that are currently being dragged.
+  List<Widget> _buildTooltips(double totalWidth) {
+    if (!widget.showTooltip || _draggedThumbIndex == null) {
+      return [];
+    }
+
+    final int index = _draggedThumbIndex!;
+    final double leftPosition = _normalizedPositions[index] * totalWidth - widget.thumbRadius;
+    final T currentValue = widget.values[index];
+
+    // Format the tooltip text using custom formatter if provided, otherwise use default formatting
+    String tooltipText;
+    if (widget.tooltipFormatter != null) {
+      tooltipText = widget.tooltipFormatter!(currentValue);
+    } else if (currentValue is num) {
+      tooltipText = currentValue.toString();
+    } else if (currentValue is Enum) {
+      tooltipText = currentValue.toString().split('.').last;
+    } else {
+      tooltipText = currentValue.toString();
+    }
+
+    return [
+      Positioned(
+        left: leftPosition + widget.thumbRadius - 20, // Center tooltip over thumb
+        top: -widget.height / 2 - 35, // Position above the thumb
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: widget.tooltipColor,
+            borderRadius: BorderRadius.circular(6),
+            boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4, offset: const Offset(0, 2))],
+          ),
+          child: Text(
+            tooltipText,
+            style: TextStyle(
+              color: widget.tooltipTextColor,
+              fontSize: widget.tooltipTextSize,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    ];
   }
 
   /// Builds the list of thumbs as overlapping widgets.
