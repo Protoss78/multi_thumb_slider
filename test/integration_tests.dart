@@ -34,6 +34,9 @@ void main() {
         // Verify the slider renders
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
         
+        // Wait for layout to complete
+        await tester.pumpAndSettle();
+        
         // Verify the slider has the correct number of values
         final slider = tester.widget<CustomMultiThumbSlider<int>>(
           find.byType(CustomMultiThumbSlider),
@@ -62,6 +65,9 @@ void main() {
           ),
         );
 
+        // Wait for layout to complete
+        await tester.pumpAndSettle();
+        
         final slider = tester.widget<CustomMultiThumbSlider<double>>(
           find.byType(CustomMultiThumbSlider),
         );
@@ -90,6 +96,9 @@ void main() {
           ),
         );
 
+        // Wait for layout to complete
+        await tester.pumpAndSettle();
+        
         final slider = tester.widget<CustomMultiThumbSlider<TestDifficulty>>(
           find.byType(CustomMultiThumbSlider),
         );

@@ -47,6 +47,10 @@ void main() {
         expect(slider.max, equals(100));
         expect(slider.height, equals(45.0)); // Default height
         expect(slider.thumbRadius, equals(14.0)); // Default thumb radius
+        
+        // Verify the widget is properly laid out
+        await tester.pumpAndSettle();
+        expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
       });
 
       testWidgets('Double slider renders correctly with custom values', (WidgetTester tester) async {
@@ -70,9 +74,14 @@ void main() {
         // Wait for widget to render completely
         await TestConfig.waitForWidgetToRender(tester);
         
+        // Wait for layout to complete
+        await tester.pumpAndSettle();
+        
         final slider = tester.findWidget<CustomMultiThumbSlider<double>>(CustomMultiThumbSlider);
         expect(slider.values.length, equals(3));
         expect(slider.values, equals([20.5, 50.0, 80.7]));
+        expect(slider.min, equals(0.0));
+        expect(slider.max, equals(100.0));
         expect(slider.height, equals(40.0));
         expect(slider.thumbRadius, equals(15.0));
       });
@@ -97,6 +106,9 @@ void main() {
         // Wait for widget to render completely
         await TestConfig.waitForWidgetToRender(tester);
         
+        // Wait for layout to complete
+        await tester.pumpAndSettle();
+        
         final slider = tester.findWidget<CustomMultiThumbSlider<TestDifficulty>>(CustomMultiThumbSlider);
         expect(slider.values.length, equals(3));
         expect(slider.values, equals([TestDifficulty.easy, TestDifficulty.medium, TestDifficulty.hard]));
@@ -120,6 +132,9 @@ void main() {
           ),
         );
 
+        // Wait for layout to complete
+        await tester.pumpAndSettle();
+        
         final slider = tester.findWidget<CustomMultiThumbSlider<int>>(CustomMultiThumbSlider);
         expect(slider.trackColor, equals(Colors.red));
         expect(slider.rangeColors, equals([Colors.blue, Colors.green, Colors.yellow]));
@@ -140,6 +155,9 @@ void main() {
           ),
         );
 
+        // Wait for layout to complete
+        await tester.pumpAndSettle();
+        
         final slider = tester.findWidget<CustomMultiThumbSlider<int>>(CustomMultiThumbSlider);
         expect(slider.height, equals(60.0));
         expect(slider.thumbRadius, equals(25.0));
@@ -157,6 +175,9 @@ void main() {
           ),
         );
 
+        // Wait for layout to complete
+        await tester.pumpAndSettle();
+        
         final slider = tester.findWidget<CustomMultiThumbSlider<int>>(CustomMultiThumbSlider);
         expect(slider.height, equals(45.0)); // Default height
         expect(slider.thumbRadius, equals(14.0)); // Default thumb radius
@@ -179,6 +200,9 @@ void main() {
           ),
         );
 
+        // Wait for layout to complete
+        await tester.pumpAndSettle();
+        
         final slider = tester.findWidget<CustomMultiThumbSlider<int>>(CustomMultiThumbSlider);
         expect(slider.readOnly, isTrue);
         expect(find.byType(CustomMultiThumbSlider), findsOneWidget);
@@ -216,6 +240,9 @@ void main() {
           ),
         );
 
+        // Wait for layout to complete
+        await tester.pumpAndSettle();
+        
         final slider = tester.findWidget<CustomMultiThumbSlider<int>>(CustomMultiThumbSlider);
         expect(slider.showTickmarks, isTrue);
       });
@@ -234,6 +261,9 @@ void main() {
           ),
         );
 
+        // Wait for layout to complete
+        await tester.pumpAndSettle();
+        
         final slider = tester.findWidget<CustomMultiThumbSlider<int>>(CustomMultiThumbSlider);
         expect(slider.tickmarkColor, equals(Colors.blue));
       });
@@ -252,6 +282,9 @@ void main() {
           ),
         );
 
+        // Wait for layout to complete
+        await tester.pumpAndSettle();
+        
         final slider = tester.findWidget<CustomMultiThumbSlider<int>>(CustomMultiThumbSlider);
         expect(slider.values.length, equals(1));
         expect(slider.values.first, equals(50));
@@ -271,6 +304,9 @@ void main() {
           ),
         );
 
+        // Wait for layout to complete
+        await tester.pumpAndSettle();
+        
         final slider = tester.findWidget<CustomMultiThumbSlider<int>>(CustomMultiThumbSlider);
         expect(slider.values.length, equals(10));
         expect(slider.values, equals(manyValues));
@@ -288,6 +324,9 @@ void main() {
           ),
         );
 
+        // Wait for layout to complete
+        await tester.pumpAndSettle();
+        
         final slider = tester.findWidget<CustomMultiThumbSlider<int>>(CustomMultiThumbSlider);
         expect(slider.values.first, equals(0));
         expect(slider.values.last, equals(100));

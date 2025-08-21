@@ -40,8 +40,9 @@ class TestConfig {
       theme: theme ?? ThemeData(),
       home: Scaffold(
         body: Center(
-          child: SizedBox(
+          child: Container(
             width: testWidth,
+            height: 200, // Provide height constraint
             child: child,
           ),
         ),
