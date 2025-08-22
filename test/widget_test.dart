@@ -2,7 +2,6 @@
 //
 // These tests focus on basic functionality that should work reliably.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:multi_thumb_slider/multi_thumb_slider.dart';
 
@@ -24,7 +23,5 @@ void main() {
         );
       }, returnsNormally);
     });
-
-
   });
 }
