@@ -7,8 +7,8 @@ on:
     branches: [ main, master ]
 
 jobs:
-  test:
-    name: Test
+  build:
+    name: Build
     runs-on: ubuntu-latest
     
     steps:
@@ -26,28 +26,6 @@ jobs:
           
       - name: Run tests
         run: flutter test
-        
-      
-
-  build-example:
-    name: Build Example
-    runs-on: ubuntu-latest
-    needs: test
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.35.1'
-          channel: 'stable'
-          
-      - name: Get dependencies
-        run: |
-          cd example
-          flutter pub get
           
       - name: Build web version
         run: |
@@ -67,7 +45,6 @@ jobs:
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          name: example-web-build
           path: example/build/web/
           
       - name: Deploy to GitHub Pages
