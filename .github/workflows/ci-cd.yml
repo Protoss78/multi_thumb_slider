@@ -32,21 +32,14 @@ jobs:
           cd example
           flutter build web --release
           
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+      - name: Deploy Flutter Web App
+        uses: bluefireteam/flutter-gh-pages@v1
         with:
-          name: example-web-build
-          path: example/build/web/
-          retention-days: 30
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-        
-      - name: Upload to GitHub Pages
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: example/build/web/
-          
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4          
+          # WICHTIG: Gibt an, dass alle Flutter-Befehle im 'example'-Verzeichnis ausgeführt werden sollen
+          workingDir: example
+          # WICHTIG: Setzt die Basis-URL für deine App.
+          # Dies ist notwendig, da die Seite unter deinedomain.de/repository-name/ gehostet wird.
+          baseHref: /multi_thumb_slider/
+          # Das GITHUB_TOKEN wird automatisch von GitHub bereitgestellt und wird benötigt,
+          # um in den gh-pages Branch deines Repositories zu pushen.
+          token: ${{ secrets.GITHUB_TOKEN }}
