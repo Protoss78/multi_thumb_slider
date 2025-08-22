@@ -26,13 +26,17 @@ class TickmarkWidget extends StatelessWidget {
       child: GestureDetector(
         onTap: isReadOnly ? null : onTap,
         child: Container(
-          width: 8.0,
+          width:
+              size, // Use the size parameter for width instead of hardcoded 8.0
           height: size + 4.0,
           alignment: Alignment.center,
           child: Container(
             width: 2.0,
             height: size,
-            decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(1.0)),
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(1.0),
+            ),
           ),
         ),
       ),

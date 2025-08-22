@@ -30,7 +30,6 @@ jobs:
       - name: Deploy Flutter Web App
         uses: bluefireteam/flutter-gh-pages@v9
         with:
-          # WICHTIG: Gibt an, dass alle Flutter-Befehle im 'example'-Verzeichnis ausgeführt werden sollen
           workingDir: example
           # WICHTIG: Setzt die Basis-URL für deine App.
           # Dies ist notwendig, da die Seite unter deinedomain.de/repository-name/ gehostet wird.
