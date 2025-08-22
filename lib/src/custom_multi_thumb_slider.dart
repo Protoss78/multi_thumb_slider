@@ -316,7 +316,10 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
   @override
   void initState() {
     super.initState();
-    _valueHandler = ValueTypeHandlerFactory.create<T>();
+    // Use the context-aware factory for enum types to get proper handling
+    _valueHandler = ValueTypeHandlerFactory.createWithContext<T>(
+      allPossibleValues: widget.allPossibleValues,
+    );
     _positionCalculator = PositionCalculator(_sliderKey);
     _validateParameters();
     _updateNormalizedPositions();
@@ -338,6 +341,13 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
     super.didUpdateWidget(oldWidget);
     // Update normalized positions when values change externally
     if (widget.values != oldWidget.values) {
+      _updateNormalizedPositions();
+    }
+    // Update value handler if allPossibleValues changed (important for enum types)
+    if (widget.allPossibleValues != oldWidget.allPossibleValues) {
+      _valueHandler = ValueTypeHandlerFactory.createWithContext<T>(
+        allPossibleValues: widget.allPossibleValues,
+      );
       _updateNormalizedPositions();
     }
   }
