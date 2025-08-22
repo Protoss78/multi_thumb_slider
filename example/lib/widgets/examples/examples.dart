@@ -12,3 +12,4 @@ export 'weight_class_example_widget.dart';
 export 'custom_styling_example_widget.dart';
 export 'read_only_example_widget.dart';
 export 'minimal_example_widget.dart';
+export 'tickmark_positioning_example_widget.dart';

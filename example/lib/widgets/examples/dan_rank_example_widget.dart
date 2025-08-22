@@ -52,6 +52,9 @@ class _DanRankExampleWidgetState extends State<DanRankExampleWidget> {
       tickmarkLabelInterval: 1,
       tickmarkLabelColor: SliderColorSchemes.danTooltipColor,
       tickmarkLabelSize: 11.0,
+      tickmarkPosition: TickmarkPosition.below,
+      tickmarkSpacing: 8.0,
+      labelSpacing: 4.0,
       showTooltip: true,
       tooltipColor: SliderColorSchemes.danTooltipColor,
       tooltipTextColor: Colors.white,
@@ -90,7 +93,9 @@ class _DanRankExampleWidgetState extends State<DanRankExampleWidget> {
   Widget _buildRankChips() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: _values.map((rank) => DanRankUtils.createDanRankChip(rank)).toList(),
+      children: _values
+          .map((rank) => DanRankUtils.createDanRankChip(rank))
+          .toList(),
     );
   }
 
@@ -132,10 +137,22 @@ class _DanRankExampleWidgetState extends State<DanRankExampleWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildCategoryInfo('Junior (1st-2nd Dan)', DanRankUtils.getDanColor(DanRank.firstDan)),
-        _buildCategoryInfo('Intermediate (3rd-5th Dan)', DanRankUtils.getDanColor(DanRank.thirdDan)),
-        _buildCategoryInfo('Senior (6th-7th Dan)', DanRankUtils.getDanColor(DanRank.sixthDan)),
-        _buildCategoryInfo('Master (8th-10th Dan)', DanRankUtils.getDanColor(DanRank.eighthDan)),
+        _buildCategoryInfo(
+          'Junior (1st-2nd Dan)',
+          DanRankUtils.getDanColor(DanRank.firstDan),
+        ),
+        _buildCategoryInfo(
+          'Intermediate (3rd-5th Dan)',
+          DanRankUtils.getDanColor(DanRank.thirdDan),
+        ),
+        _buildCategoryInfo(
+          'Senior (6th-7th Dan)',
+          DanRankUtils.getDanColor(DanRank.sixthDan),
+        ),
+        _buildCategoryInfo(
+          'Master (8th-10th Dan)',
+          DanRankUtils.getDanColor(DanRank.eighthDan),
+        ),
       ],
     );
   }
@@ -154,7 +171,10 @@ class _DanRankExampleWidgetState extends State<DanRankExampleWidget> {
           const SizedBox(width: 8),
           Text(
             category,
-            style: TextStyle(fontSize: AppConstants.smallFontSize, color: Colors.orange[700]),
+            style: TextStyle(
+              fontSize: AppConstants.smallFontSize,
+              color: Colors.orange[700],
+            ),
           ),
         ],
       ),

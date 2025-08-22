@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'constants.dart';
 import 'value_type_handler.dart';
 import 'position_calculator.dart';
@@ -123,6 +124,20 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
   /// The size of the tickmark label text
   final double tickmarkLabelSize;
 
+  /// The position of tickmarks relative to the track
+  /// When set to above, tickmarks appear above the track
+  /// When set to below, tickmarks appear below the track
+  /// When set to onTrack, tickmarks overlap with the track
+  final TickmarkPosition tickmarkPosition;
+
+  /// The spacing between the track and tickmarks
+  /// This controls the distance between the track edge and the tickmark
+  final double tickmarkSpacing;
+
+  /// The spacing between tickmarks and their labels
+  /// This controls the distance between a tickmark and its label
+  final double labelSpacing;
+
   /// Whether to display tooltips when thumbs are being dragged
   /// When true, a tooltip will appear above the thumb showing the current value
   final bool showTooltip;
@@ -167,6 +182,9 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     this.tickmarkLabelInterval = SliderConstants.defaultTickmarkLabelInterval,
     this.tickmarkLabelColor = SliderConstants.defaultTickmarkLabelColor,
     this.tickmarkLabelSize = SliderConstants.defaultTickmarkLabelSize,
+    this.tickmarkPosition = SliderConstants.defaultTickmarkPosition,
+    this.tickmarkSpacing = SliderConstants.defaultTickmarkSpacing,
+    this.labelSpacing = SliderConstants.defaultLabelSpacing,
     this.showTooltip = false,
     this.tooltipColor = SliderConstants.defaultTooltipColor,
     this.tooltipTextColor = SliderConstants.defaultTooltipTextColor,
@@ -198,6 +216,9 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     int tickmarkLabelInterval = SliderConstants.defaultTickmarkLabelInterval,
     Color tickmarkLabelColor = SliderConstants.defaultTickmarkLabelColor,
     double tickmarkLabelSize = SliderConstants.defaultTickmarkLabelSize,
+    TickmarkPosition tickmarkPosition = SliderConstants.defaultTickmarkPosition,
+    double tickmarkSpacing = SliderConstants.defaultTickmarkSpacing,
+    double labelSpacing = SliderConstants.defaultLabelSpacing,
     bool showTooltip = false,
     Color tooltipColor = SliderConstants.defaultTooltipColor,
     Color tooltipTextColor = SliderConstants.defaultTooltipTextColor,
@@ -224,6 +245,9 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       tickmarkLabelInterval: tickmarkLabelInterval,
       tickmarkLabelColor: tickmarkLabelColor,
       tickmarkLabelSize: tickmarkLabelSize,
+      tickmarkPosition: tickmarkPosition,
+      tickmarkSpacing: tickmarkSpacing,
+      labelSpacing: labelSpacing,
       showTooltip: showTooltip,
       tooltipColor: tooltipColor,
       tooltipTextColor: tooltipTextColor,
@@ -257,6 +281,9 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     int tickmarkLabelInterval = SliderConstants.defaultTickmarkLabelInterval,
     Color tickmarkLabelColor = SliderConstants.defaultTickmarkLabelColor,
     double tickmarkLabelSize = SliderConstants.defaultTickmarkLabelSize,
+    TickmarkPosition tickmarkPosition = SliderConstants.defaultTickmarkPosition,
+    double tickmarkSpacing = SliderConstants.defaultTickmarkSpacing,
+    double labelSpacing = SliderConstants.defaultLabelSpacing,
     bool showTooltip = false,
     Color tooltipColor = SliderConstants.defaultTooltipColor,
     Color tooltipTextColor = SliderConstants.defaultTooltipTextColor,
@@ -284,6 +311,9 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       tickmarkLabelInterval: tickmarkLabelInterval,
       tickmarkLabelColor: tickmarkLabelColor,
       tickmarkLabelSize: tickmarkLabelSize,
+      tickmarkPosition: tickmarkPosition,
+      tickmarkSpacing: tickmarkSpacing,
+      labelSpacing: labelSpacing,
       showTooltip: showTooltip,
       tooltipColor: tooltipColor,
       tooltipTextColor: tooltipTextColor,
@@ -312,6 +342,9 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
   /// Position calculator for handling positioning logic
   late final PositionCalculator _positionCalculator;
+
+  /// Logger instance for debug logging
+  final Logger _logger = Logger();
 
   @override
   void initState() {
@@ -357,6 +390,103 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
     _normalizedPositions = widget.values.map((v) {
       return _valueHandler.toNormalized(v, widget.min, widget.max);
     }).toList();
+  }
+
+  /// Calculates the total height needed for the slider based on tickmark positioning
+  double _calculateSliderHeight() {
+    _logger.d('=== _calculateSliderHeight() called ===');
+    _logger.d('Base height: ${widget.height}');
+    _logger.d('Show tickmarks: ${widget.showTickmarks}');
+
+    if (!widget.showTickmarks) {
+      _logger.d('No tickmarks shown, returning base height: ${widget.height}');
+      return widget.height;
+    }
+
+    _logger.d('Tickmark position: ${widget.tickmarkPosition}');
+    _logger.d('Tickmark size: ${widget.tickmarkSize}');
+    _logger.d('Tickmark spacing: ${widget.tickmarkSpacing}');
+    _logger.d('Show tickmark labels: ${widget.showTickmarkLabels}');
+    _logger.d('Label spacing: ${widget.labelSpacing}');
+
+    double additionalHeight = 0.0;
+
+    switch (widget.tickmarkPosition) {
+      case TickmarkPosition.above:
+        _logger.d('--- Processing ABOVE positioning ---');
+        // For above positioning, we need height for both tickmarks and labels above the track
+        additionalHeight = widget.tickmarkSize + widget.tickmarkSpacing;
+        _logger.d(
+          'Initial additional height (tickmark + spacing): $additionalHeight',
+        );
+
+        if (widget.showTickmarkLabels) {
+          final double labelHeight = 20.0;
+          final double labelAdditionalHeight =
+              labelHeight + widget.labelSpacing;
+          additionalHeight += labelAdditionalHeight;
+          _logger.d(
+            'Labels enabled - adding label height ($labelHeight) + label spacing (${widget.labelSpacing}) = $labelAdditionalHeight',
+          );
+          _logger.d('Total additional height for ABOVE: $additionalHeight');
+        } else {
+          _logger.d('Labels disabled - no additional height for labels');
+        }
+        break;
+
+      case TickmarkPosition.below:
+        _logger.d('--- Processing BELOW positioning ---');
+        // For below positioning, we need height for both tickmarks and labels below the track
+        additionalHeight = widget.tickmarkSize + widget.tickmarkSpacing;
+        _logger.d(
+          'Initial additional height (tickmark + spacing): $additionalHeight',
+        );
+
+        if (widget.showTickmarkLabels) {
+          final double labelHeight = 20.0;
+          final double labelAdditionalHeight =
+              labelHeight + widget.labelSpacing;
+          additionalHeight += labelAdditionalHeight;
+          _logger.d(
+            'Labels enabled - adding label height ($labelHeight) + label spacing (${widget.labelSpacing}) = $labelAdditionalHeight',
+          );
+          _logger.d('Total additional height for BELOW: $additionalHeight');
+        } else {
+          _logger.d('Labels disabled - no additional height for labels');
+        }
+        break;
+
+      case TickmarkPosition.onTrack:
+        _logger.d('--- Processing ON_TRACK positioning ---');
+        // On-track tickmarks don't add extra height, but labels might
+        if (widget.showTickmarkLabels) {
+          final double labelHeight = 20.0;
+          final double labelAdditionalHeight =
+              (widget.tickmarkSize / 2) + labelHeight + widget.labelSpacing;
+          additionalHeight = labelAdditionalHeight;
+          _logger.d(
+            'Labels enabled - calculating height for labels below track',
+          );
+          _logger.d('Tickmark size / 2: ${widget.tickmarkSize / 2}');
+          _logger.d('Label height: $labelHeight');
+          _logger.d('Label spacing: ${widget.labelSpacing}');
+          _logger.d('Total additional height for ON_TRACK: $additionalHeight');
+        } else {
+          _logger.d(
+            'Labels disabled - no additional height needed for ON_TRACK',
+          );
+        }
+        break;
+    }
+
+    final double totalHeight = widget.height + additionalHeight;
+    _logger.d('=== Final calculation ===');
+    _logger.d('Base height: ${widget.height}');
+    _logger.d('Additional height: $additionalHeight');
+    _logger.d('Total height: $totalHeight');
+    _logger.d('=== End _calculateSliderHeight() ===\n');
+
+    return totalHeight;
   }
 
   /// Moves a thumb to a specific normalized position while respecting boundaries.
@@ -443,7 +573,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
   }
 
   /// Builds tickmarks for all possible values
-  List<Widget> _buildTickmarks(double totalWidth) {
+  List<Widget> _buildTickmarks(double totalWidth, double height) {
     if (!widget.showTickmarks || !_valueHandler.shouldShowTickmarks()) {
       return [];
     }
@@ -486,11 +616,15 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
         tickmarks.add(
           TickmarkWidget(
-            position: leftPosition,
+            leftPosition: leftPosition,
+            availableHeight: height,
+            trackHeight: SliderConstants.defaultTrackHeight,
             size: widget.tickmarkSize,
             color: widget.tickmarkColor,
             onTap: () => _onTickmarkClicked(i),
             isReadOnly: widget.readOnly,
+            tickmarkPosition: widget.tickmarkPosition,
+            spacing: widget.tickmarkSpacing,
           ),
         );
       }
@@ -500,7 +634,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
   }
 
   /// Builds labels for tickmarks when enabled.
-  List<Widget> _buildTickmarkLabels(double totalWidth) {
+  List<Widget> _buildTickmarkLabels(double totalWidth, double availableHeight) {
     if (!widget.showTickmarks ||
         !widget.showTickmarkLabels ||
         !_valueHandler.shouldShowTickmarks()) {
@@ -552,12 +686,18 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
         labels.add(
           TickmarkLabelWidget(
-            position: leftPosition,
+            availableHeight: availableHeight,
+            trackHeight: SliderConstants.defaultTrackHeight,
+            leftPosition: leftPosition,
             text: labelText,
             color: widget.tickmarkLabelColor,
             fontSize: widget.tickmarkLabelSize,
             onTap: () => _onTickmarkLabelClicked(value),
             isReadOnly: widget.readOnly,
+            tickmarkPosition: widget.tickmarkPosition,
+            tickmarkSize: widget.tickmarkSize,
+            labelSpacing: widget.labelSpacing,
+            tickmarkSpacing: widget.tickmarkSpacing,
           ),
         );
       }
@@ -568,6 +708,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
   @override
   Widget build(BuildContext context) {
+    double height = _calculateSliderHeight();
     return LayoutBuilder(
       builder: (context, constraints) {
         final double totalWidth = constraints.maxWidth;
@@ -588,13 +729,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
                 },
           child: SizedBox(
             key: _sliderKey,
-            height:
-                widget.height +
-                (widget.showTickmarks && widget.showTickmarkLabels
-                    ? 35.0
-                    : widget.showTickmarks
-                    ? 15.0
-                    : 0.0), // Increased height to accommodate tickmarks and labels below
+            height: height,
             width: totalWidth,
             child: Stack(
               alignment: Alignment.center,
@@ -618,10 +753,10 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
                 // Tickmarks for all possible values (only for int and enum types)
                 // Positioned after thumbs so they appear below the track
-                ..._buildTickmarks(totalWidth),
+                ..._buildTickmarks(totalWidth, height),
 
                 // Tickmark labels (only when enabled)
-                ..._buildTickmarkLabels(totalWidth),
+                ..._buildTickmarkLabels(totalWidth, height),
 
                 // Tooltips for dragged thumbs (on top of everything)
                 ..._buildTooltips(totalWidth),
