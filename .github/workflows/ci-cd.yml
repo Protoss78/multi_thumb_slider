@@ -27,13 +27,8 @@ jobs:
       - name: Run tests
         run: flutter test
           
-      - name: Build web version
-        run: |
-          cd example
-          flutter build web --release
-          
       - name: Deploy Flutter Web App
-        uses: bluefireteam/flutter-gh-pages@v1
+        uses: bluefireteam/flutter-gh-pages@v9
         with:
           # WICHTIG: Gibt an, dass alle Flutter-Befehle im 'example'-Verzeichnis ausgeführt werden sollen
           workingDir: example
