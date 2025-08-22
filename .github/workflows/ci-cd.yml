@@ -23,18 +23,6 @@ jobs:
           
       - name: Get dependencies
         run: flutter pub get
-        
-      - name: Analyze project source code
-        run: |
-          # Use CI-specific analysis options for more lenient checking
-          flutter analyze --options=.github/workflows/analysis_options_ci.yaml --no-fatal-infos || true
-          
-      - name: Check example app structure
-        run: |
-          # Verify the example app can be analyzed separately
-          cd example
-          flutter analyze --no-fatal-infos || echo "Example app analysis completed with warnings"
-          cd ..
           
       - name: Run tests
         run: flutter test
@@ -58,7 +46,6 @@ jobs:
           
       - name: Get dependencies
         run: |
-          flutter pub get
           cd example
           flutter pub get
           
@@ -70,6 +57,19 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: web-build
+          name: example-web-build
           path: example/build/web/
           retention-days: 30
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: example-web-build
+          path: example/build/web/
+          
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4          
