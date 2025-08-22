@@ -18,6 +18,7 @@ class _TickmarkPositioningExampleWidgetState
   double _tickmarkSize = 8.0;
   double _tickmarkSpacing = 8.0;
   double _labelSpacing = 4.0;
+  double _trackHeight = 8.0;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +35,12 @@ class _TickmarkPositioningExampleWidgetState
 
   /// Builds the control panel for adjusting tickmark settings
   Widget _buildControls() {
+    // Ensure all variables are valid numbers
+    final tickmarkSize = _tickmarkSize.isFinite ? _tickmarkSize : 8.0;
+    final tickmarkSpacing = _tickmarkSpacing.isFinite ? _tickmarkSpacing : 8.0;
+    final labelSpacing = _labelSpacing.isFinite ? _labelSpacing : 4.0;
+    final trackHeight = _trackHeight.isFinite ? _trackHeight : 8.0;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -84,20 +91,20 @@ class _TickmarkPositioningExampleWidgetState
           Row(
             children: [
               Text(
-                'Size: ',
+                'Tickmark Size: ',
                 style: TextStyle(fontSize: AppConstants.captionFontSize),
               ),
               Expanded(
                 child: Slider(
-                  value: _tickmarkSize,
+                  value: tickmarkSize,
                   min: 4.0,
                   max: 16.0,
                   divisions: 12,
-                  label: _tickmarkSize.toStringAsFixed(1),
+                  label: tickmarkSize.toStringAsFixed(1),
                   onChanged: (value) => setState(() => _tickmarkSize = value),
                 ),
               ),
-              Text(_tickmarkSize.toStringAsFixed(1)),
+              Text(tickmarkSize.toStringAsFixed(1)),
             ],
           ),
 
@@ -110,16 +117,16 @@ class _TickmarkPositioningExampleWidgetState
               ),
               Expanded(
                 child: Slider(
-                  value: _tickmarkSpacing,
+                  value: tickmarkSpacing,
                   min: 0.0,
                   max: 20.0,
                   divisions: 10,
-                  label: _tickmarkSpacing.toStringAsFixed(1),
+                  label: tickmarkSpacing.toStringAsFixed(1),
                   onChanged: (value) =>
                       setState(() => _tickmarkSpacing = value),
                 ),
               ),
-              Text(_tickmarkSpacing.toStringAsFixed(1)),
+              Text(tickmarkSpacing.toStringAsFixed(1)),
             ],
           ),
 
@@ -131,15 +138,38 @@ class _TickmarkPositioningExampleWidgetState
               ),
               Expanded(
                 child: Slider(
-                  value: _labelSpacing,
+                  value: labelSpacing,
                   min: 0.0,
                   max: 20.0,
                   divisions: 18,
-                  label: _labelSpacing.toStringAsFixed(1),
+                  label: labelSpacing.toStringAsFixed(1),
                   onChanged: (value) => setState(() => _labelSpacing = value),
                 ),
               ),
-              Text(_labelSpacing.toStringAsFixed(1)),
+              Text(labelSpacing.toStringAsFixed(1)),
+            ],
+          ),
+
+          const SizedBox(height: AppConstants.itemSpacing),
+
+          // Track height slider
+          Row(
+            children: [
+              Text(
+                'Track Height: ',
+                style: TextStyle(fontSize: AppConstants.captionFontSize),
+              ),
+              Expanded(
+                child: Slider(
+                  value: trackHeight,
+                  min: 2.0,
+                  max: 20.0,
+                  divisions: 18,
+                  label: trackHeight.toStringAsFixed(1),
+                  onChanged: (value) => setState(() => _trackHeight = value),
+                ),
+              ),
+              Text(trackHeight.toStringAsFixed(1)),
             ],
           ),
         ],
@@ -159,7 +189,7 @@ class _TickmarkPositioningExampleWidgetState
       child: Column(
         children: [
           Text(
-            'Current Settings: ${_tickmarkPosition.name} | Size: ${_tickmarkSize.toStringAsFixed(1)} | Spacing: ${_tickmarkSpacing.toStringAsFixed(1)}',
+            'Current Settings: ${_tickmarkPosition.name} | Size: ${_tickmarkSize.toStringAsFixed(1)} | Spacing: ${_tickmarkSpacing.toStringAsFixed(1)} | Track: ${_trackHeight.toStringAsFixed(1)}',
             style: TextStyle(
               fontSize: AppConstants.captionFontSize,
               fontWeight: FontWeight.w600,
@@ -171,6 +201,7 @@ class _TickmarkPositioningExampleWidgetState
             min: 0,
             max: 100,
             height: 16.0,
+            trackHeight: _trackHeight,
             onChanged: (newValues) => setState(() => _values = newValues),
             showTickmarks: true,
             tickmarkColor: Colors.blue[600]!,

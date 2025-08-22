@@ -44,6 +44,7 @@ class _DanRankExampleWidgetState extends State<DanRankExampleWidget> {
       min: DanRank.firstDan,
       max: DanRank.tenthDan,
       allPossibleValues: DanRank.values,
+      trackHeight: 8.0,
       showTickmarks: true,
       tickmarkColor: SliderColorSchemes.danTooltipColor,
       tickmarkSize: 8.0,

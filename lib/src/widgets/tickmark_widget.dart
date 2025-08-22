@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import '../constants.dart';
 
 /// Widget for rendering tickmarks
@@ -14,7 +13,7 @@ class TickmarkWidget extends StatelessWidget {
   final double availableHeight;
   final double trackHeight;
 
-  TickmarkWidget({
+  const TickmarkWidget({
     super.key,
     required this.leftPosition,
     required this.availableHeight,
@@ -27,16 +26,9 @@ class TickmarkWidget extends StatelessWidget {
     required this.spacing,
   });
 
-  /// Logger instance for debug logging
-  final Logger _logger = Logger();
-
   @override
   Widget build(BuildContext context) {
     double centerHeightPosition = availableHeight / 2;
-    _logger.d('=== TickmarkWidget.build() ===');
-    _logger.d(
-      'Position: $tickmarkPosition, Size: $size, Spacing: $spacing, Left: $leftPosition',
-    );
 
     // Calculate vertical position based on tickmark position
     // The track is centered at y=0 in the Stack with Alignment.center
@@ -48,7 +40,6 @@ class TickmarkWidget extends StatelessWidget {
         // Negative values go up from the center
         final double top =
             centerHeightPosition - ((trackHeight / 2) + spacing + size);
-        _logger.d('ABOVE: top = $top (size: $size, spacing: $spacing)');
         return Positioned(
           left: leftPosition,
           top: top,
@@ -60,10 +51,6 @@ class TickmarkWidget extends StatelessWidget {
         // This ensures proper alignment with the Stack's center
         final double bottom =
             centerHeightPosition - (size + spacing) - (trackHeight / 2);
-        _logger.d('BELOW: bottom = $bottom (size: $size, spacing: $spacing)');
-        _logger.d(
-          'BELOW: tickmark will be positioned at bottom = $bottom from Stack center',
-        );
         return Positioned(
           left: leftPosition,
           bottom: bottom,
@@ -76,7 +63,6 @@ class TickmarkWidget extends StatelessWidget {
         // Still unclear why +2 is needed
         final double top =
             centerHeightPosition - ((size) / 2) - (trackHeight / 2) + 2;
-        _logger.d('ON_TRACK: top = $top (size: $size)');
         return Positioned(
           left: leftPosition,
           top: top,

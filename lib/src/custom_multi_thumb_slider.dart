@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'constants.dart';
 import 'value_type_handler.dart';
 import 'position_calculator.dart';
@@ -67,6 +66,9 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
 
   /// The height of the slider track.
   final double height;
+
+  /// The height of the slider track bar (the actual track thickness).
+  final double trackHeight;
 
   /// The color of the slider track background.
   final Color trackColor;
@@ -168,6 +170,7 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     required this.min,
     required this.max,
     this.height = SliderConstants.defaultHeight,
+    this.trackHeight = SliderConstants.defaultTrackHeight,
     this.trackColor = SliderConstants.defaultTrackColor,
     this.rangeColors = SliderConstants.defaultRangeColors,
     this.thumbColor = SliderConstants.defaultThumbColor,
@@ -203,6 +206,7 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     int min = 0,
     int max = 100,
     double height = SliderConstants.defaultHeight,
+    double trackHeight = SliderConstants.defaultTrackHeight,
     Color trackColor = SliderConstants.defaultTrackColor,
     List<Color> rangeColors = SliderConstants.defaultRangeColors,
     Color thumbColor = SliderConstants.defaultThumbColor,
@@ -232,6 +236,7 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       min: min,
       max: max,
       height: height,
+      trackHeight: trackHeight,
       trackColor: trackColor,
       rangeColors: rangeColors,
       thumbColor: thumbColor,
@@ -268,6 +273,7 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     required T max,
     required List<T> allPossibleValues,
     double height = SliderConstants.defaultHeight,
+    double trackHeight = SliderConstants.defaultTrackHeight,
     Color trackColor = SliderConstants.defaultTrackColor,
     List<Color> rangeColors = SliderConstants.defaultRangeColors,
     Color thumbColor = SliderConstants.defaultThumbColor,
@@ -297,6 +303,7 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       min: min,
       max: max,
       height: height,
+      trackHeight: trackHeight,
       trackColor: trackColor,
       rangeColors: rangeColors,
       thumbColor: thumbColor,
@@ -342,9 +349,6 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
   /// Position calculator for handling positioning logic
   late final PositionCalculator _positionCalculator;
-
-  /// Logger instance for debug logging
-  final Logger _logger = Logger();
 
   @override
   void initState() {
@@ -394,99 +398,48 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
   /// Calculates the total height needed for the slider based on tickmark positioning
   double _calculateSliderHeight() {
-    _logger.d('=== _calculateSliderHeight() called ===');
-    _logger.d('Base height: ${widget.height}');
-    _logger.d('Show tickmarks: ${widget.showTickmarks}');
-
     if (!widget.showTickmarks) {
-      _logger.d('No tickmarks shown, returning base height: ${widget.height}');
       return widget.height;
     }
-
-    _logger.d('Tickmark position: ${widget.tickmarkPosition}');
-    _logger.d('Tickmark size: ${widget.tickmarkSize}');
-    _logger.d('Tickmark spacing: ${widget.tickmarkSpacing}');
-    _logger.d('Show tickmark labels: ${widget.showTickmarkLabels}');
-    _logger.d('Label spacing: ${widget.labelSpacing}');
-
     double additionalHeight = 0.0;
 
     switch (widget.tickmarkPosition) {
       case TickmarkPosition.above:
-        _logger.d('--- Processing ABOVE positioning ---');
         // For above positioning, we need height for both tickmarks and labels above the track
         additionalHeight = widget.tickmarkSize + widget.tickmarkSpacing;
-        _logger.d(
-          'Initial additional height (tickmark + spacing): $additionalHeight',
-        );
 
         if (widget.showTickmarkLabels) {
           final double labelHeight = 20.0;
           final double labelAdditionalHeight =
               labelHeight + widget.labelSpacing;
           additionalHeight += labelAdditionalHeight;
-          _logger.d(
-            'Labels enabled - adding label height ($labelHeight) + label spacing (${widget.labelSpacing}) = $labelAdditionalHeight',
-          );
-          _logger.d('Total additional height for ABOVE: $additionalHeight');
-        } else {
-          _logger.d('Labels disabled - no additional height for labels');
         }
         break;
 
       case TickmarkPosition.below:
-        _logger.d('--- Processing BELOW positioning ---');
         // For below positioning, we need height for both tickmarks and labels below the track
         additionalHeight = widget.tickmarkSize + widget.tickmarkSpacing;
-        _logger.d(
-          'Initial additional height (tickmark + spacing): $additionalHeight',
-        );
 
         if (widget.showTickmarkLabels) {
           final double labelHeight = 20.0;
           final double labelAdditionalHeight =
               labelHeight + widget.labelSpacing;
           additionalHeight += labelAdditionalHeight;
-          _logger.d(
-            'Labels enabled - adding label height ($labelHeight) + label spacing (${widget.labelSpacing}) = $labelAdditionalHeight',
-          );
-          _logger.d('Total additional height for BELOW: $additionalHeight');
-        } else {
-          _logger.d('Labels disabled - no additional height for labels');
         }
         break;
 
       case TickmarkPosition.onTrack:
-        _logger.d('--- Processing ON_TRACK positioning ---');
         // On-track tickmarks don't add extra height, but labels might
         if (widget.showTickmarkLabels) {
           final double labelHeight = 20.0;
           final double labelAdditionalHeight =
               (widget.tickmarkSize / 2) + labelHeight + widget.labelSpacing;
           additionalHeight = labelAdditionalHeight;
-          _logger.d(
-            'Labels enabled - calculating height for labels below track',
-          );
-          _logger.d('Tickmark size / 2: ${widget.tickmarkSize / 2}');
-          _logger.d('Label height: $labelHeight');
-          _logger.d('Label spacing: ${widget.labelSpacing}');
-          _logger.d('Total additional height for ON_TRACK: $additionalHeight');
-        } else {
-          _logger.d(
-            'Labels disabled - no additional height needed for ON_TRACK',
-          );
         }
         break;
     }
 
-    final double totalHeight = widget.height + additionalHeight;
-    _logger.d('=== Final calculation ===');
-    _logger.d('Base height: ${widget.height}');
-    _logger.d('Additional height: $additionalHeight');
-    _logger.d('Total height: $totalHeight');
-    _logger.d('=== End _calculateSliderHeight() ===\n');
-
-    return totalHeight;
+    return widget.height + additionalHeight;
   }
 
   /// Moves a thumb to a specific normalized position while respecting boundaries.
@@ -618,7 +571,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
           TickmarkWidget(
             leftPosition: leftPosition,
             availableHeight: height,
-            trackHeight: SliderConstants.defaultTrackHeight,
+            trackHeight: widget.trackHeight,
             size: widget.tickmarkSize,
             color: widget.tickmarkColor,
             onTap: () => _onTickmarkClicked(i),
@@ -687,7 +640,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
         labels.add(
           TickmarkLabelWidget(
             availableHeight: availableHeight,
-            trackHeight: SliderConstants.defaultTrackHeight,
+            trackHeight: widget.trackHeight,
             leftPosition: leftPosition,
             text: labelText,
             color: widget.tickmarkLabelColor,
@@ -738,7 +691,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
               children: [
                 // Background track
                 Container(
-                  height: SliderConstants.defaultTrackHeight,
+                  height: widget.trackHeight,
                   decoration: BoxDecoration(
                     color: widget.trackColor,
                     borderRadius: BorderRadius.circular(4.0),
@@ -785,6 +738,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
           color: color,
           isFirst: i == 0,
           isLast: i == allPoints.length - 2,
+          trackHeight: widget.trackHeight,
         ),
       );
     }

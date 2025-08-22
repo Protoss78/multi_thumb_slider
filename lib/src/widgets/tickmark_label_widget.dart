@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import '../constants.dart';
 
 /// Widget for rendering tickmark labels
@@ -17,10 +16,7 @@ class TickmarkLabelWidget extends StatelessWidget {
   final double trackHeight;
   final double tickmarkSpacing;
 
-  /// Logger instance for debug logging
-  final Logger _logger = Logger();
-
-  TickmarkLabelWidget({
+  const TickmarkLabelWidget({
     super.key,
     required this.leftPosition,
     required this.availableHeight,
@@ -39,10 +35,6 @@ class TickmarkLabelWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double centerHeightPosition = availableHeight / 2;
-    _logger.d('=== TickmarkLabelWidget.build() ===');
-    _logger.d(
-      'Position: $tickmarkPosition, TickmarkSize: $tickmarkSize, Spacing: $labelSpacing, Left: $leftPosition, Text: $text',
-    );
 
     // Calculate vertical position based on tickmark position
     // Labels should be positioned relative to their tickmarks, not the track
@@ -58,9 +50,6 @@ class TickmarkLabelWidget extends StatelessWidget {
             (trackHeight / 2) -
             labelSpacing -
             fontSize;
-        _logger.d(
-          'ABOVE: top = $top (tickmarkSize: $tickmarkSize, effectiveSpacing: $effectiveSpacing)',
-        );
         return Positioned(
           left: leftPosition - 16, // Center the label relative to tickmark
           top: top,
@@ -77,12 +66,6 @@ class TickmarkLabelWidget extends StatelessWidget {
             (trackHeight / 2) -
             labelSpacing -
             fontSize;
-        _logger.d(
-          'BELOW: bottom = $bottom (tickmarkSize: $tickmarkSize, spacing: $labelSpacing)',
-        );
-        _logger.d(
-          'BELOW: tickmark bottom = ${tickmarkSize + labelSpacing}, label bottom = $bottom',
-        );
         return Positioned(
           left: leftPosition - 16, // Center the label relative to tickmark
           bottom: bottom,
@@ -93,9 +76,6 @@ class TickmarkLabelWidget extends StatelessWidget {
         // Position labels below the track (since tickmarks are on track)
         // Track is centered at y=0, so go down from there
         final double top = (tickmarkSize / 2) + labelSpacing + 20;
-        _logger.d(
-          'ON_TRACK: top = $top (tickmarkSize: $tickmarkSize, spacing: $labelSpacing)',
-        );
         return Positioned(
           left: leftPosition - 16, // Center the label relative to tickmark
           top: top,

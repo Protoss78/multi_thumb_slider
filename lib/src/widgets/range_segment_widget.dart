@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../constants.dart';
 
 /// Widget for rendering range segments
 class RangeSegmentWidget extends StatelessWidget {
@@ -8,7 +7,8 @@ class RangeSegmentWidget extends StatelessWidget {
   final Color color;
   final bool isFirst;
   final bool isLast;
-  
+  final double trackHeight;
+
   const RangeSegmentWidget({
     super.key,
     required this.left,
@@ -16,14 +16,15 @@ class RangeSegmentWidget extends StatelessWidget {
     required this.color,
     required this.isFirst,
     required this.isLast,
+    required this.trackHeight,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
       left: left,
       child: Container(
-        height: SliderConstants.defaultTrackHeight,
+        height: trackHeight,
         width: width,
         decoration: BoxDecoration(
           color: color,
