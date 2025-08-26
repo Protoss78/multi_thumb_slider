@@ -8,6 +8,7 @@ import '../../constants/app_constants.dart';
 /// - Double values from 0.0 to 100.0
 /// - Decimal precision formatting
 /// - Tooltip display with precise values
+/// - Segment display showing width calculations
 class DoubleExampleWidget extends StatefulWidget {
   const DoubleExampleWidget({super.key});
 
@@ -41,7 +42,15 @@ class _DoubleExampleWidgetState extends State<DoubleExampleWidget> {
       tooltipColor: SliderColorSchemes.customTooltipColor,
       tooltipTextColor: Colors.white,
       tooltipTextSize: 13.0,
-      valueFormatter: Formatters.decimal,
+      valueFormatter: Formatters.decimalSingle,
+      // Enable segment display showing width calculations
+      showSegments: true,
+      segmentContentType: SegmentContentType.width,
+      segmentHeight: 55,
+      segmentCardBackgroundColor: Colors.blue.shade50,
+      segmentCardBorderColor: Colors.blue.shade200,
+      segmentTextColor: Colors.blue.shade800,
+      segmentTextSize: 11,
       onChanged: _handleValueChange,
     );
   }
@@ -64,7 +73,7 @@ class _DoubleExampleWidgetState extends State<DoubleExampleWidget> {
         border: Border.all(color: Colors.blue[200]!),
       ),
       child: Text(
-        'Drag the thumbs to see decimal precision in action',
+        'Drag the thumbs to see decimal precision and segment width calculations',
         style: TextStyle(fontSize: AppConstants.smallFontSize, color: Colors.blue[800], fontWeight: FontWeight.w500),
       ),
     );

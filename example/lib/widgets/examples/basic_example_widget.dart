@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multi_thumb_slider/multi_thumb_slider.dart';
 import '../../constants/app_constants.dart';
-import '../../utils/segment_calculator.dart';
 
 /// Basic integer slider example demonstrating fundamental functionality
 ///
@@ -10,7 +9,7 @@ import '../../utils/segment_calculator.dart';
 /// - Percentage formatting
 /// - Tickmarks and labels
 /// - Tooltip display
-/// - Visual segment representation
+/// - Built-in segment display feature
 class BasicExampleWidget extends StatefulWidget {
   const BasicExampleWidget({super.key});
 
@@ -25,8 +24,6 @@ class _BasicExampleWidgetState extends State<BasicExampleWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildSegmentDisplay(),
-        const SizedBox(height: AppConstants.largeSpacing),
         _buildSlider(),
         const SizedBox(height: AppConstants.largeSpacing),
         _buildValueDisplay(),
@@ -34,45 +31,7 @@ class _BasicExampleWidgetState extends State<BasicExampleWidget> {
     );
   }
 
-  /// Builds the visual representation of slider segments
-  Widget _buildSegmentDisplay() {
-    final segmentWidths = SegmentCalculator.calculateSegmentWidths(
-      _values,
-      ExampleData.basicIntMin,
-      ExampleData.basicIntMax,
-    );
-
-    return Row(
-      children: segmentWidths.map((width) {
-        return Expanded(flex: (width * 100).toInt(), child: _buildSegmentCard(width));
-      }).toList(),
-    );
-  }
-
-  /// Builds an individual segment card
-  Widget _buildSegmentCard(double width) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 2),
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: AppConstants.primaryColor.withValues(alpha: 0.1),
-        border: Border.all(color: Colors.teal.shade200),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Center(
-        child: Text(
-          width.toStringAsFixed(1),
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.teal.shade900,
-            fontSize: AppConstants.bodyFontSize,
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Builds the main slider widget
+  /// Builds the main slider widget with built-in segment display
   Widget _buildSlider() {
     return CustomMultiThumbSlider.withInt(
       values: _values,
@@ -91,6 +50,12 @@ class _BasicExampleWidgetState extends State<BasicExampleWidget> {
       tooltipTextColor: Colors.white,
       tooltipTextSize: 14.0,
       valueFormatter: Formatters.percentage,
+      // Enable the built-in segment display
+      showSegments: true,
+      segmentContentType: SegmentContentType.fromToRange,
+      segmentCardBackgroundColor: AppConstants.primaryColor.withValues(alpha: 0.1),
+      segmentCardBorderColor: Colors.teal.shade200,
+      segmentTextColor: Colors.teal.shade900,
       onChanged: _handleValueChange,
     );
   }

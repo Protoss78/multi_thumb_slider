@@ -159,6 +159,46 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
   /// Used for both tooltips (when dragging thumbs) and tickmark labels (when enabled)
   final String Function(T value)? valueFormatter;
 
+  /// Whether to display segment information above the slider
+  /// When true, a visual representation of segments will be shown
+  final bool showSegments;
+
+  /// The type of content to display in segment cards
+  final SegmentContentType segmentContentType;
+
+  /// The height of the segment display
+  final double segmentHeight;
+
+  /// The padding inside each segment card
+  final double segmentCardPadding;
+
+  /// The margin between segment cards
+  final double segmentCardMargin;
+
+  /// The border radius of segment cards
+  final double segmentCardBorderRadius;
+
+  /// The background color of segment cards
+  final Color segmentCardBackgroundColor;
+
+  /// The border color of segment cards
+  final Color segmentCardBorderColor;
+
+  /// The text color of segment content
+  final Color segmentTextColor;
+
+  /// The font size of segment text
+  final double segmentTextSize;
+
+  /// The font weight of segment text
+  final FontWeight segmentTextWeight;
+
+  /// Whether to show segment borders
+  final bool showSegmentBorders;
+
+  /// Whether to show segment backgrounds
+  final bool showSegmentBackgrounds;
+
   /// Creates a multi-thumb slider.
   ///
   /// The [values] parameter must not be empty, and all values must be within
@@ -193,6 +233,19 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     this.tooltipTextColor = SliderConstants.defaultTooltipTextColor,
     this.tooltipTextSize = SliderConstants.defaultTooltipTextSize,
     this.valueFormatter,
+    this.showSegments = false,
+    this.segmentContentType = SliderConstants.defaultSegmentContentType,
+    this.segmentHeight = SliderConstants.defaultSegmentHeight,
+    this.segmentCardPadding = SliderConstants.defaultSegmentCardPadding,
+    this.segmentCardMargin = SliderConstants.defaultSegmentCardMargin,
+    this.segmentCardBorderRadius = SliderConstants.defaultSegmentCardBorderRadius,
+    this.segmentCardBackgroundColor = SliderConstants.defaultSegmentCardBackgroundColor,
+    this.segmentCardBorderColor = SliderConstants.defaultSegmentCardBorderColor,
+    this.segmentTextColor = SliderConstants.defaultSegmentTextColor,
+    this.segmentTextSize = SliderConstants.defaultSegmentTextSize,
+    this.segmentTextWeight = SliderConstants.defaultSegmentTextWeight,
+    this.showSegmentBorders = SliderConstants.defaultShowSegmentBorders,
+    this.showSegmentBackgrounds = SliderConstants.defaultShowSegmentBackgrounds,
   });
 
   /// Creates a multi-thumb slider with int values and default min/max range.
@@ -228,6 +281,19 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     Color tooltipTextColor = SliderConstants.defaultTooltipTextColor,
     double tooltipTextSize = SliderConstants.defaultTooltipTextSize,
     String Function(int value)? valueFormatter,
+    bool showSegments = false,
+    SegmentContentType segmentContentType = SliderConstants.defaultSegmentContentType,
+    double segmentHeight = SliderConstants.defaultSegmentHeight,
+    double segmentCardPadding = SliderConstants.defaultSegmentCardPadding,
+    double segmentCardMargin = SliderConstants.defaultSegmentCardMargin,
+    double segmentCardBorderRadius = SliderConstants.defaultSegmentCardBorderRadius,
+    Color segmentCardBackgroundColor = SliderConstants.defaultSegmentCardBackgroundColor,
+    Color segmentCardBorderColor = SliderConstants.defaultSegmentCardBorderColor,
+    Color segmentTextColor = SliderConstants.defaultSegmentTextColor,
+    double segmentTextSize = SliderConstants.defaultSegmentTextSize,
+    FontWeight segmentTextWeight = SliderConstants.defaultSegmentTextWeight,
+    bool showSegmentBorders = SliderConstants.defaultShowSegmentBorders,
+    bool showSegmentBackgrounds = SliderConstants.defaultShowSegmentBackgrounds,
   }) {
     return CustomMultiThumbSlider<int>(
       key: key,
@@ -258,6 +324,19 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       tooltipTextColor: tooltipTextColor,
       tooltipTextSize: tooltipTextSize,
       valueFormatter: valueFormatter,
+      showSegments: showSegments,
+      segmentContentType: segmentContentType,
+      segmentHeight: segmentHeight,
+      segmentCardPadding: segmentCardPadding,
+      segmentCardMargin: segmentCardMargin,
+      segmentCardBorderRadius: segmentCardBorderRadius,
+      segmentCardBackgroundColor: segmentCardBackgroundColor,
+      segmentCardBorderColor: segmentCardBorderColor,
+      segmentTextColor: segmentTextColor,
+      segmentTextSize: segmentTextSize,
+      segmentTextWeight: segmentTextWeight,
+      showSegmentBorders: showSegmentBorders,
+      showSegmentBackgrounds: showSegmentBackgrounds,
     );
   }
 
@@ -295,6 +374,19 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     Color tooltipTextColor = SliderConstants.defaultTooltipTextColor,
     double tooltipTextSize = SliderConstants.defaultTooltipTextSize,
     String Function(T value)? valueFormatter,
+    bool showSegments = false,
+    SegmentContentType segmentContentType = SliderConstants.defaultSegmentContentType,
+    double segmentHeight = SliderConstants.defaultSegmentHeight,
+    double segmentCardPadding = SliderConstants.defaultSegmentCardPadding,
+    double segmentCardMargin = SliderConstants.defaultSegmentCardMargin,
+    double segmentCardBorderRadius = SliderConstants.defaultSegmentCardBorderRadius,
+    Color segmentCardBackgroundColor = SliderConstants.defaultSegmentCardBackgroundColor,
+    Color segmentCardBorderColor = SliderConstants.defaultSegmentCardBorderColor,
+    Color segmentTextColor = SliderConstants.defaultSegmentTextColor,
+    double segmentTextSize = SliderConstants.defaultSegmentTextSize,
+    FontWeight segmentTextWeight = SliderConstants.defaultSegmentTextWeight,
+    bool showSegmentBorders = SliderConstants.defaultShowSegmentBorders,
+    bool showSegmentBackgrounds = SliderConstants.defaultShowSegmentBackgrounds,
   }) {
     return CustomMultiThumbSlider<T>(
       key: key,
@@ -326,6 +418,19 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       tooltipTextColor: tooltipTextColor,
       tooltipTextSize: tooltipTextSize,
       valueFormatter: valueFormatter,
+      showSegments: showSegments,
+      segmentContentType: segmentContentType,
+      segmentHeight: segmentHeight,
+      segmentCardPadding: segmentCardPadding,
+      segmentCardMargin: segmentCardMargin,
+      segmentCardBorderRadius: segmentCardBorderRadius,
+      segmentCardBackgroundColor: segmentCardBackgroundColor,
+      segmentCardBorderColor: segmentCardBorderColor,
+      segmentTextColor: segmentTextColor,
+      segmentTextSize: segmentTextSize,
+      segmentTextWeight: segmentTextWeight,
+      showSegmentBorders: showSegmentBorders,
+      showSegmentBackgrounds: showSegmentBackgrounds,
     );
   }
 
@@ -616,7 +721,9 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
   @override
   Widget build(BuildContext context) {
     double height = _calculateSliderHeight();
-    return LayoutBuilder(
+
+    // Build the main slider content
+    Widget sliderContent = LayoutBuilder(
       builder: (context, constraints) {
         final double totalWidth = constraints.maxWidth;
 
@@ -677,6 +784,41 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
         );
       },
     );
+
+    // If segments are enabled and T is a numeric type, wrap in a Column with segment display
+    if (widget.showSegments && widget.min is num && widget.max is num) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Segment display widget (cast to num since we've checked the types)
+          SegmentDisplayWidget<num>(
+            values: widget.values.cast<num>(),
+            min: widget.min as num,
+            max: widget.max as num,
+            contentType: widget.segmentContentType,
+            valueFormatter: widget.valueFormatter != null ? (num value) => widget.valueFormatter!(value as T) : null,
+            height: widget.segmentHeight,
+            cardPadding: widget.segmentCardPadding,
+            cardMargin: widget.segmentCardMargin,
+            cardBorderRadius: widget.segmentCardBorderRadius,
+            cardBackgroundColor: widget.segmentCardBackgroundColor,
+            cardBorderColor: widget.segmentCardBorderColor,
+            textColor: widget.segmentTextColor,
+            textSize: widget.segmentTextSize,
+            textWeight: widget.segmentTextWeight,
+            showBorders: widget.showSegmentBorders,
+            showBackgrounds: widget.showSegmentBackgrounds,
+          ),
+          // Add some spacing between segment display and slider
+          const SizedBox(height: 8.0),
+          // Main slider content
+          sliderContent,
+        ],
+      );
+    }
+
+    // Return just the slider content if segments are disabled
+    return sliderContent;
   }
 
   /// Builds the list of colored containers for the range segments.

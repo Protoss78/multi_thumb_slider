@@ -5,6 +5,32 @@ All notable changes to the `multi_thumb_slider` package will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-01-XX
+
+### Added
+- **Segment Display Feature**: New built-in segment visualization above the slider
+  - **Three Content Types**: Choose between "from-to range", "to range", or "width" display
+  - **Extensive Styling**: Customize colors, padding, margin, border radius, text styling
+  - **Value Formatting**: Integrates with custom value formatters for consistent display
+  - **Generic Type Support**: Works with numeric types (int, double) with automatic type checking
+- **Segment Calculator Utility**: New utility class for segment width calculations and label generation
+- **Segment Display Widget**: Dedicated widget for rendering segment information
+- **Enhanced Examples**: New examples showcasing segment display features and styling options
+
+### Features
+- **Content Type Options**:
+  - `SegmentContentType.fromToRange`: Shows "0 - 20", "20 - 50" format
+  - `SegmentContentType.toRange`: Shows "- 20", "- 50" format (omitting "from")
+  - `SegmentContentType.width`: Shows calculated segment widths (20, 30, etc.)
+- **Styling Customization**: Height, padding, margin, border radius, colors, text size/weight, borders, backgrounds
+- **Automatic Integration**: Seamlessly integrates with existing slider functionality
+- **Performance Optimized**: Efficient rendering with minimal impact on slider performance
+
+### Changed
+- **Example Updates**: Enhanced basic, double, and price range examples with segment display
+- **Documentation**: Comprehensive examples and documentation for the new feature
+- **API Consistency**: Maintains existing API while adding new segment display parameters
+
 ## [1.1.1+3] - 2025-08-26
 
 ### Added

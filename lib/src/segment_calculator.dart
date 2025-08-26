@@ -1,3 +1,5 @@
+import 'constants.dart';
+
 /// Utility class for calculating segment widths and properties for sliders
 class SegmentCalculator {
   /// Calculates the relative widths of segments created by slider values
@@ -63,6 +65,76 @@ class SegmentCalculator {
 
     // Last segment label
     labels.add('${_formatValue(sortedValues.last, formatter)} - ${_formatValue(max, formatter)}');
+
+    return labels;
+  }
+
+  /// Creates segment labels based on content type
+  static List<String> createSegmentLabelsByType<T extends num>(
+    List<T> values,
+    T min,
+    T max, {
+    required SegmentContentType contentType,
+    String Function(T)? formatter,
+  }) {
+    if (values.isEmpty) {
+      switch (contentType) {
+        case SegmentContentType.fromToRange:
+          return ['${_formatValue(min, formatter)} - ${_formatValue(max, formatter)}'];
+        case SegmentContentType.toRange:
+          return ['- ${_formatValue(max, formatter)}'];
+        case SegmentContentType.width:
+          final width = (max - min).toDouble();
+          return [_formatValue(width as T, formatter)];
+      }
+    }
+
+    final sortedValues = List<T>.from(values)..sort();
+    final List<String> labels = [];
+
+    // First segment
+    switch (contentType) {
+      case SegmentContentType.fromToRange:
+        labels.add('${_formatValue(min, formatter)} - ${_formatValue(sortedValues.first, formatter)}');
+        break;
+      case SegmentContentType.toRange:
+        labels.add('- ${_formatValue(sortedValues.first, formatter)}');
+        break;
+      case SegmentContentType.width:
+        final width = (sortedValues.first - min).toDouble();
+        labels.add(_formatValue(width as T, formatter));
+        break;
+    }
+
+    // Middle segments
+    for (int i = 0; i < sortedValues.length - 1; i++) {
+      switch (contentType) {
+        case SegmentContentType.fromToRange:
+          labels.add('${_formatValue(sortedValues[i], formatter)} - ${_formatValue(sortedValues[i + 1], formatter)}');
+          break;
+        case SegmentContentType.toRange:
+          labels.add('- ${_formatValue(sortedValues[i + 1], formatter)}');
+          break;
+        case SegmentContentType.width:
+          final width = (sortedValues[i + 1] - sortedValues[i]).toDouble();
+          labels.add(_formatValue(width as T, formatter));
+          break;
+      }
+    }
+
+    // Last segment
+    switch (contentType) {
+      case SegmentContentType.fromToRange:
+        labels.add('${_formatValue(sortedValues.last, formatter)} - ${_formatValue(max, formatter)}');
+        break;
+      case SegmentContentType.toRange:
+        labels.add('- ${_formatValue(max, formatter)}');
+        break;
+      case SegmentContentType.width:
+        final width = (max - sortedValues.last).toDouble();
+        labels.add(_formatValue(width as T, formatter));
+        break;
+    }
 
     return labels;
   }

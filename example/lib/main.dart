@@ -33,10 +33,7 @@ class MultiThumbSliderExampleApp extends StatelessWidget {
     return ThemeData(
       fontFamily: AppConstants.fontFamily,
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: AppConstants.primaryColor,
-        brightness: Brightness.light,
-      ),
+      colorScheme: ColorScheme.fromSeed(seedColor: AppConstants.primaryColor, brightness: Brightness.light),
     );
   }
 }
@@ -52,11 +49,7 @@ class ExamplesScreen extends StatefulWidget {
 class _ExamplesScreenState extends State<ExamplesScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      backgroundColor: AppConstants.backgroundColor,
-      body: _buildBody(),
-    );
+    return Scaffold(appBar: _buildAppBar(), backgroundColor: AppConstants.backgroundColor, body: _buildBody());
   }
 
   /// Builds the application bar
@@ -100,10 +93,7 @@ class _ExamplesScreenState extends State<ExamplesScreen> {
         const SizedBox(height: AppConstants.itemSpacing),
         Text(
           'Explore the various features and use cases of the Multi-Thumb Slider',
-          style: TextStyle(
-            fontSize: AppConstants.bodyFontSize,
-            color: AppConstants.textSecondaryColor,
-          ),
+          style: TextStyle(fontSize: AppConstants.bodyFontSize, color: AppConstants.textSecondaryColor),
         ),
       ],
     );
@@ -141,14 +131,21 @@ class _ExamplesScreenState extends State<ExamplesScreen> {
         'title': 'Basic Multi-Thumb Slider (Int)',
         'description':
             'Simple slider with three thumbs for range selection using int values. '
-            'Features percentage formatting, tickmarks, labels, and visual segment display.',
+            'Features percentage formatting, tickmarks, labels, and built-in segment display.',
         'widget': const BasicExampleWidget(),
+      },
+      {
+        'title': 'Segment Display Features',
+        'description':
+            'Comprehensive showcase of the built-in segment display feature. '
+            'Demonstrates all content types (from-to range, to range, width) and custom styling options.',
+        'widget': const SegmentDisplayExampleWidget(),
       },
       {
         'title': 'Double Values Slider',
         'description':
             'Slider using double values for precise measurements. '
-            'Demonstrates decimal precision and smooth value transitions.',
+            'Demonstrates decimal precision, smooth value transitions, and segment width calculations.',
         'widget': const DoubleExampleWidget(),
       },
       {
@@ -162,7 +159,7 @@ class _ExamplesScreenState extends State<ExamplesScreen> {
         'title': 'Price Range Selector',
         'description':
             'E-commerce style price range with custom colors and currency formatting. '
-            'Perfect for filtering products by price categories.',
+            'Features segment display showing price ranges with currency symbols.',
         'widget': const PriceRangeExampleWidget(),
       },
       {

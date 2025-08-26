@@ -44,6 +44,14 @@ class _PriceRangeExampleWidgetState extends State<PriceRangeExampleWidget> {
       tooltipTextColor: Colors.white,
       tooltipTextSize: 13.0,
       valueFormatter: Formatters.price,
+      // Enable segment display with currency formatting
+      showSegments: true,
+      segmentContentType: SegmentContentType.toRange,
+      segmentHeight: 50,
+      segmentCardBackgroundColor: Colors.green.shade50,
+      segmentCardBorderColor: Colors.green.shade200,
+      segmentTextColor: Colors.green.shade800,
+      segmentTextSize: 12,
       onChanged: _handleValueChange,
     );
   }

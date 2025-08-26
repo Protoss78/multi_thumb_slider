@@ -20,6 +20,7 @@ The live demo showcases all the features of the multi-thumb slider with interact
 - **Customizable Appearance**: Customize colors, sizes, and styling
 - **Responsive Design**: Adapts to different screen sizes and orientations
 - **Smooth Animations**: Visual feedback during interactions
+- **Segment Display**: Built-in segment visualization with customizable content types and styling
 
 ## Getting Started
 
@@ -99,6 +100,111 @@ CustomMultiThumbSlider<Difficulty>(
 )
 ```
 
+## Segment Display Feature
+
+The multi-thumb slider now includes a built-in segment display feature that shows visual representations of the segments created by your slider values. This feature is optional and highly customizable.
+
+### Enabling Segment Display
+
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [20, 50, 80],
+  min: 0,
+  max: 100,
+  onChanged: (newValues) => setState(() => _values = newValues),
+  // Enable segment display
+  showSegments: true,
+  segmentContentType: SegmentContentType.fromToRange,
+)
+```
+
+### Content Type Options
+
+The segment display supports three different ways to show segment information:
+
+#### 1. From-To Range Display
+Shows the complete range of each segment (e.g., "0 - 20", "20 - 50", "50 - 100"):
+
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [20, 50, 80],
+  showSegments: true,
+  segmentContentType: SegmentContentType.fromToRange,
+  onChanged: (newValues) => setState(() => _values = newValues),
+)
+```
+
+#### 2. To Range Display
+Shows only the "to" value, omitting the "from" (e.g., "- 20", "- 50", "- 100"):
+
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [20, 50, 80],
+  showSegments: true,
+  segmentContentType: SegmentContentType.toRange,
+  onChanged: (newValues) => setState(() => _values = newValues),
+)
+```
+
+#### 3. Width Display
+Shows the calculated width of each segment (e.g., "20", "30", "20"):
+
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [20, 50, 80],
+  showSegments: true,
+  segmentContentType: SegmentContentType.width,
+  onChanged: (newValues) => setState(() => _values = newValues),
+)
+```
+
+### Styling Customization
+
+The segment display offers extensive styling options:
+
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [20, 50, 80],
+  showSegments: true,
+  segmentContentType: SegmentContentType.fromToRange,
+  // Styling options
+  segmentHeight: 70,
+  segmentCardPadding: 12,
+  segmentCardMargin: 4,
+  segmentCardBorderRadius: 12,
+  segmentCardBackgroundColor: Colors.blue.shade100,
+  segmentCardBorderColor: Colors.blue.shade400,
+  segmentTextColor: Colors.blue.shade900,
+  segmentTextSize: 14,
+  segmentTextWeight: FontWeight.bold,
+  showSegmentBorders: true,
+  showSegmentBackgrounds: true,
+  onChanged: (newValues) => setState(() => _values = newValues),
+)
+```
+
+### Value Formatting Integration
+
+Segment display integrates seamlessly with custom value formatters:
+
+```dart
+CustomMultiThumbSlider<double>(
+  values: [20.5, 50.0, 80.7],
+  showSegments: true,
+  segmentContentType: SegmentContentType.fromToRange,
+  valueFormatter: (value) => '${value.toStringAsFixed(1)}%',
+  onChanged: (newValues) => setState(() => _values = newValues),
+)
+```
+
+### Use Cases
+
+- **Data Visualization**: Show segment breakdowns in charts and graphs
+- **Range Selection**: Display selected ranges for better user understanding
+- **Form Controls**: Provide visual feedback for multi-value inputs
+- **E-commerce**: Show price ranges with currency formatting
+- **Analytics**: Display data segments with custom formatting
+
 ## API Reference
 
 ### CustomMultiThumbSlider
@@ -127,6 +233,20 @@ const CustomMultiThumbSlider<T>({
   Color thumbColor = Colors.white,
   double thumbRadius = 14.0,
   bool readOnly = false,
+  // Segment Display Parameters
+  bool showSegments = false,
+  SegmentContentType segmentContentType = SegmentContentType.fromToRange,
+  double segmentHeight = 60.0,
+  double segmentCardPadding = 8.0,
+  double segmentCardMargin = 2.0,
+  double segmentCardBorderRadius = 8.0,
+  Color segmentCardBackgroundColor = const Color(0xFFF5F5F5),
+  Color segmentCardBorderColor = const Color(0xFFE0E0E0),
+  Color segmentTextColor = const Color(0xFF424242),
+  double segmentTextSize = 12.0,
+  FontWeight segmentTextWeight = FontWeight.normal,
+  bool showSegmentBorders = true,
+  bool showSegmentBackgrounds = true,
 })
 ```
 
@@ -167,6 +287,24 @@ const CustomMultiThumbSlider.withInt({
 | `thumbColor` | `Color` | `Colors.white` | Color of the thumb circles |
 | `thumbRadius` | `double` | `14.0` | Radius of each thumb circle |
 | `readOnly` | `bool` | `false` | Whether the slider is in read-only mode |
+
+#### Segment Display Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `showSegments` | `bool` | `false` | Whether to display segment information above the slider |
+| `segmentContentType` | `SegmentContentType` | `fromToRange` | Type of content to display in segment cards |
+| `segmentHeight` | `double` | `60.0` | Height of the segment display |
+| `segmentCardPadding` | `double` | `8.0` | Padding inside each segment card |
+| `segmentCardMargin` | `double` | `2.0` | Margin between segment cards |
+| `segmentCardBorderRadius` | `double` | `8.0` | Border radius of segment cards |
+| `segmentCardBackgroundColor` | `Color` | `Color(0xFFF5F5F5)` | Background color of segment cards |
+| `segmentCardBorderColor` | `Color` | `Color(0xFFE0E0E0)` | Border color of segment cards |
+| `segmentTextColor` | `Color` | `Color(0xFF424242)` | Text color of segment content |
+| `segmentTextSize` | `double` | `12.0` | Font size of segment text |
+| `segmentTextWeight` | `FontWeight` | `FontWeight.normal` | Font weight of segment text |
+| `showSegmentBorders` | `bool` | `true` | Whether to show segment borders |
+| `showSegmentBackgrounds` | `bool` | `true` | Whether to show segment backgrounds |
 
 ## Examples
 
@@ -255,6 +393,52 @@ CustomMultiThumbSlider.withInt(
 )
 ```
 
+### Segment Display Examples
+
+#### Basic Segment Display
+
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [20, 50, 80],
+  showSegments: true,
+  segmentContentType: SegmentContentType.fromToRange,
+  onChanged: (values) => setState(() => _values = values),
+)
+```
+
+#### Segment Display with Custom Styling
+
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [20, 50, 80],
+  showSegments: true,
+  segmentContentType: SegmentContentType.width,
+  segmentHeight: 70,
+  segmentCardBackgroundColor: Colors.purple.shade100,
+  segmentCardBorderColor: Colors.purple.shade400,
+  segmentTextColor: Colors.purple.shade900,
+  segmentTextSize: 14,
+  segmentTextWeight: FontWeight.bold,
+  onChanged: (values) => setState(() => _values = values),
+)
+```
+
+#### Price Range with Segment Display
+
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [10, 50, 100],
+  min: 0,
+  max: 200,
+  showSegments: true,
+  segmentContentType: SegmentContentType.toRange,
+  valueFormatter: (value) => '\$$value',
+  segmentCardBackgroundColor: Colors.green.shade50,
+  segmentCardBorderColor: Colors.green.shade200,
+  onChanged: (values) => setState(() => _values = values),
+)
+```
+
 ## Type Support
 
 The slider supports various value types:
@@ -277,10 +461,13 @@ The slider supports various value types:
 - **Weight Class Selection**: Sports or fitness applications
 - **Time Range Selection**: Scheduling or booking applications
 - **Score Thresholds**: Educational or gaming applications
-- **Data Visualization**: Interactive charts and graphs
+- **Data Visualization**: Interactive charts and graphs with segment breakdowns
 - **Form Controls**: Custom input widgets for multiple values
 - **Difficulty Selection**: Game or application settings
 - **Rating Systems**: Multi-point rating scales
+- **Segment Analysis**: Show data segments with custom formatting and styling
+- **Range Feedback**: Provide visual feedback for selected ranges
+- **Analytics Dashboards**: Display data breakdowns in interactive interfaces
 
 ## Customization
 
@@ -334,6 +521,15 @@ If you encounter any issues or have questions, please:
 3. Include your Flutter version and device information
 
 ## Changelog
+
+### 1.2.0
+- **New Segment Display Feature**: Built-in segment visualization above the slider
+  - Three content types: from-to range, to range, and width display
+  - Extensive styling customization options
+  - Integration with value formatters
+  - Works with numeric types (int, double)
+- **Enhanced Examples**: New examples showcasing segment display features
+- **Improved Documentation**: Comprehensive examples and API documentation
 
 ### 1.1.0
 - Added generic type support for `int`, `double`, `enum`, and other types
