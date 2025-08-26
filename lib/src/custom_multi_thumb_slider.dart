@@ -330,13 +330,13 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
   }
 
   @override
-  State<CustomMultiThumbSlider<T>> createState() =>
-      _CustomMultiThumbSliderState<T>();
+  State<CustomMultiThumbSlider<T>> createState() => _CustomMultiThumbSliderState<T>();
 }
 
 class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
   /// Index of the thumb currently being dragged.
   int? _draggedThumbIndex;
+  int? _touchedThumbIndex; // New: track which thumb is being touched
 
   /// Normalized positions of thumbs (values between 0.0 and 1.0).
   late List<double> _normalizedPositions;
@@ -354,9 +354,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
   void initState() {
     super.initState();
     // Use the context-aware factory for enum types to get proper handling
-    _valueHandler = ValueTypeHandlerFactory.createWithContext<T>(
-      allPossibleValues: widget.allPossibleValues,
-    );
+    _valueHandler = ValueTypeHandlerFactory.createWithContext<T>(allPossibleValues: widget.allPossibleValues);
     _positionCalculator = PositionCalculator(_sliderKey);
     _validateParameters();
     _updateNormalizedPositions();
@@ -379,14 +377,23 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
     // Update normalized positions when values change externally
     if (widget.values != oldWidget.values) {
       _updateNormalizedPositions();
+      // Reset touch states when values change
+      _touchedThumbIndex = null;
+      _draggedThumbIndex = null;
     }
     // Update value handler if allPossibleValues changed (important for enum types)
     if (widget.allPossibleValues != oldWidget.allPossibleValues) {
-      _valueHandler = ValueTypeHandlerFactory.createWithContext<T>(
-        allPossibleValues: widget.allPossibleValues,
-      );
+      _valueHandler = ValueTypeHandlerFactory.createWithContext<T>(allPossibleValues: widget.allPossibleValues);
       _updateNormalizedPositions();
     }
+  }
+
+  @override
+  void dispose() {
+    // Reset touch states
+    _touchedThumbIndex = null;
+    _draggedThumbIndex = null;
+    super.dispose();
   }
 
   /// Converts absolute values to normalized values (0.0-1.0) used for UI positioning.
@@ -410,8 +417,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
         if (widget.showTickmarkLabels) {
           final double labelHeight = 20.0;
-          final double labelAdditionalHeight =
-              labelHeight + widget.labelSpacing;
+          final double labelAdditionalHeight = labelHeight + widget.labelSpacing;
           additionalHeight += labelAdditionalHeight;
         }
         break;
@@ -422,8 +428,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
         if (widget.showTickmarkLabels) {
           final double labelHeight = 20.0;
-          final double labelAdditionalHeight =
-              labelHeight + widget.labelSpacing;
+          final double labelAdditionalHeight = labelHeight + widget.labelSpacing;
           additionalHeight += labelAdditionalHeight;
         }
         break;
@@ -432,8 +437,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
         // On-track tickmarks don't add extra height, but labels might
         if (widget.showTickmarkLabels) {
           final double labelHeight = 20.0;
-          final double labelAdditionalHeight =
-              (widget.tickmarkSize / 2) + labelHeight + widget.labelSpacing;
+          final double labelAdditionalHeight = (widget.tickmarkSize / 2) + labelHeight + widget.labelSpacing;
           additionalHeight = labelAdditionalHeight;
         }
         break;
@@ -445,25 +449,15 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
   /// Moves a thumb to a specific normalized position while respecting boundaries.
   void _moveThumbToPosition(int thumbIndex, double targetPosition) {
     // Determine allowed boundaries from neighboring thumbs
-    final double lowerBound = _positionCalculator.calculateLowerBound(
-      thumbIndex,
-      _normalizedPositions,
-    );
-    final double upperBound = _positionCalculator.calculateUpperBound(
-      thumbIndex,
-      _normalizedPositions,
-    );
+    final double lowerBound = _positionCalculator.calculateLowerBound(thumbIndex, _normalizedPositions);
+    final double upperBound = _positionCalculator.calculateUpperBound(thumbIndex, _normalizedPositions);
 
     // Clamp the target position to valid boundaries
     final double clampedPosition = targetPosition.clamp(lowerBound, upperBound);
 
     // Create new list with updated values
     List<T> newValues = List.from(widget.values);
-    final T newValue = _valueHandler.fromNormalized(
-      clampedPosition,
-      widget.min,
-      widget.max,
-    );
+    final T newValue = _valueHandler.fromNormalized(clampedPosition, widget.min, widget.max);
 
     // Only update if the value actually changed
     if (newValue != widget.values[thumbIndex]) {
@@ -479,9 +473,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
     if (widget.min is int && widget.max is int) {
       // For int types, the valueIndex is the actual int value
       targetValue = valueIndex as T;
-    } else if (widget.min is Enum &&
-        widget.max is Enum &&
-        widget.allPossibleValues != null) {
+    } else if (widget.min is Enum && widget.max is Enum && widget.allPossibleValues != null) {
       // For enum types, valueIndex is the index in the allPossibleValues list
       final List<T> allValues = widget.allPossibleValues!;
       if (valueIndex >= 0 && valueIndex < allValues.length) {
@@ -494,34 +486,20 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
     }
 
     // Convert the target value to normalized position
-    final double normalizedPosition = _valueHandler.toNormalized(
-      targetValue,
-      widget.min,
-      widget.max,
-    );
+    final double normalizedPosition = _valueHandler.toNormalized(targetValue, widget.min, widget.max);
 
     // Find the closest thumb and move it to this position
-    final int nearestThumbIndex = _positionCalculator.findNearestThumbIndex(
-      normalizedPosition,
-      _normalizedPositions,
-    );
+    final int nearestThumbIndex = _positionCalculator.findNearestThumbIndex(normalizedPosition, _normalizedPositions);
     _moveThumbToPosition(nearestThumbIndex, normalizedPosition);
   }
 
   /// Handles clicks on tickmark labels, moving the closest thumb to the clicked value
   void _onTickmarkLabelClicked(T targetValue) {
     // Convert the target value to normalized position
-    final double normalizedPosition = _valueHandler.toNormalized(
-      targetValue,
-      widget.min,
-      widget.max,
-    );
+    final double normalizedPosition = _valueHandler.toNormalized(targetValue, widget.min, widget.max);
 
     // Find the closest thumb and move it to this position
-    final int nearestThumbIndex = _positionCalculator.findNearestThumbIndex(
-      normalizedPosition,
-      _normalizedPositions,
-    );
+    final int nearestThumbIndex = _positionCalculator.findNearestThumbIndex(normalizedPosition, _normalizedPositions);
     _moveThumbToPosition(nearestThumbIndex, normalizedPosition);
   }
 
@@ -540,31 +518,21 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
     for (int i = 0; i < allPossibleValues.length; i++) {
       // Always show tickmarks for first and last values, and for values at the specified interval
-      final bool shouldShowTickmark =
-          i == 0 ||
-          i == allPossibleValues.length - 1 ||
-          (i % widget.tickmarkInterval == 0);
+      final bool shouldShowTickmark = i == 0 || i == allPossibleValues.length - 1 || (i % widget.tickmarkInterval == 0);
 
       if (shouldShowTickmark) {
         final T value = allPossibleValues[i];
-        final double normalizedPosition = _valueHandler.toNormalized(
-          value,
-          widget.min,
-          widget.max,
-        );
+        final double normalizedPosition = _valueHandler.toNormalized(value, widget.min, widget.max);
         double leftPosition;
 
         // Adjust positioning for edge tickmarks to connect with the track
         if (i == 0) {
           leftPosition = 0.0; // Align left edge with track start
         } else if (i == allPossibleValues.length - 1) {
-          leftPosition =
-              totalWidth -
-              widget.tickmarkSize; // Align right edge with track end
+          leftPosition = totalWidth - widget.tickmarkSize; // Align right edge with track end
         } else {
           // Center the tickmark on the track by subtracting half the tickmark width
-          leftPosition =
-              normalizedPosition * totalWidth - (widget.tickmarkSize / 2);
+          leftPosition = normalizedPosition * totalWidth - (widget.tickmarkSize / 2);
         }
 
         tickmarks.add(
@@ -588,9 +556,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
   /// Builds labels for tickmarks when enabled.
   List<Widget> _buildTickmarkLabels(double totalWidth, double availableHeight) {
-    if (!widget.showTickmarks ||
-        !widget.showTickmarkLabels ||
-        !_valueHandler.shouldShowTickmarks()) {
+    if (!widget.showTickmarks || !widget.showTickmarkLabels || !_valueHandler.shouldShowTickmarks()) {
       return [];
     }
 
@@ -606,36 +572,24 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
       // Always show labels for first and last values, and for values at the specified interval
       final bool shouldShowLabel =
-          i == 0 ||
-          i == allPossibleValues.length - 1 ||
-          (i % widget.tickmarkLabelInterval == 0);
+          i == 0 || i == allPossibleValues.length - 1 || (i % widget.tickmarkLabelInterval == 0);
 
       if (shouldShowLabel) {
-        final double normalizedPosition = _valueHandler.toNormalized(
-          value,
-          widget.min,
-          widget.max,
-        );
+        final double normalizedPosition = _valueHandler.toNormalized(value, widget.min, widget.max);
         double leftPosition;
 
         // Adjust positioning for edge labels to align with tickmarks
         if (i == 0) {
           leftPosition = 0.0; // Align left edge with track start
         } else if (i == allPossibleValues.length - 1) {
-          leftPosition =
-              totalWidth -
-              widget.tickmarkSize; // Align right edge with track end
+          leftPosition = totalWidth - widget.tickmarkSize; // Align right edge with track end
         } else {
           // Center the label on the track by subtracting half the tickmark width
-          leftPosition =
-              normalizedPosition * totalWidth - (widget.tickmarkSize / 2);
+          leftPosition = normalizedPosition * totalWidth - (widget.tickmarkSize / 2);
         }
 
         // Format the label text using the valueFormatter if provided
-        final String labelText = _valueHandler.formatValue(
-          value,
-          widget.valueFormatter,
-        );
+        final String labelText = _valueHandler.formatValue(value, widget.valueFormatter);
 
         labels.add(
           TickmarkLabelWidget(
@@ -671,11 +625,19 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
           onTapDown: widget.readOnly
               ? null
               : (details) {
+                  // Hide tooltip when tapping outside thumbs
+                  if (_touchedThumbIndex != null && _draggedThumbIndex == null) {
+                    setState(() {
+                      _touchedThumbIndex = null;
+                    });
+                  }
+
                   // Find the nearest thumb to the tap position
-                  final double tapPosition = _positionCalculator
-                      .calculateNormalizedPosition(details.globalPosition);
-                  final int nearestThumbIndex = _positionCalculator
-                      .findNearestThumbIndex(tapPosition, _normalizedPositions);
+                  final double tapPosition = _positionCalculator.calculateNormalizedPosition(details.globalPosition);
+                  final int nearestThumbIndex = _positionCalculator.findNearestThumbIndex(
+                    tapPosition,
+                    _normalizedPositions,
+                  );
 
                   // Move the nearest thumb to the tap position
                   _moveThumbToPosition(nearestThumbIndex, tapPosition);
@@ -686,16 +648,12 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
             width: totalWidth,
             child: Stack(
               alignment: Alignment.center,
-              clipBehavior:
-                  Clip.none, // Allow tickmarks to extend beyond bounds
+              clipBehavior: Clip.none, // Allow tickmarks to extend beyond bounds
               children: [
                 // Background track
                 Container(
                   height: widget.trackHeight,
-                  decoration: BoxDecoration(
-                    color: widget.trackColor,
-                    borderRadius: BorderRadius.circular(4.0),
-                  ),
+                  decoration: BoxDecoration(color: widget.trackColor, borderRadius: BorderRadius.circular(4.0)),
                 ),
 
                 // Colored range segments
@@ -745,22 +703,19 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
     return ranges;
   }
 
-  /// Builds tooltips for thumbs that are currently being dragged.
+  /// Builds tooltips for thumbs that are currently being dragged or touched.
   List<Widget> _buildTooltips(double totalWidth) {
-    if (!widget.showTooltip || _draggedThumbIndex == null) {
+    if (!widget.showTooltip || (_draggedThumbIndex == null && _touchedThumbIndex == null)) {
       return [];
     }
 
-    final int index = _draggedThumbIndex!;
-    final double leftPosition =
-        _normalizedPositions[index] * totalWidth - widget.thumbRadius;
+    // Show tooltip for dragged thumb (priority) or touched thumb
+    final int index = _draggedThumbIndex ?? _touchedThumbIndex!;
+    final double leftPosition = _normalizedPositions[index] * totalWidth - widget.thumbRadius;
     final T currentValue = widget.values[index];
 
     // Format the tooltip text using custom formatter if provided, otherwise use default formatting
-    final String tooltipText = _valueHandler.formatValue(
-      currentValue,
-      widget.valueFormatter,
-    );
+    final String tooltipText = _valueHandler.formatValue(currentValue, widget.valueFormatter);
 
     return [
       TooltipWidget(
@@ -778,18 +733,50 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
     return List.generate(_normalizedPositions.length, (index) {
       // Calculate the pixel position of the thumb
       // Subtract radius so the center of the circle lies on the track
-      final double leftPosition =
-          _normalizedPositions[index] * totalWidth - widget.thumbRadius;
+      final double leftPosition = _normalizedPositions[index] * totalWidth - widget.thumbRadius;
 
       return Positioned(
         left: leftPosition,
         child: GestureDetector(
+          behavior: HitTestBehavior.opaque, // Ensure touch events are captured properly
+          // Handle immediate touch feedback (only if not read-only)
+          onTapDown: widget.readOnly
+              ? null
+              : (details) {
+                  setState(() {
+                    _touchedThumbIndex = index;
+                  });
+                },
+          // Handle tap (only if not read-only)
+          onTap: widget.readOnly
+              ? null
+              : () {
+                  // Keep tooltip visible briefly after tap for better mobile UX
+                  Future.delayed(const Duration(milliseconds: 1500), () {
+                    if (mounted && _touchedThumbIndex == index && _draggedThumbIndex == null) {
+                      setState(() {
+                        _touchedThumbIndex = null;
+                      });
+                    }
+                  });
+                },
+          // Handle touch cancellation (only if not read-only)
+          onTapCancel: widget.readOnly
+              ? null
+              : () {
+                  setState(() {
+                    if (_touchedThumbIndex == index && _draggedThumbIndex == null) {
+                      _touchedThumbIndex = null;
+                    }
+                  });
+                },
           // Start dragging (only if not read-only)
           onPanStart: widget.readOnly
               ? null
               : (details) {
                   setState(() {
                     _draggedThumbIndex = index;
+                    _touchedThumbIndex = index; // Set touched index
                   });
                 },
           // End dragging (only if not read-only)
@@ -798,6 +785,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
               : (details) {
                   setState(() {
                     _draggedThumbIndex = null;
+                    _touchedThumbIndex = null; // Reset touched index
                   });
                 },
           // Main logic during dragging (only if not read-only)
@@ -806,26 +794,20 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
               : (details) {
                   if (_draggedThumbIndex == index) {
                     // 1. Calculate the exact normalized position from global mouse position
-                    final double newNormalizedPosition = _positionCalculator
-                        .calculateNormalizedPosition(details.globalPosition);
+                    final double newNormalizedPosition = _positionCalculator.calculateNormalizedPosition(
+                      details.globalPosition,
+                    );
 
                     // 2. Determine allowed boundaries from neighboring thumbs
-                    final double lowerBound = _positionCalculator
-                        .calculateLowerBound(index, _normalizedPositions);
-                    final double upperBound = _positionCalculator
-                        .calculateUpperBound(index, _normalizedPositions);
+                    final double lowerBound = _positionCalculator.calculateLowerBound(index, _normalizedPositions);
+                    final double upperBound = _positionCalculator.calculateUpperBound(index, _normalizedPositions);
 
                     // 3. Clamp the normalized position to valid boundaries
-                    final double clampedNormalizedPosition =
-                        newNormalizedPosition.clamp(lowerBound, upperBound);
+                    final double clampedNormalizedPosition = newNormalizedPosition.clamp(lowerBound, upperBound);
 
                     // 4. Create new list with updated values
                     List<T> newValues = List.from(widget.values);
-                    final T newValue = _valueHandler.fromNormalized(
-                      clampedNormalizedPosition,
-                      widget.min,
-                      widget.max,
-                    );
+                    final T newValue = _valueHandler.fromNormalized(clampedNormalizedPosition, widget.min, widget.max);
 
                     // 5. Only update if the value actually changed (helps with smoothness for int types)
                     if (newValue != widget.values[index]) {
