@@ -482,9 +482,11 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
     // Update normalized positions when values change externally
     if (widget.values != oldWidget.values) {
       _updateNormalizedPositions();
-      // Reset touch states when values change
-      _touchedThumbIndex = null;
-      _draggedThumbIndex = null;
+      // Only reset touch states when values change if there's no active drag operation
+      // This prevents the drag from being interrupted when onChanged() triggers a widget update
+      if (_draggedThumbIndex == null) {
+        _touchedThumbIndex = null;
+      }
     }
     // Update value handler if allPossibleValues changed (important for enum types)
     if (widget.allPossibleValues != oldWidget.allPossibleValues) {
