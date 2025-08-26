@@ -142,6 +142,13 @@ class _ExamplesScreenState extends State<ExamplesScreen> {
         'widget': const SegmentDisplayExampleWidget(),
       },
       {
+        'title': 'Segment Edit Mode',
+        'description':
+            'Interactive segment editing with add and remove functionality. '
+            'Add segments with + buttons, remove with × buttons, and see real-time calculations.',
+        'widget': const SegmentEditExampleWidget(),
+      },
+      {
         'title': 'Double Values Slider',
         'description':
             'Slider using double values for precise measurements. '

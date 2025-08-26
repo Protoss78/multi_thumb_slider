@@ -70,4 +70,9 @@ class SliderConstants {
   static const FontWeight defaultSegmentTextWeight = FontWeight.normal;
   static const bool defaultShowSegmentBorders = true;
   static const bool defaultShowSegmentBackgrounds = true;
+
+  // Segment edit mode constants
+  static const Color defaultSegmentAddButtonColor = Colors.green;
+  static const Color defaultSegmentRemoveButtonColor = Colors.red;
+  static const double defaultSegmentButtonSize = 20.0;
 }

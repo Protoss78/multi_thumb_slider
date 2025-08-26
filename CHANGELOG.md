@@ -13,15 +13,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Extensive Styling**: Customize colors, padding, margin, border radius, text styling
   - **Value Formatting**: Integrates with custom value formatters for consistent display
   - **Generic Type Support**: Works with numeric types (int, double) with automatic type checking
+- **Segment Edit Mode**: Interactive segment editing functionality
+  - **Add Segments**: Click + buttons to dynamically add new segments to the slider
+  - **Remove Segments**: Click × buttons on segment cards to remove segments
+  - **Smart Positioning**: New segments are automatically positioned at optimal midpoints
+  - **Callback System**: `onSegmentAdd` and `onSegmentRemove` callbacks for handling segment changes
+  - **Validation**: Built-in validation prevents invalid configurations
 - **Segment Calculator Utility**: New utility class for segment width calculations and label generation
+  - **Add/Remove Operations**: Helper methods for calculating new thumb values during segment operations
+  - **Validation Methods**: Ensure new values maintain proper order and bounds
+  - **Type Safety**: Generic support for int, double, and other numeric types
 - **Segment Display Widget**: Dedicated widget for rendering segment information
-- **Enhanced Examples**: New examples showcasing segment display features and styling options
+- **Enhanced Examples**: New examples showcasing segment display and edit mode features
 
 ### Features
 - **Content Type Options**:
   - `SegmentContentType.fromToRange`: Shows "0 - 20", "20 - 50" format
   - `SegmentContentType.toRange`: Shows "- 20", "- 50" format (omitting "from")
   - `SegmentContentType.width`: Shows calculated segment widths (20, 30, etc.)
+- **Segment Edit Mode Options**:
+  - `enableSegmentEdit`: Boolean to enable/disable edit mode
+  - `onSegmentAdd`: Callback for adding new segments with index parameter
+  - `onSegmentRemove`: Callback for removing segments with index parameter
+  - `segmentAddButtonColor`: Customizable color for add buttons
+  - `segmentRemoveButtonColor`: Customizable color for remove buttons
+  - `segmentButtonSize`: Adjustable size for edit buttons
 - **Styling Customization**: Height, padding, margin, border radius, colors, text size/weight, borders, backgrounds
 - **Automatic Integration**: Seamlessly integrates with existing slider functionality
 - **Performance Optimized**: Efficient rendering with minimal impact on slider performance

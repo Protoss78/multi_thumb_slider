@@ -199,6 +199,27 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
   /// Whether to show segment backgrounds
   final bool showSegmentBackgrounds;
 
+  /// Whether to enable segment edit mode
+  /// When true, segment cards will display add/remove buttons for dynamic segment editing
+  final bool enableSegmentEdit;
+
+  /// Callback function called when a new segment should be added
+  /// The callback receives the index where the new segment should be inserted
+  final void Function(int segmentIndex)? onSegmentAdd;
+
+  /// Callback function called when a segment should be removed
+  /// The callback receives the index of the segment to be removed
+  final void Function(int segmentIndex)? onSegmentRemove;
+
+  /// The color of the add segment button
+  final Color segmentAddButtonColor;
+
+  /// The color of the remove segment button
+  final Color segmentRemoveButtonColor;
+
+  /// The size of segment edit buttons
+  final double segmentButtonSize;
+
   /// Creates a multi-thumb slider.
   ///
   /// The [values] parameter must not be empty, and all values must be within
@@ -246,6 +267,12 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     this.segmentTextWeight = SliderConstants.defaultSegmentTextWeight,
     this.showSegmentBorders = SliderConstants.defaultShowSegmentBorders,
     this.showSegmentBackgrounds = SliderConstants.defaultShowSegmentBackgrounds,
+    this.enableSegmentEdit = false,
+    this.onSegmentAdd,
+    this.onSegmentRemove,
+    this.segmentAddButtonColor = SliderConstants.defaultSegmentAddButtonColor,
+    this.segmentRemoveButtonColor = SliderConstants.defaultSegmentRemoveButtonColor,
+    this.segmentButtonSize = SliderConstants.defaultSegmentButtonSize,
   });
 
   /// Creates a multi-thumb slider with int values and default min/max range.
@@ -294,6 +321,12 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     FontWeight segmentTextWeight = SliderConstants.defaultSegmentTextWeight,
     bool showSegmentBorders = SliderConstants.defaultShowSegmentBorders,
     bool showSegmentBackgrounds = SliderConstants.defaultShowSegmentBackgrounds,
+    bool enableSegmentEdit = false,
+    void Function(int segmentIndex)? onSegmentAdd,
+    void Function(int segmentIndex)? onSegmentRemove,
+    Color segmentAddButtonColor = SliderConstants.defaultSegmentAddButtonColor,
+    Color segmentRemoveButtonColor = SliderConstants.defaultSegmentRemoveButtonColor,
+    double segmentButtonSize = SliderConstants.defaultSegmentButtonSize,
   }) {
     return CustomMultiThumbSlider<int>(
       key: key,
@@ -337,6 +370,12 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       segmentTextWeight: segmentTextWeight,
       showSegmentBorders: showSegmentBorders,
       showSegmentBackgrounds: showSegmentBackgrounds,
+      enableSegmentEdit: enableSegmentEdit,
+      onSegmentAdd: onSegmentAdd,
+      onSegmentRemove: onSegmentRemove,
+      segmentAddButtonColor: segmentAddButtonColor,
+      segmentRemoveButtonColor: segmentRemoveButtonColor,
+      segmentButtonSize: segmentButtonSize,
     );
   }
 
@@ -387,6 +426,12 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     FontWeight segmentTextWeight = SliderConstants.defaultSegmentTextWeight,
     bool showSegmentBorders = SliderConstants.defaultShowSegmentBorders,
     bool showSegmentBackgrounds = SliderConstants.defaultShowSegmentBackgrounds,
+    bool enableSegmentEdit = false,
+    void Function(int segmentIndex)? onSegmentAdd,
+    void Function(int segmentIndex)? onSegmentRemove,
+    Color segmentAddButtonColor = SliderConstants.defaultSegmentAddButtonColor,
+    Color segmentRemoveButtonColor = SliderConstants.defaultSegmentRemoveButtonColor,
+    double segmentButtonSize = SliderConstants.defaultSegmentButtonSize,
   }) {
     return CustomMultiThumbSlider<T>(
       key: key,
@@ -431,6 +476,12 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       segmentTextWeight: segmentTextWeight,
       showSegmentBorders: showSegmentBorders,
       showSegmentBackgrounds: showSegmentBackgrounds,
+      enableSegmentEdit: enableSegmentEdit,
+      onSegmentAdd: onSegmentAdd,
+      onSegmentRemove: onSegmentRemove,
+      segmentAddButtonColor: segmentAddButtonColor,
+      segmentRemoveButtonColor: segmentRemoveButtonColor,
+      segmentButtonSize: segmentButtonSize,
     );
   }
 
@@ -810,6 +861,12 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
             textWeight: widget.segmentTextWeight,
             showBorders: widget.showSegmentBorders,
             showBackgrounds: widget.showSegmentBackgrounds,
+            enableEditMode: widget.enableSegmentEdit,
+            onSegmentAdd: widget.onSegmentAdd,
+            onSegmentRemove: widget.onSegmentRemove,
+            addButtonColor: widget.segmentAddButtonColor,
+            removeButtonColor: widget.segmentRemoveButtonColor,
+            buttonSize: widget.segmentButtonSize,
           ),
           // Add some spacing between segment display and slider
           const SizedBox(height: 8.0),
