@@ -1,442 +1,514 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:multi_thumb_slider/src/value_type_handler.dart';
 
-// Test enum for testing enum value handler
+// Test enum for testing purposes
 enum TestDifficulty { easy, medium, hard, expert }
 
 void main() {
-  group('NumericValueHandler Tests', () {
-    late NumericValueHandler<int> intHandler;
-    late NumericValueHandler<double> doubleHandler;
+  group('ValueTypeHandler Tests', () {
+    group('NumericValueHandler Tests', () {
+      group('Integer Handler', () {
+        late NumericValueHandler<int> handler;
 
-    setUp(() {
-      intHandler = NumericValueHandler<int>();
-      doubleHandler = NumericValueHandler<double>();
-    });
+        setUp(() {
+          handler = NumericValueHandler<int>();
+        });
 
-    group('toNormalized', () {
-      test('int handler converts values correctly', () {
-        expect(intHandler.toNormalized(0, 0, 100), equals(0.0));
-        expect(intHandler.toNormalized(50, 0, 100), equals(0.5));
-        expect(intHandler.toNormalized(100, 0, 100), equals(1.0));
-        expect(intHandler.toNormalized(25, 0, 100), equals(0.25));
-        expect(intHandler.toNormalized(75, 0, 100), equals(0.75));
+        test('converts int value to normalized position correctly', () {
+          expect(handler.toNormalized(0, 0, 100), equals(0.0));
+          expect(handler.toNormalized(50, 0, 100), equals(0.5));
+          expect(handler.toNormalized(100, 0, 100), equals(1.0));
+          expect(handler.toNormalized(25, 0, 100), equals(0.25));
+          expect(handler.toNormalized(75, 0, 100), equals(0.75));
+        });
+
+        test('converts int value to normalized position with different ranges', () {
+          expect(handler.toNormalized(5, 0, 10), equals(0.5));
+          expect(handler.toNormalized(150, 100, 200), equals(0.5));
+          expect(handler.toNormalized(-50, -100, 0), equals(0.5));
+        });
+
+        test('converts normalized position back to int value correctly', () {
+          expect(handler.fromNormalized(0.0, 0, 100), equals(0));
+          expect(handler.fromNormalized(0.5, 0, 100), equals(50));
+          expect(handler.fromNormalized(1.0, 0, 100), equals(100));
+          expect(handler.fromNormalized(0.25, 0, 100), equals(25));
+          expect(handler.fromNormalized(0.75, 0, 100), equals(75));
+        });
+
+        test('rounds normalized position correctly for int values', () {
+          expect(handler.fromNormalized(0.234, 0, 100), equals(23));
+          expect(handler.fromNormalized(0.567, 0, 100), equals(57));
+          expect(handler.fromNormalized(0.999, 0, 100), equals(100));
+        });
+
+        test('handles negative int ranges correctly', () {
+          expect(handler.toNormalized(-50, -100, 0), equals(0.5));
+          expect(handler.fromNormalized(0.5, -100, 0), equals(-50));
+          expect(handler.toNormalized(-75, -100, -50), equals(0.5));
+          expect(handler.fromNormalized(0.5, -100, -50), equals(-75));
+        });
+
+        test('gets all possible int values in range', () {
+          final values = handler.getAllPossibleValues(0, 5, null);
+          expect(values, equals([0, 1, 2, 3, 4, 5]));
+        });
+
+        test('gets all possible int values with large range', () {
+          final values = handler.getAllPossibleValues(98, 102, null);
+          expect(values, equals([98, 99, 100, 101, 102]));
+        });
+
+        test('uses provided allPossibleValues when given', () {
+          final providedValues = [10, 20, 30];
+          final values = handler.getAllPossibleValues(0, 100, providedValues);
+          expect(values, equals(providedValues));
+        });
+
+        test('should show tickmarks for int handler', () {
+          expect(handler.shouldShowTickmarks(), isTrue);
+        });
+
+        test('formats int values correctly', () {
+          expect(handler.formatValue(42, null), equals('42'));
+          expect(handler.formatValue(-15, null), equals('-15'));
+        });
+
+        test('uses custom formatter when provided', () {
+          String customFormatter(int value) => 'Value: $value';
+          expect(handler.formatValue(42, customFormatter), equals('Value: 42'));
+        });
       });
 
-      test('double handler converts values correctly', () {
-        expect(doubleHandler.toNormalized(0.0, 0.0, 100.0), equals(0.0));
-        expect(doubleHandler.toNormalized(50.0, 0.0, 100.0), equals(0.5));
-        expect(doubleHandler.toNormalized(100.0, 0.0, 100.0), equals(1.0));
-        expect(doubleHandler.toNormalized(25.5, 0.0, 100.0), equals(0.255));
-        expect(doubleHandler.toNormalized(75.7, 0.0, 100.0), equals(0.757));
-      });
+      group('Double Handler', () {
+        late NumericValueHandler<double> handler;
 
-      test('handles negative ranges', () {
-        expect(intHandler.toNormalized(-50, -100, 0), equals(0.5));
-        expect(intHandler.toNormalized(-25, -100, 0), equals(0.75));
-        expect(doubleHandler.toNormalized(-50.0, -100.0, 0.0), equals(0.5));
-      });
+        setUp(() {
+          handler = NumericValueHandler<double>();
+        });
 
-      test('handles reversed ranges', () {
-        expect(intHandler.toNormalized(25, 100, 0), equals(0.75));
-        expect(doubleHandler.toNormalized(25.0, 100.0, 0.0), equals(0.75));
-      });
-    });
+        test('converts double value to normalized position correctly', () {
+          expect(handler.toNormalized(0.0, 0.0, 100.0), equals(0.0));
+          expect(handler.toNormalized(50.0, 0.0, 100.0), equals(0.5));
+          expect(handler.toNormalized(100.0, 0.0, 100.0), equals(1.0));
+          expect(handler.toNormalized(25.5, 0.0, 100.0), equals(0.255));
+        });
 
-    group('fromNormalized', () {
-      test('int handler converts normalized positions correctly', () {
-        expect(intHandler.fromNormalized(0.0, 0, 100), equals(0));
-        expect(intHandler.fromNormalized(0.5, 0, 100), equals(50));
-        expect(intHandler.fromNormalized(1.0, 0, 100), equals(100));
-        expect(intHandler.fromNormalized(0.25, 0, 100), equals(25));
-        expect(intHandler.fromNormalized(0.75, 0, 100), equals(75));
-      });
+        test('converts normalized position back to double value correctly', () {
+          expect(handler.fromNormalized(0.0, 0.0, 100.0), equals(0.0));
+          expect(handler.fromNormalized(0.5, 0.0, 100.0), equals(50.0));
+          expect(handler.fromNormalized(1.0, 0.0, 100.0), equals(100.0));
+          expect(handler.fromNormalized(0.255, 0.0, 100.0), equals(25.5));
+        });
 
-      test('double handler converts normalized positions correctly', () {
-        expect(doubleHandler.fromNormalized(0.0, 0.0, 100.0), equals(0.0));
-        expect(doubleHandler.fromNormalized(0.5, 0.0, 100.0), equals(50.0));
-        expect(doubleHandler.fromNormalized(1.0, 0.0, 100.0), equals(100.0));
-        expect(doubleHandler.fromNormalized(0.255, 0.0, 100.0), equals(25.5));
-        expect(doubleHandler.fromNormalized(0.757, 0.0, 100.0), equals(75.7));
-      });
+        test('handles very small double values', () {
+          expect(handler.toNormalized(0.001, 0.0, 0.002), equals(0.5));
+          expect(handler.fromNormalized(0.5, 0.0, 0.002), equals(0.001));
+        });
 
-      test('handles negative ranges', () {
-        expect(intHandler.fromNormalized(0.5, -100, 0), equals(-50));
-        expect(doubleHandler.fromNormalized(0.5, -100.0, 0.0), equals(-50.0));
-      });
+        test('gets minimal double values (min and max only)', () {
+          final values = handler.getAllPossibleValues(0.0, 100.0, null);
+          expect(values, equals([0.0, 100.0]));
+        });
 
-      test('handles reversed ranges', () {
-        expect(intHandler.fromNormalized(0.25, 100, 0), equals(75));
-        expect(doubleHandler.fromNormalized(0.25, 100.0, 0.0), equals(75.0));
-      });
+        test('uses provided allPossibleValues when given for doubles', () {
+          final providedValues = [10.5, 20.7, 30.2];
+          final values = handler.getAllPossibleValues(0.0, 100.0, providedValues);
+          expect(values, equals(providedValues));
+        });
 
-      test('rounds correctly for int values', () {
-        expect(intHandler.fromNormalized(0.333, 0, 100), equals(33));
-        expect(intHandler.fromNormalized(0.666, 0, 100), equals(67));
-      });
-    });
+        test('should show tickmarks for double handler', () {
+          expect(handler.shouldShowTickmarks(), isTrue);
+        });
 
-    group('getAllPossibleValues', () {
-      test('int handler returns all values in range', () {
-        final values = intHandler.getAllPossibleValues(0, 5, null);
-        expect(values, equals([0, 1, 2, 3, 4, 5]));
-      });
+        test('formats double values correctly', () {
+          expect(handler.formatValue(42.5, null), equals('42.5'));
+          expect(handler.formatValue(-15.75, null), equals('-15.75'));
+        });
 
-      test('int handler returns single value when min equals max', () {
-        final values = intHandler.getAllPossibleValues(10, 10, null);
-        expect(values, equals([10]));
-      });
-
-      test('int handler returns empty list when min > max', () {
-        final values = intHandler.getAllPossibleValues(10, 5, null);
-        expect(values, equals([]));
-      });
-
-      test('int handler uses custom allPossibleValues when provided', () {
-        final customValues = [0, 2, 4, 6, 8, 10];
-        final values = intHandler.getAllPossibleValues(0, 10, customValues);
-        expect(values, equals(customValues));
-      });
-
-      test('double handler returns min and max when no custom values', () {
-        final values = doubleHandler.getAllPossibleValues(0.0, 100.0, null);
-        expect(values, equals([0.0, 100.0]));
-      });
-
-      test('double handler uses custom allPossibleValues when provided', () {
-        final customValues = [0.0, 25.0, 50.0, 75.0, 100.0];
-        final values = doubleHandler.getAllPossibleValues(
-          0.0,
-          100.0,
-          customValues,
-        );
-        expect(values, equals(customValues));
-      });
-    });
-
-    group('shouldShowTickmarks', () {
-      test('returns true for numeric types', () {
-        expect(intHandler.shouldShowTickmarks(), isTrue);
-        expect(doubleHandler.shouldShowTickmarks(), isTrue);
-      });
-    });
-
-    group('formatValue', () {
-      test('formats values correctly', () {
-        expect(intHandler.formatValue(42, null), equals('42'));
-        expect(doubleHandler.formatValue(42.5, null), equals('42.5'));
-      });
-
-      test('uses custom formatter when provided', () {
-        String customFormatter(int value) => 'Value: $value';
-        String customDoubleFormatter(double value) => 'Double: $value';
-
-        expect(
-          intHandler.formatValue(42, customFormatter),
-          equals('Value: 42'),
-        );
-        expect(
-          doubleHandler.formatValue(42.5, customDoubleFormatter),
-          equals('Double: 42.5'),
-        );
-      });
-    });
-  });
-
-  group('EnumValueHandler Tests', () {
-    late EnumValueHandler<TestDifficulty> enumHandler;
-
-    setUp(() {
-      enumHandler = EnumValueHandler<TestDifficulty>();
-    });
-
-    group('toNormalized', () {
-      test('converts enum values correctly', () {
-        expect(
-          enumHandler.toNormalized(
-            TestDifficulty.easy,
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-          ),
-          equals(0.0),
-        );
-        expect(
-          enumHandler.toNormalized(
-            TestDifficulty.medium,
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-          ),
-          equals(0.3333333333333333),
-        );
-        expect(
-          enumHandler.toNormalized(
-            TestDifficulty.hard,
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-          ),
-          equals(0.6666666666666666),
-        );
-        expect(
-          enumHandler.toNormalized(
-            TestDifficulty.expert,
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-          ),
-          equals(1.0),
-        );
-      });
-
-      test('handles reversed enum ranges', () {
-        expect(
-          enumHandler.toNormalized(
-            TestDifficulty.expert,
-            TestDifficulty.expert,
-            TestDifficulty.easy,
-          ),
-          equals(0.0),
-        );
-        expect(
-          enumHandler.toNormalized(
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-            TestDifficulty.easy,
-          ),
-          equals(1.0),
-        );
+        test('uses custom formatter for doubles when provided', () {
+          String customFormatter(double value) => value.toStringAsFixed(1);
+          expect(handler.formatValue(42.567, customFormatter), equals('42.6'));
+        });
       });
     });
 
-    group('fromNormalized', () {
-      test('converts normalized positions back to enum values correctly', () {
-        // Test with allPossibleValues provided
-        final enumHandlerWithValues = EnumValueHandler<TestDifficulty>(
-          TestDifficulty.values,
-        );
+    group('EnumValueHandler Tests', () {
+      group('Basic Enum Operations', () {
+        late EnumValueHandler<TestDifficulty> handler;
+        late List<TestDifficulty> allValues;
 
-        expect(
-          enumHandlerWithValues.fromNormalized(
-            0.0,
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-          ),
-          equals(TestDifficulty.easy),
-        );
-        expect(
-          enumHandlerWithValues.fromNormalized(
-            0.3333333333333333,
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-          ),
-          equals(TestDifficulty.medium),
-        );
-        expect(
-          enumHandlerWithValues.fromNormalized(
-            0.6666666666666666,
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-          ),
-          equals(TestDifficulty.hard),
-        );
-        expect(
-          enumHandlerWithValues.fromNormalized(
-            1.0,
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-          ),
-          equals(TestDifficulty.expert),
-        );
-      });
+        setUp(() {
+          allValues = TestDifficulty.values;
+          handler = EnumValueHandler<TestDifficulty>(allValues);
+        });
 
-      test('handles edge cases and clamping', () {
-        final enumHandlerWithValues = EnumValueHandler<TestDifficulty>(
-          TestDifficulty.values,
-        );
-
-        // Test values outside the 0.0-1.0 range (should clamp)
-        expect(
-          enumHandlerWithValues.fromNormalized(
-            -0.1,
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-          ),
-          equals(TestDifficulty.easy),
-        );
-        expect(
-          enumHandlerWithValues.fromNormalized(
-            1.1,
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-          ),
-          equals(TestDifficulty.expert),
-        );
-
-        // Test intermediate values
-        expect(
-          enumHandlerWithValues.fromNormalized(
-            0.25,
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-          ),
-          equals(TestDifficulty.medium),
-        );
-        expect(
-          enumHandlerWithValues.fromNormalized(
-            0.75,
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-          ),
-          equals(TestDifficulty.hard),
-        );
-      });
-
-      test('fallback behavior when allPossibleValues not provided', () {
-        // Test the fallback behavior when no allPossibleValues is provided
-        expect(
-          enumHandler.fromNormalized(
-            0.5,
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-          ),
-          equals(TestDifficulty.easy),
-        );
-        expect(
-          enumHandler.fromNormalized(
-            0.0,
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-          ),
-          equals(TestDifficulty.easy),
-        );
-        expect(
-          enumHandler.fromNormalized(
-            1.0,
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-          ),
-          equals(TestDifficulty.easy),
-        );
-      });
-    });
-
-    group('getAllPossibleValues', () {
-      test('returns values in range when allPossibleValues provided', () {
-        final allValues = TestDifficulty.values;
-        final values = enumHandler.getAllPossibleValues(
-          TestDifficulty.easy,
-          TestDifficulty.hard,
-          allValues,
-        );
-        expect(
-          values,
-          equals([
-            TestDifficulty.easy,
-            TestDifficulty.medium,
-            TestDifficulty.hard,
-          ]),
-        );
-      });
-
-      test(
-        'returns values in reversed range when allPossibleValues provided',
-        () {
-          final allValues = TestDifficulty.values;
-          final values = enumHandler.getAllPossibleValues(
-            TestDifficulty.hard,
-            TestDifficulty.easy,
-            allValues,
+        test('converts enum value to normalized position correctly', () {
+          expect(handler.toNormalized(TestDifficulty.easy, TestDifficulty.easy, TestDifficulty.expert), equals(0.0));
+          expect(
+            handler.toNormalized(TestDifficulty.medium, TestDifficulty.easy, TestDifficulty.expert),
+            equals(1.0 / 3.0),
           );
           expect(
-            values,
-            equals([
-              TestDifficulty.easy,
-              TestDifficulty.medium,
-              TestDifficulty.hard,
-            ]),
+            handler.toNormalized(TestDifficulty.hard, TestDifficulty.easy, TestDifficulty.expert),
+            equals(2.0 / 3.0),
           );
-        },
-      );
+          expect(handler.toNormalized(TestDifficulty.expert, TestDifficulty.easy, TestDifficulty.expert), equals(1.0));
+        });
 
-      test('throws error when allPossibleValues is null', () {
-        expect(
-          () => enumHandler.getAllPossibleValues(
-            TestDifficulty.easy,
-            TestDifficulty.expert,
-            null,
-          ),
-          throwsA(isA<ArgumentError>()),
-        );
+        test('converts normalized position back to enum value correctly', () {
+          expect(handler.fromNormalized(0.0, TestDifficulty.easy, TestDifficulty.expert), equals(TestDifficulty.easy));
+          expect(
+            handler.fromNormalized(0.33, TestDifficulty.easy, TestDifficulty.expert),
+            equals(TestDifficulty.medium),
+          );
+          expect(handler.fromNormalized(0.67, TestDifficulty.easy, TestDifficulty.expert), equals(TestDifficulty.hard));
+          expect(
+            handler.fromNormalized(1.0, TestDifficulty.easy, TestDifficulty.expert),
+            equals(TestDifficulty.expert),
+          );
+        });
+
+        test('handles partial enum ranges correctly', () {
+          expect(handler.toNormalized(TestDifficulty.medium, TestDifficulty.medium, TestDifficulty.hard), equals(0.0));
+          expect(handler.toNormalized(TestDifficulty.hard, TestDifficulty.medium, TestDifficulty.hard), equals(1.0));
+        });
+
+        test('gets all possible enum values in range', () {
+          final values = handler.getAllPossibleValues(TestDifficulty.easy, TestDifficulty.expert, allValues);
+          expect(values, equals(allValues));
+        });
+
+        test('gets partial enum values in range', () {
+          final values = handler.getAllPossibleValues(TestDifficulty.medium, TestDifficulty.hard, allValues);
+          expect(values, equals([TestDifficulty.medium, TestDifficulty.hard]));
+        });
+
+        test('handles reversed enum ranges', () {
+          final values = handler.getAllPossibleValues(TestDifficulty.hard, TestDifficulty.medium, allValues);
+          expect(values, equals([TestDifficulty.medium, TestDifficulty.hard]));
+        });
+
+        test('throws error when allPossibleValues is null', () {
+          expect(
+            () => handler.getAllPossibleValues(TestDifficulty.easy, TestDifficulty.expert, null),
+            throwsArgumentError,
+          );
+        });
+
+        test('should show tickmarks for enum handler', () {
+          expect(handler.shouldShowTickmarks(), isTrue);
+        });
+
+        test('formats enum values correctly', () {
+          expect(handler.formatValue(TestDifficulty.easy, null), equals('easy'));
+          expect(handler.formatValue(TestDifficulty.expert, null), equals('expert'));
+        });
+
+        test('uses custom formatter for enums when provided', () {
+          String customFormatter(TestDifficulty value) => value.name.toUpperCase();
+          expect(handler.formatValue(TestDifficulty.easy, customFormatter), equals('EASY'));
+        });
       });
 
-      test('filters values correctly based on range', () {
+      group('Enum Handler Without Predefined Values', () {
+        late EnumValueHandler<TestDifficulty> handler;
+
+        setUp(() {
+          handler = EnumValueHandler<TestDifficulty>();
+        });
+
+        test('handles fromNormalized without allPossibleValues', () {
+          final result = handler.fromNormalized(0.5, TestDifficulty.easy, TestDifficulty.expert);
+          expect(result, equals(TestDifficulty.easy)); // Falls back to min
+        });
+
+        test('handles edge cases in fromNormalized without allPossibleValues', () {
+          expect(
+            handler.fromNormalized(0.0, TestDifficulty.medium, TestDifficulty.hard),
+            equals(TestDifficulty.medium),
+          );
+          // The handler without allPossibleValues falls back to closest min/max comparison
+          final result = handler.fromNormalized(1.0, TestDifficulty.medium, TestDifficulty.hard);
+          expect(result, isIn([TestDifficulty.medium, TestDifficulty.hard]));
+        });
+      });
+    });
+
+    group('GenericValueHandler Tests', () {
+      group('Numeric Types in Generic Handler', () {
+        late GenericValueHandler<int> intHandler;
+        late GenericValueHandler<double> doubleHandler;
+
+        setUp(() {
+          intHandler = GenericValueHandler<int>();
+          doubleHandler = GenericValueHandler<double>();
+        });
+
+        test('handles int values like NumericValueHandler', () {
+          expect(intHandler.toNormalized(50, 0, 100), equals(0.5));
+          expect(intHandler.fromNormalized(0.5, 0, 100), equals(50));
+        });
+
+        test('handles double values like NumericValueHandler', () {
+          expect(doubleHandler.toNormalized(50.0, 0.0, 100.0), equals(0.5));
+          expect(doubleHandler.fromNormalized(0.5, 0.0, 100.0), equals(50.0));
+        });
+
+        test('gets all possible int values', () {
+          final values = intHandler.getAllPossibleValues(0, 3, null);
+          expect(values, equals([0, 1, 2, 3]));
+        });
+
+        test('gets minimal double values', () {
+          final values = doubleHandler.getAllPossibleValues(0.0, 100.0, null);
+          expect(values, equals([0.0, 100.0]));
+        });
+      });
+
+      group('Enum Types in Generic Handler', () {
+        late GenericValueHandler<TestDifficulty> handler;
+        late List<TestDifficulty> allValues;
+
+        setUp(() {
+          allValues = TestDifficulty.values;
+          handler = GenericValueHandler<TestDifficulty>(allValues);
+        });
+
+        test('handles enum values like EnumValueHandler', () {
+          expect(
+            handler.toNormalized(TestDifficulty.medium, TestDifficulty.easy, TestDifficulty.expert),
+            equals(1.0 / 3.0),
+          );
+        });
+
+        test('converts normalized position back to enum with allPossibleValues', () {
+          expect(
+            handler.fromNormalized(0.33, TestDifficulty.easy, TestDifficulty.expert),
+            equals(TestDifficulty.medium),
+          );
+        });
+
+        test('handles enum without allPossibleValues', () {
+          final handlerWithoutValues = GenericValueHandler<TestDifficulty>();
+          final result = handlerWithoutValues.fromNormalized(0.5, TestDifficulty.easy, TestDifficulty.expert);
+          // The generic handler without allPossibleValues uses distance comparison
+          expect(result, isIn([TestDifficulty.easy, TestDifficulty.expert]));
+        });
+
+        test('gets all possible enum values', () {
+          final values = handler.getAllPossibleValues(TestDifficulty.easy, TestDifficulty.expert, allValues);
+          expect(values, equals(allValues));
+        });
+      });
+
+      group('Generic Types in Generic Handler', () {
+        late GenericValueHandler<String> handler;
+
+        setUp(() {
+          handler = GenericValueHandler<String>();
+        });
+
+        test('handles unknown types with fallback behavior', () {
+          expect(handler.toNormalized('middle', 'start', 'end'), equals(0.5));
+          expect(handler.fromNormalized(0.5, 'start', 'end'), equals('start'));
+        });
+
+        test('gets fallback values for unknown types', () {
+          final values = handler.getAllPossibleValues('start', 'end', null);
+          expect(values, equals(['start', 'end']));
+        });
+
+        test('uses provided values for unknown types', () {
+          final providedValues = ['a', 'b', 'c'];
+          final values = handler.getAllPossibleValues('start', 'end', providedValues);
+          expect(values, equals(providedValues));
+        });
+
+        test('should show tickmarks for generic handler', () {
+          expect(handler.shouldShowTickmarks(), isTrue);
+        });
+
+        test('formats generic values correctly', () {
+          expect(handler.formatValue('test', null), equals('test'));
+        });
+      });
+
+      group('Value Formatting in Generic Handler', () {
+        test('formats numeric values correctly', () {
+          final intHandler = GenericValueHandler<int>();
+          final doubleHandler = GenericValueHandler<double>();
+
+          expect(intHandler.formatValue(42, null), equals('42'));
+          expect(doubleHandler.formatValue(42.5, null), equals('42.5'));
+        });
+
+        test('formats enum values correctly', () {
+          final handler = GenericValueHandler<TestDifficulty>();
+          expect(handler.formatValue(TestDifficulty.easy, null), equals('easy'));
+        });
+
+        test('uses custom formatters', () {
+          final handler = GenericValueHandler<int>();
+          String customFormatter(int value) => 'Custom: $value';
+          expect(handler.formatValue(42, customFormatter), equals('Custom: 42'));
+        });
+      });
+    });
+
+    group('ValueTypeHandlerFactory Tests', () {
+      test('creates generic handler by default', () {
+        final handler = ValueTypeHandlerFactory.create<int>();
+        expect(handler, isA<GenericValueHandler<int>>());
+      });
+
+      test('creates generic handler for double type', () {
+        final handler = ValueTypeHandlerFactory.create<double>();
+        expect(handler, isA<GenericValueHandler<double>>());
+      });
+
+      test('creates generic handler for enum type', () {
+        final handler = ValueTypeHandlerFactory.create<TestDifficulty>();
+        expect(handler, isA<GenericValueHandler<TestDifficulty>>());
+      });
+
+      test('creates handler with context', () {
         final allValues = TestDifficulty.values;
-        final values = enumHandler.getAllPossibleValues(
-          TestDifficulty.medium,
-          TestDifficulty.expert,
-          allValues,
-        );
-        expect(
-          values,
-          equals([
-            TestDifficulty.medium,
-            TestDifficulty.hard,
-            TestDifficulty.expert,
-          ]),
-        );
+        final handler = ValueTypeHandlerFactory.createWithContext<TestDifficulty>(allPossibleValues: allValues);
+        expect(handler, isA<GenericValueHandler<TestDifficulty>>());
+
+        // Verify that the context is used
+        final values = handler.getAllPossibleValues(TestDifficulty.easy, TestDifficulty.expert, null);
+        expect(values, equals(allValues));
+      });
+
+      test('creates handler without context', () {
+        final handler = ValueTypeHandlerFactory.createWithContext<int>();
+        expect(handler, isA<GenericValueHandler<int>>());
       });
     });
 
-    group('shouldShowTickmarks', () {
-      test('returns true for enum types', () {
-        expect(enumHandler.shouldShowTickmarks(), isTrue);
+    group('Edge Cases and Error Handling', () {
+      test('handles zero range in numeric handler', () {
+        final handler = NumericValueHandler<int>();
+        // Zero range results in division by zero, which produces NaN
+        final result = handler.toNormalized(5, 5, 5);
+        expect(result.isNaN, isTrue);
+      });
+
+      test('handles very small ranges in numeric handler', () {
+        final handler = NumericValueHandler<double>();
+        expect(handler.toNormalized(0.0001, 0.0, 0.0002), equals(0.5));
+      });
+
+      test('handles boundary values correctly', () {
+        final handler = NumericValueHandler<int>();
+        expect(handler.fromNormalized(-0.1, 0, 100), equals(-10));
+        expect(handler.fromNormalized(1.1, 0, 100), equals(110));
+      });
+
+      test('handles single enum value range', () {
+        final handler = EnumValueHandler<TestDifficulty>(TestDifficulty.values);
+        // Single enum value range also results in division by zero (NaN)
+        final result = handler.toNormalized(TestDifficulty.easy, TestDifficulty.easy, TestDifficulty.easy);
+        expect(result.isNaN, isTrue);
+      });
+
+      test('enum handler with empty allPossibleValues', () {
+        final handler = EnumValueHandler<TestDifficulty>([]);
+        expect(handler.fromNormalized(0.5, TestDifficulty.easy, TestDifficulty.expert), equals(TestDifficulty.easy));
+      });
+
+      test('generic handler handles mixed type scenarios', () {
+        final handler = GenericValueHandler<dynamic>();
+        expect(handler.toNormalized('test', 'start', 'end'), equals(0.5));
+        expect(handler.formatValue('anything', null), equals('anything'));
       });
     });
 
-    group('formatValue', () {
-      test('uses custom formatter when provided', () {
-        String customFormatter(TestDifficulty value) =>
-            'Difficulty: ${value.name}';
+    group('Performance and Memory', () {
+      test('numeric handler efficiently handles large int ranges', () {
+        final handler = NumericValueHandler<int>();
+        final values = handler.getAllPossibleValues(0, 10000, null);
+        expect(values.length, equals(10001));
+        expect(values.first, equals(0));
+        expect(values.last, equals(10000));
+      });
 
-        expect(
-          enumHandler.formatValue(TestDifficulty.easy, customFormatter),
-          equals('Difficulty: easy'),
-        );
-        expect(
-          enumHandler.formatValue(TestDifficulty.hard, customFormatter),
-          equals('Difficulty: hard'),
-        );
+      test('double handler does not enumerate large ranges', () {
+        final handler = NumericValueHandler<double>();
+        final values = handler.getAllPossibleValues(0.0, 10000.0, null);
+        expect(values.length, equals(2)); // Only min and max
+        expect(values, equals([0.0, 10000.0]));
+      });
+
+      test('enum handler filters values efficiently', () {
+        final allValues = TestDifficulty.values;
+        final handler = EnumValueHandler<TestDifficulty>(allValues);
+        final values = handler.getAllPossibleValues(TestDifficulty.medium, TestDifficulty.hard, allValues);
+        expect(values.length, equals(2));
+        expect(values, equals([TestDifficulty.medium, TestDifficulty.hard]));
       });
     });
-  });
 
-  group('ValueTypeHandler Edge Cases', () {
-    test('handles very large numbers', () {
-      final intHandler = NumericValueHandler<int>();
-      final doubleHandler = NumericValueHandler<double>();
+    group('Type Safety', () {
+      test('numeric handler maintains type consistency', () {
+        final intHandler = NumericValueHandler<int>();
+        final doubleHandler = NumericValueHandler<double>();
 
-      expect(
-        () => intHandler.toNormalized(1000000, 0, 2000000),
-        returnsNormally,
-      );
-      expect(
-        () => doubleHandler.toNormalized(1000000.0, 0.0, 2000000.0),
-        returnsNormally,
-      );
+        final intResult = intHandler.fromNormalized(0.5, 0, 100);
+        final doubleResult = doubleHandler.fromNormalized(0.5, 0.0, 100.0);
 
-      expect(intHandler.toNormalized(1000000, 0, 2000000), equals(0.5));
-      expect(
-        doubleHandler.toNormalized(1000000.0, 0.0, 2000000.0),
-        equals(0.5),
-      );
+        expect(intResult, isA<int>());
+        expect(doubleResult, isA<double>());
+      });
+
+      test('enum handler maintains enum type consistency', () {
+        final handler = EnumValueHandler<TestDifficulty>(TestDifficulty.values);
+        final result = handler.fromNormalized(0.5, TestDifficulty.easy, TestDifficulty.expert);
+        expect(result, isA<TestDifficulty>());
+      });
+
+      test('generic handler maintains type consistency for known types', () {
+        final intHandler = GenericValueHandler<int>();
+        final enumHandler = GenericValueHandler<TestDifficulty>(TestDifficulty.values);
+
+        final intResult = intHandler.fromNormalized(0.5, 0, 100);
+        final enumResult = enumHandler.fromNormalized(0.5, TestDifficulty.easy, TestDifficulty.expert);
+
+        expect(intResult, isA<int>());
+        expect(enumResult, isA<TestDifficulty>());
+      });
     });
 
-    test('handles very small numbers', () {
-      final doubleHandler = NumericValueHandler<double>();
+    group('Precision and Accuracy', () {
+      test('maintains precision in double calculations', () {
+        final handler = NumericValueHandler<double>();
+        const double precision = 0.000001;
 
-      expect(
-        () => doubleHandler.toNormalized(0.000001, 0.0, 0.000002),
-        returnsNormally,
-      );
-      expect(doubleHandler.toNormalized(0.000001, 0.0, 0.000002), equals(0.5));
+        expect(handler.toNormalized(33.333333, 0.0, 100.0), closeTo(0.33333333, precision));
+        expect(handler.fromNormalized(0.33333333, 0.0, 100.0), closeTo(33.333333, precision));
+      });
+
+      test('rounds int values consistently', () {
+        final handler = NumericValueHandler<int>();
+
+        expect(handler.fromNormalized(0.499, 0, 100), equals(50));
+        expect(handler.fromNormalized(0.501, 0, 100), equals(50));
+        expect(handler.fromNormalized(0.994, 0, 100), equals(99));
+        expect(handler.fromNormalized(0.996, 0, 100), equals(100));
+      });
+
+      test('enum handler provides consistent index mapping', () {
+        final handler = EnumValueHandler<TestDifficulty>(TestDifficulty.values);
+
+        // Test round-trip consistency
+        for (final difficulty in TestDifficulty.values) {
+          final normalized = handler.toNormalized(difficulty, TestDifficulty.easy, TestDifficulty.expert);
+          final roundTrip = handler.fromNormalized(normalized, TestDifficulty.easy, TestDifficulty.expert);
+          expect(roundTrip, equals(difficulty));
+        }
+      });
     });
   });
 }
