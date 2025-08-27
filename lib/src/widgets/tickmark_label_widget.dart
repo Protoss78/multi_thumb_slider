@@ -51,7 +51,6 @@ class TickmarkLabelWidget extends StatelessWidget {
     textPainter.layout();
     final double textWidth =
         textPainter.width + 2; // Add small padding for measurement accuracy
-    _logger.d('Text: $text, textWidth: $textWidth');
     int divider = textWidth > 30 ? 2 : 4;
 
     // Calculate vertical position based on tickmark position
