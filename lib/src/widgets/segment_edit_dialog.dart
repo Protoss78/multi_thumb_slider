@@ -48,13 +48,9 @@ class _SegmentEditDialogState extends State<SegmentEditDialog> {
   @override
   void initState() {
     super.initState();
-    _isUsingCustomDescription =
-        widget.currentDescription != null &&
-        widget.currentDescription!.isNotEmpty;
+    _isUsingCustomDescription = widget.currentDescription != null && widget.currentDescription!.isNotEmpty;
     _controller = TextEditingController(
-      text: _isUsingCustomDescription
-          ? widget.currentDescription
-          : widget.defaultDescription,
+      text: _isUsingCustomDescription ? widget.currentDescription : widget.defaultDescription,
     );
   }
 
@@ -88,89 +84,20 @@ class _SegmentEditDialogState extends State<SegmentEditDialog> {
     // Calculate dialog width based on screen size
     final dialogWidth = isSmallScreen
         ? screenWidth *
-              0.9 // 90% width on mobile
+              0.7 // 70% width on mobile (reduced from 90%)
         : screenWidth < 900
-        ? 500.0 // Fixed 500px on medium screens
-        : 600.0; // Fixed 600px on large screens
+        ? 350.0 // Fixed 350px on medium screens (reduced from 500px)
+        : 400.0; // Fixed 400px on large screens (reduced from 600px)
 
     return AlertDialog(
-      title: Text('Edit Segment ${widget.segmentIndex + 1} Description'),
       content: SizedBox(
         width: dialogWidth,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Current segment: ${widget.defaultDescription}',
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
-            ),
-            const SizedBox(height: 16),
-            // Responsive layout for description type and reset button
-            isSmallScreen
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _isUsingCustomDescription
-                            ? 'Custom Description:'
-                            : 'Default Description:',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      SizedBox(
-                        width: double.infinity,
-                        child: TextButton.icon(
-                          onPressed: _resetToDefault,
-                          icon: const Icon(Icons.refresh, size: 16),
-                          label: const Text('Reset to Default'),
-                          style: TextButton.styleFrom(
-                            foregroundColor: _isUsingCustomDescription
-                                ? Colors.blue
-                                : Colors.grey,
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            alignment: Alignment.centerLeft,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                : Row(
-                    children: [
-                      Text(
-                        _isUsingCustomDescription
-                            ? 'Custom Description:'
-                            : 'Default Description:',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const Spacer(),
-                      TextButton.icon(
-                        onPressed: _resetToDefault,
-                        icon: const Icon(Icons.refresh, size: 16),
-                        label: const Text('Reset to Default'),
-                        style: TextButton.styleFrom(
-                          foregroundColor: _isUsingCustomDescription
-                              ? Colors.blue
-                              : Colors.grey,
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                        ),
-                      ),
-                    ],
-                  ),
-            const SizedBox(height: 8),
             TextField(
               controller: _controller,
-              decoration: const InputDecoration(
-                hintText: 'Enter segment description...',
-                border: OutlineInputBorder(),
-                labelText: 'Description',
-              ),
+              decoration: InputDecoration(hintText: '...', border: const OutlineInputBorder(), labelText: '...'),
               maxLines: null,
               enabled: true, // Always enabled
               onChanged: (_) {
@@ -184,45 +111,60 @@ class _SegmentEditDialogState extends State<SegmentEditDialog> {
                 }
               },
             ),
-            if (!_isUsingCustomDescription)
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Text(
-                  'Start typing to customize this description, or use "Reset to Default" to restore the original text',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey[600],
-                    fontStyle: FontStyle.italic,
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close, size: 16),
+                  label: const Text(''),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   ),
                 ),
-              ),
+                ElevatedButton.icon(
+                  onPressed: _resetToDefault,
+                  icon: const Icon(Icons.refresh, size: 16),
+                  label: const Text(''),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  ),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    final description = _controller.text.trim();
+                    if (description.isEmpty) {
+                      // Return null for empty description (will use default)
+                      Navigator.of(context).pop(null);
+                    } else if (_wasResetToDefault) {
+                      // Return empty string to indicate reset to default
+                      Navigator.of(context).pop('');
+                    } else if (!_isUsingCustomDescription) {
+                      // Return null if using default description unchanged
+                      Navigator.of(context).pop(null);
+                    } else {
+                      // Return the custom description
+                      Navigator.of(context).pop(description);
+                    }
+                  },
+                  icon: const Icon(Icons.save, size: 16),
+                  label: const Text(''),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            final description = _controller.text.trim();
-            if (description.isEmpty) {
-              // Return null for empty description (will use default)
-              Navigator.of(context).pop(null);
-            } else if (_wasResetToDefault) {
-              // Return empty string to indicate reset to default
-              Navigator.of(context).pop('');
-            } else if (!_isUsingCustomDescription) {
-              // Return null if using default description unchanged
-              Navigator.of(context).pop(null);
-            } else {
-              // Return the custom description
-              Navigator.of(context).pop(description);
-            }
-          },
-          child: const Text('Save'),
-        ),
-      ],
     );
   }
 }
