@@ -21,6 +21,8 @@ The live demo showcases all the features of the multi-thumb slider with interact
 - **Responsive Design**: Adapts to different screen sizes and orientations
 - **Smooth Animations**: Visual feedback during interactions
 - **Segment Display**: Built-in segment visualization with customizable content types and styling
+- **Custom Segment Descriptions**: Edit and customize segment descriptions with interactive popup dialogs
+- **Segment Data Access**: Retrieve complete segment information including values and custom descriptions
 
 ## Getting Started
 
@@ -30,7 +32,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  multi_thumb_slider: ^1.0.0
+  multi_thumb_slider: ^1.3.0
 ```
 
 ### Basic Usage
@@ -204,6 +206,156 @@ CustomMultiThumbSlider<double>(
 - **Form Controls**: Provide visual feedback for multi-value inputs
 - **E-commerce**: Show price ranges with currency formatting
 - **Analytics**: Display data segments with custom formatting
+- **Custom Labeling**: Allow users to create meaningful names for data segments
+
+## Custom Segment Descriptions Feature
+
+The multi-thumb slider now supports custom segment descriptions, allowing users to edit and personalize segment labels beyond the default generated content.
+
+### Enabling Custom Descriptions
+
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [20, 50, 80],
+  min: 0,
+  max: 100,
+  onChanged: (newValues) => setState(() => _values = newValues),
+  // Enable segment display with edit mode
+  showSegments: true,
+  enableSegmentEdit: true,
+  // Add description change callback
+  onDescriptionChanged: (segmentIndex, customDescription) {
+    print('Segment $segmentIndex description changed to: $customDescription');
+  },
+)
+```
+
+### Interactive Description Editing
+
+When segment edit mode is enabled, users can:
+- **Tap any segment card** to open an editing dialog
+- **Customize the description** with their own text
+- **Reset to default** using the reset button in the dialog
+- **See visual indicators** for customized segments (underlined text with edit icon)
+
+### Accessing Segment Data
+
+Retrieve complete segment information including custom descriptions:
+
+```dart
+// Get all segments with their value ranges and descriptions
+List<SliderSegment<num>> segments = slider.getSegmentsWithDescriptions();
+
+for (var segment in segments) {
+  print('Segment: ${segment.startValue} - ${segment.endValue}');
+  print('Custom description: ${segment.customDescription ?? 'Using default'}');
+  print('Segment width: ${segment.width}');
+}
+```
+
+### Description Change Callback
+
+Monitor when users modify segment descriptions:
+
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [20, 50, 80],
+  showSegments: true,
+  enableSegmentEdit: true,
+  onDescriptionChanged: (int segmentIndex, String? customDescription) {
+    if (customDescription != null) {
+      print('Segment $segmentIndex now has custom description: $customDescription');
+    } else {
+      print('Segment $segmentIndex reset to default description');
+    }
+    // Save to your data model, send to server, etc.
+  },
+  onChanged: (newValues) => setState(() => _values = newValues),
+)
+```
+
+### Data Models
+
+#### SliderSegment<T>
+Represents a complete segment with value range and description:
+
+```dart
+class SliderSegment<T extends num> {
+  final T startValue;           // Segment start value
+  final T endValue;             // Segment end value
+  final String? customDescription; // Custom description (null = use default)
+  
+  double get width => (endValue - startValue).toDouble();
+  bool get hasCustomDescription => customDescription != null && customDescription!.isNotEmpty;
+}
+```
+
+#### SegmentDescription
+Helper class for managing descriptions:
+
+```dart
+class SegmentDescription {
+  final int segmentIndex;       // Which segment this describes
+  final String description;     // The description text
+}
+```
+
+### Advanced Usage Example
+
+```dart
+class AdvancedSegmentSlider extends StatefulWidget {
+  @override
+  _AdvancedSegmentSliderState createState() => _AdvancedSegmentSliderState();
+}
+
+class _AdvancedSegmentSliderState extends State<AdvancedSegmentSlider> {
+  List<int> _values = [20, 50, 80];
+  Map<int, String> _customDescriptions = {};
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // The slider with custom description support
+        CustomMultiThumbSlider.withInt(
+          values: _values,
+          min: 0,
+          max: 100,
+          showSegments: true,
+          enableSegmentEdit: true,
+          segmentContentType: SegmentContentType.fromToRange,
+          onChanged: (newValues) => setState(() => _values = newValues),
+          onDescriptionChanged: (segmentIndex, customDescription) {
+            setState(() {
+              if (customDescription != null) {
+                _customDescriptions[segmentIndex] = customDescription;
+              } else {
+                _customDescriptions.remove(segmentIndex);
+              }
+            });
+          },
+        ),
+        
+        // Display current segment information
+        const SizedBox(height: 20),
+        Text('Current Segments:', style: Theme.of(context).textTheme.headlineSmall),
+        
+        // Build list of segments
+        ..._buildSegmentInfo(),
+      ],
+    );
+  }
+
+  List<Widget> _buildSegmentInfo() {
+    // This would require access to the slider instance
+    // In practice, you'd store the slider as a member variable with a GlobalKey
+    return [
+      Text('Tap segments above to customize their descriptions'),
+      Text('Custom descriptions: ${_customDescriptions.length}'),
+    ];
+  }
+}
+```
 
 ## API Reference
 
@@ -305,6 +457,7 @@ const CustomMultiThumbSlider.withInt({
 | `segmentTextWeight` | `FontWeight` | `FontWeight.normal` | Font weight of segment text |
 | `showSegmentBorders` | `bool` | `true` | Whether to show segment borders |
 | `showSegmentBackgrounds` | `bool` | `true` | Whether to show segment backgrounds |
+| `onDescriptionChanged` | `Function(int, String?)?` | `null` | Callback when segment descriptions are changed |
 
 ## Examples
 
@@ -521,6 +674,18 @@ If you encounter any issues or have questions, please:
 3. Include your Flutter version and device information
 
 ## Changelog
+
+### 1.3.0
+- **Custom Segment Descriptions**: Interactive editing of segment descriptions
+  - Tap-to-edit functionality with popup dialogs
+  - Reset to default button for easy restoration
+  - Visual indicators for customized segments
+  - `onDescriptionChanged` callback for monitoring changes
+- **Segment Data Access**: New `getSegmentsWithDescriptions()` method
+  - Returns complete segment information including custom descriptions
+  - `SliderSegment<T>` and `SegmentDescription` data models
+  - Full type safety and generic support
+- **Enhanced UX**: Improved segment editing experience with better visual feedback
 
 ### 1.2.0
 - **New Segment Display Feature**: Built-in segment visualization above the slider

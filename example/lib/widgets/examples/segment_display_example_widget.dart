@@ -13,13 +13,20 @@ class SegmentDisplayExampleWidget extends StatefulWidget {
   const SegmentDisplayExampleWidget({super.key});
 
   @override
-  State<SegmentDisplayExampleWidget> createState() => _SegmentDisplayExampleWidgetState();
+  State<SegmentDisplayExampleWidget> createState() =>
+      _SegmentDisplayExampleWidgetState();
 }
 
-class _SegmentDisplayExampleWidgetState extends State<SegmentDisplayExampleWidget> {
+class _SegmentDisplayExampleWidgetState
+    extends State<SegmentDisplayExampleWidget> {
   List<double> _values1 = [15.0, 35.0, 60.0, 85.0];
   List<int> _values2 = [10, 40, 70];
   List<double> _values3 = [25.5, 55.2, 78.8];
+  List<double> _values4 = [
+    20.0,
+    45.0,
+    75.0,
+  ]; // Separate values for custom styled example
 
   @override
   Widget build(BuildContext context) {
@@ -140,12 +147,12 @@ class _SegmentDisplayExampleWidgetState extends State<SegmentDisplayExampleWidge
   /// Builds a custom styled segment display example
   Widget _buildCustomStyledExample() {
     return CustomMultiThumbSlider<double>(
-      values: _values1,
+      values: _values4,
       min: 0.0,
       max: 100.0,
       onChanged: (newValues) {
         setState(() {
-          _values1 = newValues;
+          _values4 = newValues;
         });
       },
       showSegments: true,
@@ -198,17 +205,34 @@ class _SegmentDisplayExampleWidgetState extends State<SegmentDisplayExampleWidge
           const SizedBox(height: AppConstants.itemSpacing),
           Text(
             'From-To Range: ${_values1.map((v) => v.toStringAsFixed(1)).join(', ')}',
-            style: TextStyle(fontSize: AppConstants.bodyFontSize, color: AppConstants.textSecondaryColor),
+            style: TextStyle(
+              fontSize: AppConstants.bodyFontSize,
+              color: AppConstants.textSecondaryColor,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             'To Range: ${_values2.join(', ')}',
-            style: TextStyle(fontSize: AppConstants.bodyFontSize, color: AppConstants.textSecondaryColor),
+            style: TextStyle(
+              fontSize: AppConstants.bodyFontSize,
+              color: AppConstants.textSecondaryColor,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             'Width Display: ${_values3.map((v) => v.toStringAsFixed(1)).join(', ')}',
-            style: TextStyle(fontSize: AppConstants.bodyFontSize, color: AppConstants.textSecondaryColor),
+            style: TextStyle(
+              fontSize: AppConstants.bodyFontSize,
+              color: AppConstants.textSecondaryColor,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Custom Styled: ${_values4.map((v) => v.toStringAsFixed(1)).join(', ')}',
+            style: TextStyle(
+              fontSize: AppConstants.bodyFontSize,
+              color: AppConstants.textSecondaryColor,
+            ),
           ),
         ],
       ),

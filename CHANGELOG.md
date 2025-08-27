@@ -5,6 +5,51 @@ All notable changes to the `multi_thumb_slider` package will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-01-XX
+
+### Added
+- **Custom Segment Descriptions**: New feature allowing users to customize segment descriptions
+  - **Interactive Description Editing**: Tap segment cards to open a popup dialog for editing descriptions
+  - **Reset to Default**: Button in popup dialog to reset custom descriptions to default values
+  - **Visual Indicators**: Custom descriptions are underlined and show edit icons
+  - **Persistent State**: Custom descriptions are maintained throughout slider interactions
+- **New Data Models**: `SliderSegment` and `SegmentDescription` classes for structured segment data
+- **Segment Retrieval API**: New `getSegmentsWithDescriptions()` method to access all segments with values and custom descriptions
+- **Description Change Callback**: New `onDescriptionChanged` callback parameter for responding to description edits
+- **Enhanced Segment Display**: Improved segment display widget with description editing capabilities
+
+### Features
+- **Segment Description Editing**:
+  - `onDescriptionChanged`: Callback for when segment descriptions are modified
+  - Popup dialog with text editing and reset functionality
+  - Visual feedback for custom vs. default descriptions
+- **Segment Data Access**:
+  - `getSegmentsWithDescriptions()`: Returns list of `SliderSegment` objects with value ranges and descriptions
+  - `SliderSegment<T>`: Data class containing start value, end value, and custom description
+  - `SegmentDescription`: Helper class for managing segment descriptions
+- **Improved UX**:
+  - Tap-to-edit functionality on segment cards in edit mode
+  - Clear visual distinction between custom and default descriptions
+  - Non-destructive editing with easy reset to defaults
+
+### Enhanced
+- **Segment Edit Mode**: Extended existing segment edit functionality with description editing
+- **Type Safety**: Full generic type support for new segment data structures
+- **State Management**: Efficient storage and management of custom segment descriptions
+- **Factory Constructor Support**: Added `enableDescriptionEdit` parameter to `withInt` and `withEnum` factory constructors
+- **Example Improvements**: Enhanced `SegmentEditExampleWidget` with independent toggles for both segment editing and description editing modes
+- **Better Instructions**: Updated example instructions to clearly explain both editing modes and their independent functionality
+
+### Fixed
+- **Description Edit Independence**: Fixed issue where `enableDescriptionEdit` only worked when `enableSegmentEdit` was also enabled
+  - Description editing now works independently of segment add/remove functionality
+  - Edit icons are properly displayed when only description editing is enabled
+  - Add/remove buttons are correctly hidden when only description editing is enabled
+- **Responsive Dialog Width**: Fixed `SegmentEditDialog` taking full screen width on large displays
+  - Mobile screens (< 600px): Uses 90% of screen width for optimal mobile experience
+  - Medium screens (600-900px): Fixed 500px width for better desktop usability
+  - Large screens (> 900px): Fixed 600px width for optimal content presentation
+
 ## [1.2.0] - 2025-01-XX
 
 ### Added

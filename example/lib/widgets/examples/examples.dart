@@ -15,3 +15,4 @@ export 'minimal_example_widget.dart';
 export 'tickmark_positioning_example_widget.dart';
 export 'segment_display_example_widget.dart';
 export 'segment_edit_example_widget.dart';
+export 'segment_description_edit_example_widget.dart';

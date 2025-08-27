@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'constants.dart';
 import 'value_type_handler.dart';
 import 'position_calculator.dart';
+import 'segment_data.dart';
 import 'widgets/widgets.dart';
 
 /// A customizable multi-thumb slider widget that allows users to set multiple values
@@ -203,6 +204,10 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
   /// When true, segment cards will display add/remove buttons for dynamic segment editing
   final bool enableSegmentEdit;
 
+  /// Whether to enable segment description editing
+  /// When true, segment cards will show edit indicators and allow description editing via dialog
+  final bool enableDescriptionEdit;
+
   /// Callback function called when a new segment should be added
   /// The callback receives the index where the new segment should be inserted
   final void Function(int segmentIndex)? onSegmentAdd;
@@ -220,11 +225,17 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
   /// The size of segment edit buttons
   final double segmentButtonSize;
 
+  /// Callback function called when a segment description is changed
+  /// The callback receives the segment index and the new custom description
+  /// If the description is null, it means the segment should use the default description
+  final void Function(int segmentIndex, String? customDescription)?
+  onDescriptionChanged;
+
   /// Creates a multi-thumb slider.
   ///
   /// The [values] parameter must not be empty, and all values must be within
   /// the [min] and [max] range.
-  const CustomMultiThumbSlider({
+  CustomMultiThumbSlider({
     super.key,
     required this.values,
     required this.onChanged,
@@ -259,8 +270,10 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     this.segmentHeight = SliderConstants.defaultSegmentHeight,
     this.segmentCardPadding = SliderConstants.defaultSegmentCardPadding,
     this.segmentCardMargin = SliderConstants.defaultSegmentCardMargin,
-    this.segmentCardBorderRadius = SliderConstants.defaultSegmentCardBorderRadius,
-    this.segmentCardBackgroundColor = SliderConstants.defaultSegmentCardBackgroundColor,
+    this.segmentCardBorderRadius =
+        SliderConstants.defaultSegmentCardBorderRadius,
+    this.segmentCardBackgroundColor =
+        SliderConstants.defaultSegmentCardBackgroundColor,
     this.segmentCardBorderColor = SliderConstants.defaultSegmentCardBorderColor,
     this.segmentTextColor = SliderConstants.defaultSegmentTextColor,
     this.segmentTextSize = SliderConstants.defaultSegmentTextSize,
@@ -268,12 +281,15 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     this.showSegmentBorders = SliderConstants.defaultShowSegmentBorders,
     this.showSegmentBackgrounds = SliderConstants.defaultShowSegmentBackgrounds,
     this.enableSegmentEdit = false,
+    this.enableDescriptionEdit = false,
     this.onSegmentAdd,
     this.onSegmentRemove,
     this.segmentAddButtonColor = SliderConstants.defaultSegmentAddButtonColor,
-    this.segmentRemoveButtonColor = SliderConstants.defaultSegmentRemoveButtonColor,
+    this.segmentRemoveButtonColor =
+        SliderConstants.defaultSegmentRemoveButtonColor,
     this.segmentButtonSize = SliderConstants.defaultSegmentButtonSize,
-  });
+    this.onDescriptionChanged,
+  }) : _key = GlobalKey<_CustomMultiThumbSliderState<T>>();
 
   /// Creates a multi-thumb slider with int values and default min/max range.
   ///
@@ -309,24 +325,32 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     double tooltipTextSize = SliderConstants.defaultTooltipTextSize,
     String Function(int value)? valueFormatter,
     bool showSegments = false,
-    SegmentContentType segmentContentType = SliderConstants.defaultSegmentContentType,
+    SegmentContentType segmentContentType =
+        SliderConstants.defaultSegmentContentType,
     double segmentHeight = SliderConstants.defaultSegmentHeight,
     double segmentCardPadding = SliderConstants.defaultSegmentCardPadding,
     double segmentCardMargin = SliderConstants.defaultSegmentCardMargin,
-    double segmentCardBorderRadius = SliderConstants.defaultSegmentCardBorderRadius,
-    Color segmentCardBackgroundColor = SliderConstants.defaultSegmentCardBackgroundColor,
-    Color segmentCardBorderColor = SliderConstants.defaultSegmentCardBorderColor,
+    double segmentCardBorderRadius =
+        SliderConstants.defaultSegmentCardBorderRadius,
+    Color segmentCardBackgroundColor =
+        SliderConstants.defaultSegmentCardBackgroundColor,
+    Color segmentCardBorderColor =
+        SliderConstants.defaultSegmentCardBorderColor,
     Color segmentTextColor = SliderConstants.defaultSegmentTextColor,
     double segmentTextSize = SliderConstants.defaultSegmentTextSize,
     FontWeight segmentTextWeight = SliderConstants.defaultSegmentTextWeight,
     bool showSegmentBorders = SliderConstants.defaultShowSegmentBorders,
     bool showSegmentBackgrounds = SliderConstants.defaultShowSegmentBackgrounds,
     bool enableSegmentEdit = false,
+    bool enableDescriptionEdit = false,
     void Function(int segmentIndex)? onSegmentAdd,
     void Function(int segmentIndex)? onSegmentRemove,
     Color segmentAddButtonColor = SliderConstants.defaultSegmentAddButtonColor,
-    Color segmentRemoveButtonColor = SliderConstants.defaultSegmentRemoveButtonColor,
+    Color segmentRemoveButtonColor =
+        SliderConstants.defaultSegmentRemoveButtonColor,
     double segmentButtonSize = SliderConstants.defaultSegmentButtonSize,
+    void Function(int segmentIndex, String? customDescription)?
+    onDescriptionChanged,
   }) {
     return CustomMultiThumbSlider<int>(
       key: key,
@@ -371,11 +395,13 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       showSegmentBorders: showSegmentBorders,
       showSegmentBackgrounds: showSegmentBackgrounds,
       enableSegmentEdit: enableSegmentEdit,
+      enableDescriptionEdit: enableDescriptionEdit,
       onSegmentAdd: onSegmentAdd,
       onSegmentRemove: onSegmentRemove,
       segmentAddButtonColor: segmentAddButtonColor,
       segmentRemoveButtonColor: segmentRemoveButtonColor,
       segmentButtonSize: segmentButtonSize,
+      onDescriptionChanged: onDescriptionChanged,
     );
   }
 
@@ -414,24 +440,32 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
     double tooltipTextSize = SliderConstants.defaultTooltipTextSize,
     String Function(T value)? valueFormatter,
     bool showSegments = false,
-    SegmentContentType segmentContentType = SliderConstants.defaultSegmentContentType,
+    SegmentContentType segmentContentType =
+        SliderConstants.defaultSegmentContentType,
     double segmentHeight = SliderConstants.defaultSegmentHeight,
     double segmentCardPadding = SliderConstants.defaultSegmentCardPadding,
     double segmentCardMargin = SliderConstants.defaultSegmentCardMargin,
-    double segmentCardBorderRadius = SliderConstants.defaultSegmentCardBorderRadius,
-    Color segmentCardBackgroundColor = SliderConstants.defaultSegmentCardBackgroundColor,
-    Color segmentCardBorderColor = SliderConstants.defaultSegmentCardBorderColor,
+    double segmentCardBorderRadius =
+        SliderConstants.defaultSegmentCardBorderRadius,
+    Color segmentCardBackgroundColor =
+        SliderConstants.defaultSegmentCardBackgroundColor,
+    Color segmentCardBorderColor =
+        SliderConstants.defaultSegmentCardBorderColor,
     Color segmentTextColor = SliderConstants.defaultSegmentTextColor,
     double segmentTextSize = SliderConstants.defaultSegmentTextSize,
     FontWeight segmentTextWeight = SliderConstants.defaultSegmentTextWeight,
     bool showSegmentBorders = SliderConstants.defaultShowSegmentBorders,
     bool showSegmentBackgrounds = SliderConstants.defaultShowSegmentBackgrounds,
     bool enableSegmentEdit = false,
+    bool enableDescriptionEdit = false,
     void Function(int segmentIndex)? onSegmentAdd,
     void Function(int segmentIndex)? onSegmentRemove,
     Color segmentAddButtonColor = SliderConstants.defaultSegmentAddButtonColor,
-    Color segmentRemoveButtonColor = SliderConstants.defaultSegmentRemoveButtonColor,
+    Color segmentRemoveButtonColor =
+        SliderConstants.defaultSegmentRemoveButtonColor,
     double segmentButtonSize = SliderConstants.defaultSegmentButtonSize,
+    void Function(int segmentIndex, String? customDescription)?
+    onDescriptionChanged,
   }) {
     return CustomMultiThumbSlider<T>(
       key: key,
@@ -477,16 +511,76 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
       showSegmentBorders: showSegmentBorders,
       showSegmentBackgrounds: showSegmentBackgrounds,
       enableSegmentEdit: enableSegmentEdit,
+      enableDescriptionEdit: enableDescriptionEdit,
       onSegmentAdd: onSegmentAdd,
       onSegmentRemove: onSegmentRemove,
       segmentAddButtonColor: segmentAddButtonColor,
       segmentRemoveButtonColor: segmentRemoveButtonColor,
       segmentButtonSize: segmentButtonSize,
+      onDescriptionChanged: onDescriptionChanged,
     );
   }
 
+  /// Returns a list of SliderSegment objects containing both values and descriptions
+  /// This method provides access to all segments with their calculated value ranges
+  /// and any custom descriptions that have been set
+  List<SliderSegment<num>> getSegmentsWithDescriptions() {
+    if (min is! num || max is! num) {
+      throw UnsupportedError(
+        'getSegmentsWithDescriptions is only supported for numeric types',
+      );
+    }
+
+    final state = _key.currentState;
+    if (state == null) {
+      // If widget not yet built, calculate segments directly
+      return _calculateSegmentsDirectly();
+    }
+
+    return state._getSegmentsWithDescriptions();
+  }
+
+  /// Global key to access the state
+  final GlobalKey<_CustomMultiThumbSliderState<T>> _key;
+
+  /// Helper method to calculate segments when state is not available
+  List<SliderSegment<num>> _calculateSegmentsDirectly() {
+    if (values.isEmpty) {
+      return [SliderSegment(startValue: min as num, endValue: max as num)];
+    }
+
+    final sortedValues = List<T>.from(values)..sort();
+    final List<SliderSegment<num>> segments = [];
+
+    // First segment: from min to first value
+    segments.add(
+      SliderSegment(
+        startValue: min as num,
+        endValue: sortedValues.first as num,
+      ),
+    );
+
+    // Middle segments: between consecutive values
+    for (int i = 0; i < sortedValues.length - 1; i++) {
+      segments.add(
+        SliderSegment(
+          startValue: sortedValues[i] as num,
+          endValue: sortedValues[i + 1] as num,
+        ),
+      );
+    }
+
+    // Last segment: from last value to max
+    segments.add(
+      SliderSegment(startValue: sortedValues.last as num, endValue: max as num),
+    );
+
+    return segments;
+  }
+
   @override
-  State<CustomMultiThumbSlider<T>> createState() => _CustomMultiThumbSliderState<T>();
+  State<CustomMultiThumbSlider<T>> createState() =>
+      _CustomMultiThumbSliderState<T>();
 }
 
 class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
@@ -506,11 +600,17 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
   /// Position calculator for handling positioning logic
   late final PositionCalculator _positionCalculator;
 
+  /// Storage for custom segment descriptions
+  /// Map of segment index to custom description
+  final Map<int, String> _customSegmentDescriptions = {};
+
   @override
   void initState() {
     super.initState();
     // Use the context-aware factory for enum types to get proper handling
-    _valueHandler = ValueTypeHandlerFactory.createWithContext<T>(allPossibleValues: widget.allPossibleValues);
+    _valueHandler = ValueTypeHandlerFactory.createWithContext<T>(
+      allPossibleValues: widget.allPossibleValues,
+    );
     _positionCalculator = PositionCalculator(_sliderKey);
     _validateParameters();
     _updateNormalizedPositions();
@@ -541,7 +641,9 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
     }
     // Update value handler if allPossibleValues changed (important for enum types)
     if (widget.allPossibleValues != oldWidget.allPossibleValues) {
-      _valueHandler = ValueTypeHandlerFactory.createWithContext<T>(allPossibleValues: widget.allPossibleValues);
+      _valueHandler = ValueTypeHandlerFactory.createWithContext<T>(
+        allPossibleValues: widget.allPossibleValues,
+      );
       _updateNormalizedPositions();
     }
   }
@@ -575,7 +677,8 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
         if (widget.showTickmarkLabels) {
           final double labelHeight = 20.0;
-          final double labelAdditionalHeight = labelHeight + widget.labelSpacing;
+          final double labelAdditionalHeight =
+              labelHeight + widget.labelSpacing;
           additionalHeight += labelAdditionalHeight;
         }
         break;
@@ -586,7 +689,8 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
         if (widget.showTickmarkLabels) {
           final double labelHeight = 20.0;
-          final double labelAdditionalHeight = labelHeight + widget.labelSpacing;
+          final double labelAdditionalHeight =
+              labelHeight + widget.labelSpacing;
           additionalHeight += labelAdditionalHeight;
         }
         break;
@@ -595,7 +699,8 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
         // On-track tickmarks don't add extra height, but labels might
         if (widget.showTickmarkLabels) {
           final double labelHeight = 20.0;
-          final double labelAdditionalHeight = (widget.tickmarkSize / 2) + labelHeight + widget.labelSpacing;
+          final double labelAdditionalHeight =
+              (widget.tickmarkSize / 2) + labelHeight + widget.labelSpacing;
           additionalHeight = labelAdditionalHeight;
         }
         break;
@@ -607,15 +712,25 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
   /// Moves a thumb to a specific normalized position while respecting boundaries.
   void _moveThumbToPosition(int thumbIndex, double targetPosition) {
     // Determine allowed boundaries from neighboring thumbs
-    final double lowerBound = _positionCalculator.calculateLowerBound(thumbIndex, _normalizedPositions);
-    final double upperBound = _positionCalculator.calculateUpperBound(thumbIndex, _normalizedPositions);
+    final double lowerBound = _positionCalculator.calculateLowerBound(
+      thumbIndex,
+      _normalizedPositions,
+    );
+    final double upperBound = _positionCalculator.calculateUpperBound(
+      thumbIndex,
+      _normalizedPositions,
+    );
 
     // Clamp the target position to valid boundaries
     final double clampedPosition = targetPosition.clamp(lowerBound, upperBound);
 
     // Create new list with updated values
     List<T> newValues = List.from(widget.values);
-    final T newValue = _valueHandler.fromNormalized(clampedPosition, widget.min, widget.max);
+    final T newValue = _valueHandler.fromNormalized(
+      clampedPosition,
+      widget.min,
+      widget.max,
+    );
 
     // Only update if the value actually changed
     if (newValue != widget.values[thumbIndex]) {
@@ -631,7 +746,9 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
     if (widget.min is int && widget.max is int) {
       // For int types, the valueIndex is the actual int value
       targetValue = valueIndex as T;
-    } else if (widget.min is Enum && widget.max is Enum && widget.allPossibleValues != null) {
+    } else if (widget.min is Enum &&
+        widget.max is Enum &&
+        widget.allPossibleValues != null) {
       // For enum types, valueIndex is the index in the allPossibleValues list
       final List<T> allValues = widget.allPossibleValues!;
       if (valueIndex >= 0 && valueIndex < allValues.length) {
@@ -644,20 +761,34 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
     }
 
     // Convert the target value to normalized position
-    final double normalizedPosition = _valueHandler.toNormalized(targetValue, widget.min, widget.max);
+    final double normalizedPosition = _valueHandler.toNormalized(
+      targetValue,
+      widget.min,
+      widget.max,
+    );
 
     // Find the closest thumb and move it to this position
-    final int nearestThumbIndex = _positionCalculator.findNearestThumbIndex(normalizedPosition, _normalizedPositions);
+    final int nearestThumbIndex = _positionCalculator.findNearestThumbIndex(
+      normalizedPosition,
+      _normalizedPositions,
+    );
     _moveThumbToPosition(nearestThumbIndex, normalizedPosition);
   }
 
   /// Handles clicks on tickmark labels, moving the closest thumb to the clicked value
   void _onTickmarkLabelClicked(T targetValue) {
     // Convert the target value to normalized position
-    final double normalizedPosition = _valueHandler.toNormalized(targetValue, widget.min, widget.max);
+    final double normalizedPosition = _valueHandler.toNormalized(
+      targetValue,
+      widget.min,
+      widget.max,
+    );
 
     // Find the closest thumb and move it to this position
-    final int nearestThumbIndex = _positionCalculator.findNearestThumbIndex(normalizedPosition, _normalizedPositions);
+    final int nearestThumbIndex = _positionCalculator.findNearestThumbIndex(
+      normalizedPosition,
+      _normalizedPositions,
+    );
     _moveThumbToPosition(nearestThumbIndex, normalizedPosition);
   }
 
@@ -676,21 +807,31 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
     for (int i = 0; i < allPossibleValues.length; i++) {
       // Always show tickmarks for first and last values, and for values at the specified interval
-      final bool shouldShowTickmark = i == 0 || i == allPossibleValues.length - 1 || (i % widget.tickmarkInterval == 0);
+      final bool shouldShowTickmark =
+          i == 0 ||
+          i == allPossibleValues.length - 1 ||
+          (i % widget.tickmarkInterval == 0);
 
       if (shouldShowTickmark) {
         final T value = allPossibleValues[i];
-        final double normalizedPosition = _valueHandler.toNormalized(value, widget.min, widget.max);
+        final double normalizedPosition = _valueHandler.toNormalized(
+          value,
+          widget.min,
+          widget.max,
+        );
         double leftPosition;
 
         // Adjust positioning for edge tickmarks to connect with the track
         if (i == 0) {
           leftPosition = 0.0; // Align left edge with track start
         } else if (i == allPossibleValues.length - 1) {
-          leftPosition = totalWidth - widget.tickmarkSize; // Align right edge with track end
+          leftPosition =
+              totalWidth -
+              widget.tickmarkSize; // Align right edge with track end
         } else {
           // Center the tickmark on the track by subtracting half the tickmark width
-          leftPosition = normalizedPosition * totalWidth - (widget.tickmarkSize / 2);
+          leftPosition =
+              normalizedPosition * totalWidth - (widget.tickmarkSize / 2);
         }
 
         tickmarks.add(
@@ -714,7 +855,9 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
   /// Builds labels for tickmarks when enabled.
   List<Widget> _buildTickmarkLabels(double totalWidth, double availableHeight) {
-    if (!widget.showTickmarks || !widget.showTickmarkLabels || !_valueHandler.shouldShowTickmarks()) {
+    if (!widget.showTickmarks ||
+        !widget.showTickmarkLabels ||
+        !_valueHandler.shouldShowTickmarks()) {
       return [];
     }
 
@@ -730,24 +873,36 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
       // Always show labels for first and last values, and for values at the specified interval
       final bool shouldShowLabel =
-          i == 0 || i == allPossibleValues.length - 1 || (i % widget.tickmarkLabelInterval == 0);
+          i == 0 ||
+          i == allPossibleValues.length - 1 ||
+          (i % widget.tickmarkLabelInterval == 0);
 
       if (shouldShowLabel) {
-        final double normalizedPosition = _valueHandler.toNormalized(value, widget.min, widget.max);
+        final double normalizedPosition = _valueHandler.toNormalized(
+          value,
+          widget.min,
+          widget.max,
+        );
         double leftPosition;
 
         // Adjust positioning for edge labels to align with tickmarks
         if (i == 0) {
           leftPosition = 0.0; // Align left edge with track start
         } else if (i == allPossibleValues.length - 1) {
-          leftPosition = totalWidth - widget.tickmarkSize; // Align right edge with track end
+          leftPosition =
+              totalWidth -
+              widget.tickmarkSize; // Align right edge with track end
         } else {
           // Center the label on the track by subtracting half the tickmark width
-          leftPosition = normalizedPosition * totalWidth - (widget.tickmarkSize / 2);
+          leftPosition =
+              normalizedPosition * totalWidth - (widget.tickmarkSize / 2);
         }
 
         // Format the label text using the valueFormatter if provided
-        final String labelText = _valueHandler.formatValue(value, widget.valueFormatter);
+        final String labelText = _valueHandler.formatValue(
+          value,
+          widget.valueFormatter,
+        );
 
         labels.add(
           TickmarkLabelWidget(
@@ -776,66 +931,76 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
     double height = _calculateSliderHeight();
 
     // Build the main slider content
-    Widget sliderContent = LayoutBuilder(
-      builder: (context, constraints) {
-        final double totalWidth = constraints.maxWidth;
+    Widget sliderContent = Container(
+      key: widget._key,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final double totalWidth = constraints.maxWidth;
 
-        return GestureDetector(
-          // Click-to-position functionality for the entire slider area
-          onTapDown: widget.readOnly
-              ? null
-              : (details) {
-                  // Hide tooltip when tapping outside thumbs
-                  if (_touchedThumbIndex != null && _draggedThumbIndex == null) {
-                    setState(() {
-                      _touchedThumbIndex = null;
-                    });
-                  }
+          return GestureDetector(
+            // Click-to-position functionality for the entire slider area
+            onTapDown: widget.readOnly
+                ? null
+                : (details) {
+                    // Hide tooltip when tapping outside thumbs
+                    if (_touchedThumbIndex != null &&
+                        _draggedThumbIndex == null) {
+                      setState(() {
+                        _touchedThumbIndex = null;
+                      });
+                    }
 
-                  // Find the nearest thumb to the tap position
-                  final double tapPosition = _positionCalculator.calculateNormalizedPosition(details.globalPosition);
-                  final int nearestThumbIndex = _positionCalculator.findNearestThumbIndex(
-                    tapPosition,
-                    _normalizedPositions,
-                  );
+                    // Find the nearest thumb to the tap position
+                    final double tapPosition = _positionCalculator
+                        .calculateNormalizedPosition(details.globalPosition);
+                    final int nearestThumbIndex = _positionCalculator
+                        .findNearestThumbIndex(
+                          tapPosition,
+                          _normalizedPositions,
+                        );
 
-                  // Move the nearest thumb to the tap position
-                  _moveThumbToPosition(nearestThumbIndex, tapPosition);
-                },
-          child: SizedBox(
-            key: _sliderKey,
-            height: height,
-            width: totalWidth,
-            child: Stack(
-              alignment: Alignment.center,
-              clipBehavior: Clip.none, // Allow tickmarks to extend beyond bounds
-              children: [
-                // Background track
-                Container(
-                  height: widget.trackHeight,
-                  decoration: BoxDecoration(color: widget.trackColor, borderRadius: BorderRadius.circular(4.0)),
-                ),
+                    // Move the nearest thumb to the tap position
+                    _moveThumbToPosition(nearestThumbIndex, tapPosition);
+                  },
+            child: SizedBox(
+              key: _sliderKey,
+              height: height,
+              width: totalWidth,
+              child: Stack(
+                alignment: Alignment.center,
+                clipBehavior:
+                    Clip.none, // Allow tickmarks to extend beyond bounds
+                children: [
+                  // Background track
+                  Container(
+                    height: widget.trackHeight,
+                    decoration: BoxDecoration(
+                      color: widget.trackColor,
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                  ),
 
-                // Colored range segments
-                ..._buildRanges(totalWidth),
+                  // Colored range segments
+                  ..._buildRanges(totalWidth),
 
-                // Draggable thumbs
-                ..._buildThumbs(totalWidth),
+                  // Draggable thumbs
+                  ..._buildThumbs(totalWidth),
 
-                // Tickmarks for all possible values (only for int and enum types)
-                // Positioned after thumbs so they appear below the track
-                ..._buildTickmarks(totalWidth, height),
+                  // Tickmarks for all possible values (only for int and enum types)
+                  // Positioned after thumbs so they appear below the track
+                  ..._buildTickmarks(totalWidth, height),
 
-                // Tickmark labels (only when enabled)
-                ..._buildTickmarkLabels(totalWidth, height),
+                  // Tickmark labels (only when enabled)
+                  ..._buildTickmarkLabels(totalWidth, height),
 
-                // Tooltips for dragged thumbs (on top of everything)
-                ..._buildTooltips(totalWidth),
-              ],
+                  // Tooltips for dragged thumbs (on top of everything)
+                  ..._buildTooltips(totalWidth),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
 
     // If segments are enabled and T is a numeric type, wrap in a Column with segment display
@@ -849,7 +1014,9 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
             min: widget.min as num,
             max: widget.max as num,
             contentType: widget.segmentContentType,
-            valueFormatter: widget.valueFormatter != null ? (num value) => widget.valueFormatter!(value as T) : null,
+            valueFormatter: widget.valueFormatter != null
+                ? (num value) => widget.valueFormatter!(value as T)
+                : null,
             height: widget.segmentHeight,
             cardPadding: widget.segmentCardPadding,
             cardMargin: widget.segmentCardMargin,
@@ -862,11 +1029,16 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
             showBorders: widget.showSegmentBorders,
             showBackgrounds: widget.showSegmentBackgrounds,
             enableEditMode: widget.enableSegmentEdit,
+            enableDescriptionEdit: widget.enableDescriptionEdit,
             onSegmentAdd: widget.onSegmentAdd,
             onSegmentRemove: widget.onSegmentRemove,
             addButtonColor: widget.segmentAddButtonColor,
             removeButtonColor: widget.segmentRemoveButtonColor,
             buttonSize: widget.segmentButtonSize,
+            customDescriptions: _customSegmentDescriptions,
+            onDescriptionEdit: widget.enableDescriptionEdit
+                ? _handleDescriptionEdit
+                : null,
           ),
           // Add some spacing between segment display and slider
           const SizedBox(height: 8.0),
@@ -906,17 +1078,22 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
 
   /// Builds tooltips for thumbs that are currently being dragged or touched.
   List<Widget> _buildTooltips(double totalWidth) {
-    if (!widget.showTooltip || (_draggedThumbIndex == null && _touchedThumbIndex == null)) {
+    if (!widget.showTooltip ||
+        (_draggedThumbIndex == null && _touchedThumbIndex == null)) {
       return [];
     }
 
     // Show tooltip for dragged thumb (priority) or touched thumb
     final int index = _draggedThumbIndex ?? _touchedThumbIndex!;
-    final double leftPosition = _normalizedPositions[index] * totalWidth - widget.thumbRadius;
+    final double leftPosition =
+        _normalizedPositions[index] * totalWidth - widget.thumbRadius;
     final T currentValue = widget.values[index];
 
     // Format the tooltip text using custom formatter if provided, otherwise use default formatting
-    final String tooltipText = _valueHandler.formatValue(currentValue, widget.valueFormatter);
+    final String tooltipText = _valueHandler.formatValue(
+      currentValue,
+      widget.valueFormatter,
+    );
 
     return [
       TooltipWidget(
@@ -929,17 +1106,109 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
     ];
   }
 
+  /// Returns a list of SliderSegment objects containing both values and descriptions
+  List<SliderSegment<num>> _getSegmentsWithDescriptions() {
+    if (widget.min is! num || widget.max is! num) {
+      throw UnsupportedError(
+        'getSegmentsWithDescriptions is only supported for numeric types',
+      );
+    }
+
+    if (widget.values.isEmpty) {
+      final customDesc = _customSegmentDescriptions[0];
+      return [
+        SliderSegment(
+          startValue: widget.min as num,
+          endValue: widget.max as num,
+          customDescription: customDesc,
+        ),
+      ];
+    }
+
+    final sortedValues = List<T>.from(widget.values)..sort();
+    final List<SliderSegment<num>> segments = [];
+
+    // First segment: from min to first value
+    final firstCustomDesc = _customSegmentDescriptions[0];
+    segments.add(
+      SliderSegment(
+        startValue: widget.min as num,
+        endValue: sortedValues.first as num,
+        customDescription: firstCustomDesc,
+      ),
+    );
+
+    // Middle segments: between consecutive values
+    for (int i = 0; i < sortedValues.length - 1; i++) {
+      final customDesc = _customSegmentDescriptions[i + 1];
+      segments.add(
+        SliderSegment(
+          startValue: sortedValues[i] as num,
+          endValue: sortedValues[i + 1] as num,
+          customDescription: customDesc,
+        ),
+      );
+    }
+
+    // Last segment: from last value to max
+    final lastCustomDesc = _customSegmentDescriptions[sortedValues.length];
+    segments.add(
+      SliderSegment(
+        startValue: sortedValues.last as num,
+        endValue: widget.max as num,
+        customDescription: lastCustomDesc,
+      ),
+    );
+
+    return segments;
+  }
+
+  /// Handles editing segment descriptions
+  void _handleDescriptionEdit(
+    int segmentIndex,
+    String defaultDescription,
+  ) async {
+    final currentDescription = _customSegmentDescriptions[segmentIndex];
+
+    final result = await SegmentEditDialog.show(
+      context: context,
+      currentDescription: currentDescription,
+      defaultDescription: defaultDescription,
+      segmentIndex: segmentIndex,
+    );
+
+    if (result != null) {
+      setState(() {
+        if (result.isEmpty) {
+          // Remove custom description to use default
+          _customSegmentDescriptions.remove(segmentIndex);
+        } else {
+          // Set custom description
+          _customSegmentDescriptions[segmentIndex] = result;
+        }
+      });
+
+      // Notify callback if provided
+      widget.onDescriptionChanged?.call(
+        segmentIndex,
+        result.isEmpty ? null : result,
+      );
+    }
+  }
+
   /// Builds the list of thumbs as overlapping widgets.
   List<Widget> _buildThumbs(double totalWidth) {
     return List.generate(_normalizedPositions.length, (index) {
       // Calculate the pixel position of the thumb
       // Subtract radius so the center of the circle lies on the track
-      final double leftPosition = _normalizedPositions[index] * totalWidth - widget.thumbRadius;
+      final double leftPosition =
+          _normalizedPositions[index] * totalWidth - widget.thumbRadius;
 
       return Positioned(
         left: leftPosition,
         child: GestureDetector(
-          behavior: HitTestBehavior.opaque, // Ensure touch events are captured properly
+          behavior: HitTestBehavior
+              .opaque, // Ensure touch events are captured properly
           // Handle immediate touch feedback (only if not read-only)
           onTapDown: widget.readOnly
               ? null
@@ -954,7 +1223,9 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
               : () {
                   // Keep tooltip visible briefly after tap for better mobile UX
                   Future.delayed(const Duration(milliseconds: 1500), () {
-                    if (mounted && _touchedThumbIndex == index && _draggedThumbIndex == null) {
+                    if (mounted &&
+                        _touchedThumbIndex == index &&
+                        _draggedThumbIndex == null) {
                       setState(() {
                         _touchedThumbIndex = null;
                       });
@@ -966,7 +1237,8 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
               ? null
               : () {
                   setState(() {
-                    if (_touchedThumbIndex == index && _draggedThumbIndex == null) {
+                    if (_touchedThumbIndex == index &&
+                        _draggedThumbIndex == null) {
                       _touchedThumbIndex = null;
                     }
                   });
@@ -995,20 +1267,26 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
               : (details) {
                   if (_draggedThumbIndex == index) {
                     // 1. Calculate the exact normalized position from global mouse position
-                    final double newNormalizedPosition = _positionCalculator.calculateNormalizedPosition(
-                      details.globalPosition,
-                    );
+                    final double newNormalizedPosition = _positionCalculator
+                        .calculateNormalizedPosition(details.globalPosition);
 
                     // 2. Determine allowed boundaries from neighboring thumbs
-                    final double lowerBound = _positionCalculator.calculateLowerBound(index, _normalizedPositions);
-                    final double upperBound = _positionCalculator.calculateUpperBound(index, _normalizedPositions);
+                    final double lowerBound = _positionCalculator
+                        .calculateLowerBound(index, _normalizedPositions);
+                    final double upperBound = _positionCalculator
+                        .calculateUpperBound(index, _normalizedPositions);
 
                     // 3. Clamp the normalized position to valid boundaries
-                    final double clampedNormalizedPosition = newNormalizedPosition.clamp(lowerBound, upperBound);
+                    final double clampedNormalizedPosition =
+                        newNormalizedPosition.clamp(lowerBound, upperBound);
 
                     // 4. Create new list with updated values
                     List<T> newValues = List.from(widget.values);
-                    final T newValue = _valueHandler.fromNormalized(clampedNormalizedPosition, widget.min, widget.max);
+                    final T newValue = _valueHandler.fromNormalized(
+                      clampedNormalizedPosition,
+                      widget.min,
+                      widget.max,
+                    );
 
                     // 5. Only update if the value actually changed (helps with smoothness for int types)
                     if (newValue != widget.values[index]) {

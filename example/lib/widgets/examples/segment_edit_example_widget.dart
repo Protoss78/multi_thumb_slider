@@ -23,6 +23,7 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
   final int _min = 0;
   final int _max = 100;
   bool _editModeEnabled = true;
+  bool _descriptionEditEnabled = true;
 
   @override
   Widget build(BuildContext context) {
@@ -42,37 +43,74 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
     );
   }
 
-  /// Builds the control panel for toggling edit mode
+  /// Builds the control panel for toggling edit modes
   Widget _buildControls() {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Edit Mode:',
-              style: TextStyle(
-                fontSize: AppConstants.bodyFontSize,
-                fontWeight: FontWeight.w500,
-              ),
+            // Segment Add/Remove Edit Mode
+            Row(
+              children: [
+                Text(
+                  'Segment Edit Mode:',
+                  style: TextStyle(
+                    fontSize: AppConstants.bodyFontSize,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(width: 16.0),
+                Switch(
+                  value: _editModeEnabled,
+                  onChanged: (value) {
+                    setState(() {
+                      _editModeEnabled = value;
+                    });
+                  },
+                ),
+                const SizedBox(width: 16.0),
+                Text(
+                  _editModeEnabled ? 'ON' : 'OFF',
+                  style: TextStyle(
+                    fontSize: AppConstants.bodyFontSize,
+                    color: _editModeEnabled ? Colors.green : Colors.grey,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 16.0),
-            Switch(
-              value: _editModeEnabled,
-              onChanged: (value) {
-                setState(() {
-                  _editModeEnabled = value;
-                });
-              },
-            ),
-            const SizedBox(width: 16.0),
-            Text(
-              _editModeEnabled ? 'ON' : 'OFF',
-              style: TextStyle(
-                fontSize: AppConstants.bodyFontSize,
-                color: _editModeEnabled ? Colors.green : Colors.grey,
-                fontWeight: FontWeight.bold,
-              ),
+            const SizedBox(height: 12.0),
+            // Description Edit Mode
+            Row(
+              children: [
+                Text(
+                  'Description Edit Mode:',
+                  style: TextStyle(
+                    fontSize: AppConstants.bodyFontSize,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(width: 16.0),
+                Switch(
+                  value: _descriptionEditEnabled,
+                  onChanged: (value) {
+                    setState(() {
+                      _descriptionEditEnabled = value;
+                    });
+                  },
+                ),
+                const SizedBox(width: 16.0),
+                Text(
+                  _descriptionEditEnabled ? 'ON' : 'OFF',
+                  style: TextStyle(
+                    fontSize: AppConstants.bodyFontSize,
+                    color: _descriptionEditEnabled ? Colors.green : Colors.grey,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -80,7 +118,7 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
     );
   }
 
-  /// Builds instruction text for using the edit mode
+  /// Builds instruction text for using the edit modes
   Widget _buildInstructions() {
     return Card(
       color: Colors.blue.shade50,
@@ -90,13 +128,21 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'How to use Segment Edit Mode:',
+              'How to use Edit Modes:',
               style: TextStyle(
                 fontSize: AppConstants.bodyFontSize,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8.0),
+            Text(
+              'Segment Edit Mode:',
+              style: TextStyle(
+                fontSize: AppConstants.bodyFontSize - 1,
+                fontWeight: FontWeight.w600,
+                color: Colors.blue.shade800,
+              ),
+            ),
             _buildInstructionItem(
               '• Click the green + buttons to add new segments',
             ),
@@ -106,8 +152,27 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
             _buildInstructionItem(
               '• New segments are automatically positioned at the midpoint',
             ),
+            const SizedBox(height: 8.0),
+            Text(
+              'Description Edit Mode:',
+              style: TextStyle(
+                fontSize: AppConstants.bodyFontSize - 1,
+                fontWeight: FontWeight.w600,
+                color: Colors.blue.shade800,
+              ),
+            ),
             _buildInstructionItem(
-              '• Toggle edit mode on/off using the switch above',
+              '• Click on any segment card to edit its description',
+            ),
+            _buildInstructionItem(
+              '• Edit icons (✏️) are visible next to segment text',
+            ),
+            _buildInstructionItem(
+              '• Use "Reset to Default" in the dialog to restore original text',
+            ),
+            const SizedBox(height: 8.0),
+            _buildInstructionItem(
+              '• Toggle each mode independently using the switches above',
             ),
             _buildInstructionItem(
               '• Slider thumbs can still be dragged normally',
@@ -131,7 +196,7 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
     );
   }
 
-  /// Builds the main slider with segment edit mode
+  /// Builds the main slider with segment edit modes
   Widget _buildSlider() {
     return CustomMultiThumbSlider.withInt(
       values: _values,
@@ -145,10 +210,12 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
       ),
       segmentCardBorderColor: Colors.teal.shade200,
       segmentTextColor: Colors.teal.shade900,
-      // Enable segment edit mode
+      // Enable segment edit modes
       enableSegmentEdit: _editModeEnabled,
+      enableDescriptionEdit: _descriptionEditEnabled,
       onSegmentAdd: _handleSegmentAdd,
       onSegmentRemove: _handleSegmentRemove,
+      onDescriptionChanged: _handleDescriptionChanged,
       segmentAddButtonColor: Colors.green,
       segmentRemoveButtonColor: Colors.red,
       segmentButtonSize: 24.0,
@@ -188,7 +255,11 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
               style: TextStyle(fontSize: AppConstants.bodyFontSize),
             ),
             Text(
-              'Edit Mode: ${_editModeEnabled ? "Enabled" : "Disabled"}',
+              'Segment Edit Mode: ${_editModeEnabled ? "Enabled" : "Disabled"}',
+              style: TextStyle(fontSize: AppConstants.bodyFontSize),
+            ),
+            Text(
+              'Description Edit Mode: ${_descriptionEditEnabled ? "Enabled" : "Disabled"}',
               style: TextStyle(fontSize: AppConstants.bodyFontSize),
             ),
           ],
@@ -286,6 +357,15 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
     setState(() {
       _values = newValues;
     });
+  }
+
+  /// Handles segment description changes
+  void _handleDescriptionChanged(int segmentIndex, String? customDescription) {
+    final String message = customDescription != null
+        ? 'Updated description for segment ${segmentIndex + 1}'
+        : 'Reset description for segment ${segmentIndex + 1} to default';
+
+    _showFeedback(message);
   }
 
   /// Shows success feedback to the user
