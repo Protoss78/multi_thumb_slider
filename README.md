@@ -13,27 +13,12 @@ The live demo showcases all the features of the multi-thumb slider with interact
 
 - **Multiple Thumbs**: Set multiple values on a single slider track with intuitive drag-and-drop interaction
 - **Generic Type Support**: Full support for `int`, `double`, `enum`, and other comparable types
-- **Range Constraints**: Thumbs automatically respect boundaries of neighboring thumbs
 - **Customizable Appearance**: Extensive styling options for colors, sizes, and visual elements
 - **Responsive Design**: Adapts to different screen sizes and orientations with smooth animations
-
-### Visual Features
 - **Tickmarks & Labels**: Configurable tickmarks with positioning options (above, below, on-track)
-- **Tooltips**: Interactive tooltips with custom formatting and styling
 - **Segment Display**: Built-in segment visualization with multiple content types
 - **Custom Formatting**: Flexible value formatting for currency, percentages, weights, and more
-
-### Interactive Features  
 - **Segment Editing**: Add and remove segments dynamically with visual buttons
-- **Custom Descriptions**: Edit segment descriptions with interactive popup dialogs
-- **Read-Only Mode**: Display-only mode for data visualization
-- **Touch-Friendly**: Optimized for mobile and desktop interaction
-
-### Advanced Features
-- **Enum Support**: Native support for enum types with educational examples (Dan ranks, difficulty levels)
-- **Value Formatting**: Built-in formatters for common use cases (currency, percentage, weight)
-- **Segment Analysis**: Calculate and display segment widths, ranges, and custom descriptions
-- **Event Callbacks**: Rich callback system for value changes, segment edits, and description updates
 
 ## Getting Started
 
@@ -212,11 +197,11 @@ class _DanRankExampleWidgetState extends State<DanRankExampleWidget> {
 
 ## Advanced Examples
 
-### Price Range Selector for E-commerce
+### Price Range Selector 
 
 *[🎬 Animated example placeholder - GIF will be added here]*
 
-Perfect for e-commerce applications with currency formatting and range categorization:
+Applications with currency formatting and range categorization:
 
 ```dart
 class PriceRangeExampleWidget extends StatefulWidget {
@@ -255,7 +240,7 @@ class _PriceRangeExampleWidgetState extends State<PriceRangeExampleWidget> {
 
 *[🎬 Animated example placeholder - GIF will be added here]*
 
-Ideal for sports and fitness applications with weight formatting:
+Weight class ranges:
 
 ```dart
 class WeightClassExampleWidget extends StatefulWidget {
@@ -314,7 +299,7 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
       segmentContentType: SegmentContentType.fromToRange,
       enableSegmentEdit: _editModeEnabled,
       enableDescriptionEdit: _descriptionEditEnabled,
-      // Editing callbacks
+      // Optional editing callbacks
       onSegmentAdd: (segmentIndex) {
         // Handle adding new segment
         final newValues = calculateNewValues(segmentIndex);
@@ -424,7 +409,7 @@ CustomMultiThumbSlider.withInt(
 
 ## Segment Display & Editing Features
 
-The multi-thumb slider includes powerful segment visualization and editing capabilities that make it perfect for data analysis and interactive applications.
+The multi-thumb range slider includes segment visualization and editing capabilities for interactive application use cases.
 
 ### Segment Display Options
 
@@ -541,9 +526,7 @@ CustomMultiThumbSlider<double>(
 )
 ```
 
-## Read-Only Mode & Accessibility
-
-Perfect for data visualization and display purposes:
+## Read-Only Mode 
 
 ```dart
 CustomMultiThumbSlider.withInt(
@@ -556,32 +539,6 @@ CustomMultiThumbSlider.withInt(
   onChanged: (values) {},   // Callback not called in read-only mode
 )
 ```
-
-## Use Cases
-
-### Data Analysis & Visualization
-- **Interactive Dashboards**: Display data breakdowns with customizable segments
-- **Analytics Tools**: Show metric ranges with editing capabilities  
-- **Chart Controls**: Define data ranges for chart filtering
-- **Report Builders**: Allow users to set threshold values
-
-### E-commerce & Business
-- **Price Range Filters**: Multi-tier pricing with currency formatting
-- **Product Categorization**: Define price brackets for product sorting
-- **Inventory Management**: Set stock level thresholds
-- **Commission Structures**: Define sales tiers with custom rates
-
-### Sports & Fitness
-- **Weight Classifications**: Boxing, wrestling, or martial arts divisions
-- **Performance Metrics**: Set training intensity zones
-- **Competition Categories**: Age groups, skill levels, or equipment classes
-- **Progress Tracking**: Milestone markers for fitness goals
-
-### Education & Assessment
-- **Grading Systems**: Custom grade boundaries (A, B, C, D, F)
-- **Skill Assessment**: Proficiency levels (Beginner, Intermediate, Advanced)
-- **Learning Progress**: Track student advancement through curriculum
-- **Testing Ranges**: Define score categories for standardized tests
 
 ## API Reference
 
