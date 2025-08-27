@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:multi_thumb_range_slider/multi_thumb_range_slider.dart';
-import 'package:multi_thumb_range_slider/multi_thumb_range_slider.dart';
 import 'package:multi_thumb_range_slider/src/multi_thumb_slider.dart';
 import 'test_config.dart';
 
