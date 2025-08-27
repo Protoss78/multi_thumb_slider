@@ -1,6 +1,6 @@
 # Publishing Guide
 
-This document provides step-by-step instructions for publishing the `multi_thumb_slider` package to pub.dev.
+This document provides step-by-step instructions for publishing the `multi_thumb_range_slider` package to pub.dev.
 
 ## Prerequisites
 
@@ -28,7 +28,7 @@ Before publishing, verify that:
 Ensure your package has the correct structure:
 
 ```
-multi_thumb_slider/
+multi_thumb_range_slider/
 ├── lib/
 │   ├── multi_thumb_slider.dart (main export file)
 │   └── src/
@@ -85,7 +85,7 @@ You'll be prompted to:
 ### 5. Verify Publication
 
 After publishing:
-1. Check [pub.dev](https://pub.dev/packages/multi_thumb_slider) for your package
+1. Check [pub.dev](https://pub.dev/packages/multi_thumb_range_slider) for your package
 2. Verify all documentation is displayed correctly
 3. Test the installation in a new project
 

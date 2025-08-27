@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:multi_thumb_slider/multi_thumb_slider.dart';
-import '../../constants/app_constants.dart';
+import 'package:multi_thumb_range_slider/multi_thumb_range_slider.dart';
+import 'package:multi_thumb_range_slider_example/constants/app_constants.dart';
 
 /// Basic integer slider example demonstrating fundamental functionality
 ///

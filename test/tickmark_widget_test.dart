@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:multi_thumb_slider/src/widgets/tickmark_widget.dart';
-import 'package:multi_thumb_slider/src/constants.dart';
+import 'package:multi_thumb_range_slider/src/widgets/tickmark_widget.dart';
+import 'package:multi_thumb_range_slider/src/constants.dart';
 import 'test_config.dart';
 
 void main() {

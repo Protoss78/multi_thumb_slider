@@ -1,4 +1,4 @@
-package com.example.multi_thumb_slider
+package com.example.multi_thumb_range_slider
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,6 +1,6 @@
 # Multi-Thumb Slider Examples
 
-This Flutter application demonstrates various use cases and configurations of the `multi_thumb_slider` package.
+This Flutter application demonstrates various use cases and configurations of the `multi_thumb_range_slider` package.
 
 ## Examples Included
 
@@ -89,4 +89,4 @@ This Flutter application demonstrates various use cases and configurations of th
 
 ## Package Information
 
-This example app showcases the `multi_thumb_slider` package, which provides a flexible and customizable multi-thumb slider widget for Flutter applications.
+This example app showcases the `multi_thumb_range_slider` package, which provides a flexible and customizable multi-thumb slider widget for Flutter applications.

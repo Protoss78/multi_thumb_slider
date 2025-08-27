@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:multi_thumb_slider/src/value_type_handler.dart';
+import 'package:multi_thumb_range_slider/src/value_type_handler.dart';
 
 // Test enum for testing purposes
 enum TestDifficulty { easy, medium, hard, expert }

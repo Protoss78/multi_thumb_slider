@@ -1,6 +1,6 @@
 {
-    "name": "multi_thumb_slider",
-    "short_name": "multi_thumb_slider",
+      "name": "multi_thumb_range_slider",
+  "short_name": "multi_thumb_range_slider",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

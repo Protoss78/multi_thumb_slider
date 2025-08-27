@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="multi_thumb_slider_example"
+        android:label="multi_thumb_range_slider_example"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

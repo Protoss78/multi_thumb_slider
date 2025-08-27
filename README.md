@@ -1,4 +1,4 @@
-# Multi Thumb Slider
+# Multi Thumb Range Slider
 
 A customizable Flutter widget that provides a multi-thumb slider with draggable thumbs for defining ranges, breakpoints, or multiple selection points.
 
@@ -43,7 +43,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  multi_thumb_slider: ^1.3.0
+  multi_thumb_range_slider: ^1.3.0
 ```
 
 ## Quick Start Examples
@@ -89,7 +89,7 @@ CustomMultiThumbSlider.withInt(
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:multi_thumb_slider/multi_thumb_slider.dart';
+import 'package:multi_thumb_range_slider/multi_thumb_range_slider.dart';
 
 class BasicExampleWidget extends StatefulWidget {
   @override
@@ -738,24 +738,6 @@ enum TickmarkPosition { above, below, onTrack }
 - **Visual Feedback**: Hover states and selection indicators
 - **Accessibility**: Screen reader and keyboard navigation support
 - **Animation**: Smooth transitions and state changes
-
-## Troubleshooting
-
-### White Page Issue
-
-If you're seeing a white page when visiting the live demo:
-
-1. **Check the Debug Page**: Visit [https://protoss78.github.io/multi_thumb_slider/debug.html](https://protoss78.github.io/multi_thumb_slider/debug.html) to see what files are missing
-2. **Check Browser Console**: Open Developer Tools (F12) and look for error messages
-3. **Clear Browser Cache**: Try refreshing with Ctrl+F5 or clear your browser cache
-4. **Check Network Tab**: Look for failed requests to Flutter web files
-
-### Common Issues
-
-- **Missing Flutter.js**: The main Flutter web runtime file is not loading
-- **Missing main.dart.js**: The compiled Dart code is not available
-- **CORS Issues**: Some browsers may block local file loading
-- **Build Incomplete**: The GitHub Action may not have completed successfully
 
 ## Contributing
 

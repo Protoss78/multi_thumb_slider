@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:multi_thumb_slider/multi_thumb_slider.dart';
+import 'package:multi_thumb_range_slider/multi_thumb_range_slider.dart';
 import 'test_config.dart';
 
 void main() {
@@ -20,12 +20,7 @@ void main() {
 
       test('Widget can be instantiated with minimal parameters', () {
         expect(() {
-          CustomMultiThumbSlider<int>(
-            values: [50],
-            min: 0,
-            max: 100,
-            onChanged: (newValues) {},
-          );
+          CustomMultiThumbSlider<int>(values: [50], min: 0, max: 100, onChanged: (newValues) {});
         }, returnsNormally);
       });
 
@@ -34,30 +29,17 @@ void main() {
         // The widget constructor accepts empty list but asserts during build lifecycle
         // This test documents the validation requirement without testing the assertion directly
         expect([].isEmpty, isTrue); // Empty list should be empty
-        expect(
-          [1, 2, 3].isNotEmpty,
-          isTrue,
-        ); // Non-empty list should not be empty
+        expect([1, 2, 3].isNotEmpty, isTrue); // Non-empty list should not be empty
 
         // Widget requires values.isNotEmpty - this is validated in _validateParameters()
         expect(() {
-          CustomMultiThumbSlider<int>(
-            values: [1],
-            min: 0,
-            max: 100,
-            onChanged: (newValues) {},
-          );
+          CustomMultiThumbSlider<int>(values: [1], min: 0, max: 100, onChanged: (newValues) {});
         }, returnsNormally);
       });
 
       test('Widget accepts multiple values', () {
         expect(() {
-          CustomMultiThumbSlider<int>(
-            values: [20, 40, 60, 80],
-            min: 0,
-            max: 100,
-            onChanged: (newValues) {},
-          );
+          CustomMultiThumbSlider<int>(values: [20, 40, 60, 80], min: 0, max: 100, onChanged: (newValues) {});
         }, returnsNormally);
       });
     });
@@ -65,23 +47,13 @@ void main() {
     group('Value Type Support', () {
       test('Supports int values', () {
         expect(() {
-          CustomMultiThumbSlider<int>(
-            values: [25, 75],
-            min: 0,
-            max: 100,
-            onChanged: (newValues) {},
-          );
+          CustomMultiThumbSlider<int>(values: [25, 75], min: 0, max: 100, onChanged: (newValues) {});
         }, returnsNormally);
       });
 
       test('Supports double values', () {
         expect(() {
-          CustomMultiThumbSlider<double>(
-            values: [25.5, 75.7],
-            min: 0.0,
-            max: 100.0,
-            onChanged: (newValues) {},
-          );
+          CustomMultiThumbSlider<double>(values: [25.5, 75.7], min: 0.0, max: 100.0, onChanged: (newValues) {});
         }, returnsNormally);
       });
 
@@ -101,21 +73,13 @@ void main() {
     group('Convenience Constructors', () {
       test('withInt constructor works with default range', () {
         expect(() {
-          CustomMultiThumbSlider.withInt(
-            values: [25, 75],
-            onChanged: (newValues) {},
-          );
+          CustomMultiThumbSlider.withInt(values: [25, 75], onChanged: (newValues) {});
         }, returnsNormally);
       });
 
       test('withInt constructor works with custom range', () {
         expect(() {
-          CustomMultiThumbSlider.withInt(
-            values: [5],
-            min: 0,
-            max: 10,
-            onChanged: (newValues) {},
-          );
+          CustomMultiThumbSlider.withInt(values: [5], min: 0, max: 10, onChanged: (newValues) {});
         }, returnsNormally);
       });
 
@@ -133,38 +97,21 @@ void main() {
     });
 
     group('Widget Rendering Tests', () {
-      testWidgets('Renders basic slider with default styling', (
-        WidgetTester tester,
-      ) async {
+      testWidgets('Renders basic slider with default styling', (WidgetTester tester) async {
         await tester.pumpWidget(
           TestConfig.createTestApp(
-            child: CustomMultiThumbSlider<int>(
-              values: [50],
-              min: 0,
-              max: 100,
-              onChanged: (newValues) {},
-            ),
+            child: CustomMultiThumbSlider<int>(values: [50], min: 0, max: 100, onChanged: (newValues) {}),
           ),
         );
 
         expect(find.byType(CustomMultiThumbSlider<int>), findsOneWidget);
-        expect(
-          find.byType(Container),
-          findsWidgets,
-        ); // Track and other containers
+        expect(find.byType(Container), findsWidgets); // Track and other containers
       });
 
-      testWidgets('Renders multiple thumbs correctly', (
-        WidgetTester tester,
-      ) async {
+      testWidgets('Renders multiple thumbs correctly', (WidgetTester tester) async {
         await tester.pumpWidget(
           TestConfig.createTestApp(
-            child: CustomMultiThumbSlider<int>(
-              values: [25, 50, 75],
-              min: 0,
-              max: 100,
-              onChanged: (newValues) {},
-            ),
+            child: CustomMultiThumbSlider<int>(values: [25, 50, 75], min: 0, max: 100, onChanged: (newValues) {}),
           ),
         );
 
@@ -176,9 +123,7 @@ void main() {
         expect(find.byType(GestureDetector), findsWidgets);
       });
 
-      testWidgets('Applies custom styling correctly', (
-        WidgetTester tester,
-      ) async {
+      testWidgets('Applies custom styling correctly', (WidgetTester tester) async {
         const customThumbColor = Colors.red;
         const customTrackColor = Colors.blue;
 
@@ -210,9 +155,7 @@ void main() {
     });
 
     group('Read-Only Mode Tests', () {
-      testWidgets('Read-only mode prevents gesture handling', (
-        WidgetTester tester,
-      ) async {
+      testWidgets('Read-only mode prevents gesture handling', (WidgetTester tester) async {
         bool callbackCalled = false;
 
         await tester.pumpWidget(
@@ -238,9 +181,7 @@ void main() {
         expect(callbackCalled, isFalse);
       });
 
-      testWidgets('Interactive mode renders correctly', (
-        WidgetTester tester,
-      ) async {
+      testWidgets('Interactive mode renders correctly', (WidgetTester tester) async {
         await tester.pumpWidget(
           TestConfig.createTestApp(
             child: CustomMultiThumbSlider<int>(
@@ -264,9 +205,7 @@ void main() {
     });
 
     group('Feature Configuration Tests', () {
-      testWidgets('Renders with tickmarks configuration', (
-        WidgetTester tester,
-      ) async {
+      testWidgets('Renders with tickmarks configuration', (WidgetTester tester) async {
         await tester.pumpWidget(
           TestConfig.createTestApp(
             child: CustomMultiThumbSlider<int>(
@@ -286,9 +225,7 @@ void main() {
         expect(find.byType(CustomMultiThumbSlider<int>), findsOneWidget);
       });
 
-      testWidgets('Renders with tooltip configuration', (
-        WidgetTester tester,
-      ) async {
+      testWidgets('Renders with tooltip configuration', (WidgetTester tester) async {
         await tester.pumpWidget(
           TestConfig.createTestApp(
             child: CustomMultiThumbSlider<int>(
@@ -307,9 +244,7 @@ void main() {
         expect(find.byType(CustomMultiThumbSlider<int>), findsOneWidget);
       });
 
-      testWidgets('Shows segments when enabled for numeric types', (
-        WidgetTester tester,
-      ) async {
+      testWidgets('Shows segments when enabled for numeric types', (WidgetTester tester) async {
         await tester.pumpWidget(
           TestConfig.createTestApp(
             child: CustomMultiThumbSlider<int>(
@@ -330,9 +265,7 @@ void main() {
     });
 
     group('Custom Value Formatter Tests', () {
-      testWidgets('Accepts custom value formatter', (
-        WidgetTester tester,
-      ) async {
+      testWidgets('Accepts custom value formatter', (WidgetTester tester) async {
         await tester.pumpWidget(
           TestConfig.createTestApp(
             child: CustomMultiThumbSlider<int>(
@@ -358,40 +291,23 @@ void main() {
     group('Edge Cases and Error Handling', () {
       test('Handles single value correctly', () {
         expect(() {
-          CustomMultiThumbSlider<int>(
-            values: [42],
-            min: 0,
-            max: 100,
-            onChanged: (newValues) {},
-          );
+          CustomMultiThumbSlider<int>(values: [42], min: 0, max: 100, onChanged: (newValues) {});
         }, returnsNormally);
       });
 
       test('Handles values at boundaries', () {
         expect(() {
-          CustomMultiThumbSlider<int>(
-            values: [0, 100],
-            min: 0,
-            max: 100,
-            onChanged: (newValues) {},
-          );
+          CustomMultiThumbSlider<int>(values: [0, 100], min: 0, max: 100, onChanged: (newValues) {});
         }, returnsNormally);
       });
 
       test('Handles negative ranges', () {
         expect(() {
-          CustomMultiThumbSlider<int>(
-            values: [-50, 0, 50],
-            min: -100,
-            max: 100,
-            onChanged: (newValues) {},
-          );
+          CustomMultiThumbSlider<int>(values: [-50, 0, 50], min: -100, max: 100, onChanged: (newValues) {});
         }, returnsNormally);
       });
 
-      testWidgets('Handles widget updates gracefully', (
-        WidgetTester tester,
-      ) async {
+      testWidgets('Handles widget updates gracefully', (WidgetTester tester) async {
         List<int> currentValues = [50];
 
         await tester.pumpWidget(
@@ -446,9 +362,7 @@ void main() {
         expect(receivedValues, isNull);
       });
 
-      testWidgets('Segment edit callbacks work when enabled', (
-        WidgetTester tester,
-      ) async {
+      testWidgets('Segment edit callbacks work when enabled', (WidgetTester tester) async {
         bool addCallbackCalled = false;
         bool removeCallbackCalled = false;
 

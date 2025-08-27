@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:multi_thumb_slider/src/widgets/segment_edit_dialog.dart';
+import 'package:multi_thumb_range_slider/src/widgets/segment_edit_dialog.dart';
 import 'test_config.dart';
 
 void main() {

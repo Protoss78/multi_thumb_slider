@@ -1,4 +1,4 @@
-name: multi_thumb_slider
+name: multi_thumb_range_slider
 description: "A customizable Flutter widget that provides a multi-thumb slider with draggable thumbs for defining ranges, breakpoints, or multiple selection points."
 homepage: https://github.com/Protoss78/multi_thumb_slider
 repository: https://github.com/Protoss78/multi_thumb_slider

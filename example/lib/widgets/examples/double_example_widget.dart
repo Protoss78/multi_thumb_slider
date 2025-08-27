@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:multi_thumb_slider/multi_thumb_slider.dart';
+import 'package:multi_thumb_range_slider/multi_thumb_range_slider.dart';
 import '../../constants/app_constants.dart';
 
 /// Double precision slider example demonstrating decimal value handling

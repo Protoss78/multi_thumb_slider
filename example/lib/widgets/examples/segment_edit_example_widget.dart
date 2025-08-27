@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:multi_thumb_slider/multi_thumb_slider.dart';
+import 'package:multi_thumb_range_slider/multi_thumb_range_slider.dart';
 import '../../constants/app_constants.dart';
 
 /// Segment edit mode example demonstrating dynamic segment editing functionality
@@ -14,8 +14,7 @@ class SegmentEditExampleWidget extends StatefulWidget {
   const SegmentEditExampleWidget({super.key});
 
   @override
-  State<SegmentEditExampleWidget> createState() =>
-      _SegmentEditExampleWidgetState();
+  State<SegmentEditExampleWidget> createState() => _SegmentEditExampleWidgetState();
 }
 
 class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
@@ -56,10 +55,7 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
               children: [
                 Text(
                   'Segment Edit Mode:',
-                  style: TextStyle(
-                    fontSize: AppConstants.bodyFontSize,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(fontSize: AppConstants.bodyFontSize, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(width: 16.0),
                 Switch(
@@ -87,10 +83,7 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
               children: [
                 Text(
                   'Description Edit Mode:',
-                  style: TextStyle(
-                    fontSize: AppConstants.bodyFontSize,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(fontSize: AppConstants.bodyFontSize, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(width: 16.0),
                 Switch(
@@ -129,10 +122,7 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
           children: [
             Text(
               'How to use Edit Modes:',
-              style: TextStyle(
-                fontSize: AppConstants.bodyFontSize,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: AppConstants.bodyFontSize, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8.0),
             Text(
@@ -143,15 +133,9 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
                 color: Colors.blue.shade800,
               ),
             ),
-            _buildInstructionItem(
-              '• Click the green + buttons to add new segments',
-            ),
-            _buildInstructionItem(
-              '• Click the red × buttons on segment cards to remove segments',
-            ),
-            _buildInstructionItem(
-              '• New segments are automatically positioned at the midpoint',
-            ),
+            _buildInstructionItem('• Click the green + buttons to add new segments'),
+            _buildInstructionItem('• Click the red × buttons on segment cards to remove segments'),
+            _buildInstructionItem('• New segments are automatically positioned at the midpoint'),
             const SizedBox(height: 8.0),
             Text(
               'Description Edit Mode:',
@@ -161,22 +145,12 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
                 color: Colors.blue.shade800,
               ),
             ),
-            _buildInstructionItem(
-              '• Click on any segment card to edit its description',
-            ),
-            _buildInstructionItem(
-              '• Edit icons (✏️) are visible next to segment text',
-            ),
-            _buildInstructionItem(
-              '• Use "Reset to Default" in the dialog to restore original text',
-            ),
+            _buildInstructionItem('• Click on any segment card to edit its description'),
+            _buildInstructionItem('• Edit icons (✏️) are visible next to segment text'),
+            _buildInstructionItem('• Use "Reset to Default" in the dialog to restore original text'),
             const SizedBox(height: 8.0),
-            _buildInstructionItem(
-              '• Toggle each mode independently using the switches above',
-            ),
-            _buildInstructionItem(
-              '• Slider thumbs can still be dragged normally',
-            ),
+            _buildInstructionItem('• Toggle each mode independently using the switches above'),
+            _buildInstructionItem('• Slider thumbs can still be dragged normally'),
           ],
         ),
       ),
@@ -188,10 +162,7 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
       padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: Text(
         text,
-        style: TextStyle(
-          fontSize: AppConstants.bodyFontSize - 1,
-          color: Colors.blue.shade800,
-        ),
+        style: TextStyle(fontSize: AppConstants.bodyFontSize - 1, color: Colors.blue.shade800),
       ),
     );
   }
@@ -205,9 +176,7 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
       // Enable segments display
       showSegments: true,
       segmentContentType: SegmentContentType.fromToRange,
-      segmentCardBackgroundColor: AppConstants.primaryColor.withValues(
-        alpha: 0.1,
-      ),
+      segmentCardBackgroundColor: AppConstants.primaryColor.withValues(alpha: 0.1),
       segmentCardBorderColor: Colors.teal.shade200,
       segmentTextColor: Colors.teal.shade900,
       // Enable segment edit modes
@@ -240,20 +209,11 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
           children: [
             Text(
               'Current Configuration:',
-              style: TextStyle(
-                fontSize: AppConstants.bodyFontSize,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: AppConstants.bodyFontSize, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8.0),
-            Text(
-              'Thumb Values: ${_values.join(", ")}',
-              style: TextStyle(fontSize: AppConstants.bodyFontSize),
-            ),
-            Text(
-              'Number of Segments: ${_values.length + 1}',
-              style: TextStyle(fontSize: AppConstants.bodyFontSize),
-            ),
+            Text('Thumb Values: ${_values.join(", ")}', style: TextStyle(fontSize: AppConstants.bodyFontSize)),
+            Text('Number of Segments: ${_values.length + 1}', style: TextStyle(fontSize: AppConstants.bodyFontSize)),
             Text(
               'Segment Edit Mode: ${_editModeEnabled ? "Enabled" : "Disabled"}',
               style: TextStyle(fontSize: AppConstants.bodyFontSize),
@@ -270,14 +230,19 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
 
   /// Builds segment information display
   Widget _buildSegmentInfo() {
-    final segmentWidths = SegmentCalculator.calculateSegmentWidths(
-      _values,
-      _min,
-      _max,
-    );
-    final segmentPercentages = segmentWidths
-        .map((w) => (w * 100).toStringAsFixed(1))
-        .toList();
+    // Calculate segment widths manually for the example
+    final segmentWidths = <double>[];
+    for (int i = 0; i < _values.length + 1; i++) {
+      if (i == 0) {
+        segmentWidths.add((_values[i] - _min) / (_max - _min));
+      } else if (i == _values.length) {
+        segmentWidths.add((_max - _values[i - 1]) / (_max - _min));
+      } else {
+        segmentWidths.add((_values[i] - _values[i - 1]) / (_max - _min));
+      }
+    }
+
+    final segmentPercentages = segmentWidths.map((w) => (w * 100).toStringAsFixed(1)).toList();
 
     return Card(
       child: Padding(
@@ -287,10 +252,7 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
           children: [
             Text(
               'Segment Analysis:',
-              style: TextStyle(
-                fontSize: AppConstants.bodyFontSize,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: AppConstants.bodyFontSize, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8.0),
             for (int i = 0; i < segmentPercentages.length; i++)
@@ -309,15 +271,27 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
 
   /// Handles adding a new segment at the specified index
   void _handleSegmentAdd(int segmentIndex) {
-    final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd(
-      _values,
-      _min,
-      _max,
-      segmentIndex,
-    );
+    // Simple logic for adding a segment: insert a new value at the midpoint
+    final newValues = List<int>.from(_values);
 
-    // Validate the new values before applying
-    if (SegmentCalculator.validateNewValues(newValues, _min, _max)) {
+    if (segmentIndex == 0) {
+      // Add at the beginning
+      final newValue = _min + ((_values.first - _min) ~/ 2);
+      newValues.insert(0, newValue);
+    } else if (segmentIndex == _values.length) {
+      // Add at the end
+      final newValue = _values.last + ((_max - _values.last) ~/ 2);
+      newValues.add(newValue);
+    } else {
+      // Add between existing values
+      final prevValue = _values[segmentIndex - 1];
+      final nextValue = _values[segmentIndex];
+      final newValue = prevValue + ((nextValue - prevValue) ~/ 2);
+      newValues.insert(segmentIndex, newValue);
+    }
+
+    // Ensure the new value is within bounds
+    if (newValues.every((value) => value >= _min && value <= _max)) {
       setState(() {
         _values = newValues;
       });
@@ -337,12 +311,9 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
       return;
     }
 
-    final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove(
-      _values,
-      _min,
-      _max,
-      segmentIndex,
-    );
+    // Simple logic for removing a segment: remove the value at the specified index
+    final newValues = List<int>.from(_values);
+    newValues.removeAt(segmentIndex);
 
     setState(() {
       _values = newValues;
@@ -371,22 +342,14 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
   /// Shows success feedback to the user
   void _showFeedback(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 2),
-      ),
+      SnackBar(content: Text(message), backgroundColor: Colors.green, duration: const Duration(seconds: 2)),
     );
   }
 
   /// Shows error feedback to the user
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        duration: const Duration(seconds: 3),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red, duration: const Duration(seconds: 3)));
   }
 }
