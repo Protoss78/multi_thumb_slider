@@ -14,7 +14,8 @@ class SegmentEditExampleWidget extends StatefulWidget {
   const SegmentEditExampleWidget({super.key});
 
   @override
-  State<SegmentEditExampleWidget> createState() => _SegmentEditExampleWidgetState();
+  State<SegmentEditExampleWidget> createState() =>
+      _SegmentEditExampleWidgetState();
 }
 
 class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
@@ -50,7 +51,10 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
           children: [
             Text(
               'Edit Mode:',
-              style: TextStyle(fontSize: AppConstants.bodyFontSize, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                fontSize: AppConstants.bodyFontSize,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             const SizedBox(width: 16.0),
             Switch(
@@ -87,14 +91,27 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
           children: [
             Text(
               'How to use Segment Edit Mode:',
-              style: TextStyle(fontSize: AppConstants.bodyFontSize, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: AppConstants.bodyFontSize,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 8.0),
-            _buildInstructionItem('• Click the green + buttons to add new segments'),
-            _buildInstructionItem('• Click the red × buttons on segment cards to remove segments'),
-            _buildInstructionItem('• New segments are automatically positioned at the midpoint'),
-            _buildInstructionItem('• Toggle edit mode on/off using the switch above'),
-            _buildInstructionItem('• Slider thumbs can still be dragged normally'),
+            _buildInstructionItem(
+              '• Click the green + buttons to add new segments',
+            ),
+            _buildInstructionItem(
+              '• Click the red × buttons on segment cards to remove segments',
+            ),
+            _buildInstructionItem(
+              '• New segments are automatically positioned at the midpoint',
+            ),
+            _buildInstructionItem(
+              '• Toggle edit mode on/off using the switch above',
+            ),
+            _buildInstructionItem(
+              '• Slider thumbs can still be dragged normally',
+            ),
           ],
         ),
       ),
@@ -106,7 +123,10 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
       padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: Text(
         text,
-        style: TextStyle(fontSize: AppConstants.bodyFontSize - 1, color: Colors.blue.shade800),
+        style: TextStyle(
+          fontSize: AppConstants.bodyFontSize - 1,
+          color: Colors.blue.shade800,
+        ),
       ),
     );
   }
@@ -120,7 +140,9 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
       // Enable segments display
       showSegments: true,
       segmentContentType: SegmentContentType.fromToRange,
-      segmentCardBackgroundColor: AppConstants.primaryColor.withValues(alpha: 0.1),
+      segmentCardBackgroundColor: AppConstants.primaryColor.withValues(
+        alpha: 0.1,
+      ),
       segmentCardBorderColor: Colors.teal.shade200,
       segmentTextColor: Colors.teal.shade900,
       // Enable segment edit mode
@@ -136,7 +158,7 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
       showTickmarkLabels: true,
       tickmarkLabelInterval: 20,
       showTooltip: true,
-      valueFormatter: (value) => '${value}%',
+      valueFormatter: (value) => '$value%',
       onChanged: _handleValueChange,
     );
   }
@@ -151,11 +173,20 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
           children: [
             Text(
               'Current Configuration:',
-              style: TextStyle(fontSize: AppConstants.bodyFontSize, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: AppConstants.bodyFontSize,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 8.0),
-            Text('Thumb Values: ${_values.join(", ")}', style: TextStyle(fontSize: AppConstants.bodyFontSize)),
-            Text('Number of Segments: ${_values.length + 1}', style: TextStyle(fontSize: AppConstants.bodyFontSize)),
+            Text(
+              'Thumb Values: ${_values.join(", ")}',
+              style: TextStyle(fontSize: AppConstants.bodyFontSize),
+            ),
+            Text(
+              'Number of Segments: ${_values.length + 1}',
+              style: TextStyle(fontSize: AppConstants.bodyFontSize),
+            ),
             Text(
               'Edit Mode: ${_editModeEnabled ? "Enabled" : "Disabled"}',
               style: TextStyle(fontSize: AppConstants.bodyFontSize),
@@ -168,8 +199,14 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
 
   /// Builds segment information display
   Widget _buildSegmentInfo() {
-    final segmentWidths = SegmentCalculator.calculateSegmentWidths(_values, _min, _max);
-    final segmentPercentages = segmentWidths.map((w) => (w * 100).toStringAsFixed(1)).toList();
+    final segmentWidths = SegmentCalculator.calculateSegmentWidths(
+      _values,
+      _min,
+      _max,
+    );
+    final segmentPercentages = segmentWidths
+        .map((w) => (w * 100).toStringAsFixed(1))
+        .toList();
 
     return Card(
       child: Padding(
@@ -179,7 +216,10 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
           children: [
             Text(
               'Segment Analysis:',
-              style: TextStyle(fontSize: AppConstants.bodyFontSize, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: AppConstants.bodyFontSize,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 8.0),
             for (int i = 0; i < segmentPercentages.length; i++)
@@ -198,7 +238,12 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
 
   /// Handles adding a new segment at the specified index
   void _handleSegmentAdd(int segmentIndex) {
-    final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd(_values, _min, _max, segmentIndex);
+    final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd(
+      _values,
+      _min,
+      _max,
+      segmentIndex,
+    );
 
     // Validate the new values before applying
     if (SegmentCalculator.validateNewValues(newValues, _min, _max)) {
@@ -221,7 +266,12 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
       return;
     }
 
-    final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove(_values, _min, _max, segmentIndex);
+    final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove(
+      _values,
+      _min,
+      _max,
+      segmentIndex,
+    );
 
     setState(() {
       _values = newValues;
@@ -241,14 +291,22 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
   /// Shows success feedback to the user
   void _showFeedback(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.green, duration: const Duration(seconds: 2)),
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 2),
+      ),
     );
   }
 
   /// Shows error feedback to the user
   void _showError(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red, duration: const Duration(seconds: 3)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+      ),
+    );
   }
 }
