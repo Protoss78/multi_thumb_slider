@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import '../constants.dart';
 
 /// Widget for rendering tickmark labels
@@ -16,9 +15,8 @@ class TickmarkLabelWidget extends StatelessWidget {
   final double availableHeight;
   final double trackHeight;
   final double tickmarkSpacing;
-  final Logger _logger = Logger();
 
-  TickmarkLabelWidget({
+  const TickmarkLabelWidget({
     super.key,
     required this.leftPosition,
     required this.availableHeight,
