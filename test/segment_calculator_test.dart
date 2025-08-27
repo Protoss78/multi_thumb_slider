@@ -849,7 +849,9 @@ void main() {
           0,
           100,
         );
-        expect(newValues.every((value) => value is int), isTrue);
+        expect(newValues.length, equals(2));
+        expect(newValues[0], equals(33));
+        expect(newValues[1], equals(67));
       });
 
       test('maintains type consistency for double values', () {
@@ -858,7 +860,9 @@ void main() {
           0.0,
           100.0,
         );
-        expect(newValues.every((value) => value is double), isTrue);
+        expect(newValues.length, equals(2));
+        expect(newValues[0], closeTo(33.33, 0.01));
+        expect(newValues[1], closeTo(66.67, 0.01));
       });
     });
   });
