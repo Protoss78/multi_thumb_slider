@@ -49,7 +49,7 @@ dependencies:
 ## Quick Start Examples
 
 ### Minimal Setup
-![🎬 Animated example placeholder - GIF will be added here](assets/minimal-slider.gif)
+![🎬 Animated example placeholder - GIF will be added here](https://raw.githubusercontent.com/Protoss78/multi_thumb_slider/refs/heads/main/assets/minimal-slider.gif)
 ```dart
 CustomMultiThumbSlider.withInt(
   values: [20, 80],
@@ -85,7 +85,7 @@ CustomMultiThumbSlider.withInt(
 
 #### Basic Integer Slider with Built-in Features
 
-![🎬 Animated example placeholder - GIF will be added here](assets/segment-slider.gif)
+![🎬 Animated example placeholder - GIF will be added here](https://raw.githubusercontent.com/Protoss78/multi_thumb_slider/refs/heads/main/assets/segment-slider.gif)
 
 ```dart
 import 'package:flutter/material.dart';
@@ -161,7 +161,7 @@ class _DoubleExampleWidgetState extends State<DoubleExampleWidget> {
 
 #### Enum Slider with Educational Dan Rank System
 
-![🎬 Animated example placeholder - GIF will be added here](assets/enum-slider.gif)
+![🎬 Animated example placeholder - GIF will be added here](https://raw.githubusercontent.com/Protoss78/multi_thumb_slider/refs/heads/main/assets/enum-slider.gif)
 
 ```dart
 enum DanRank { 
@@ -288,7 +288,7 @@ class _WeightClassExampleWidgetState extends State<WeightClassExampleWidget> {
 
 ### Interactive Segment Editing
 
-![🎬 Animated example placeholder - GIF will be added here](assets/segment-edit-mode.gif)
+![🎬 Animated example placeholder - GIF will be added here](https://raw.githubusercontent.com/Protoss78/multi_thumb_slider/refs/heads/main/assets/segment-edit-mode.gif)
 
 Advanced segment editing capabilities with add/remove functionality:
 
@@ -343,7 +343,7 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
 
 ### Tickmark Positioning Options
 
-![🎬 Animated example placeholder - GIF will be added here](assets/tick-styles.gif)
+![🎬 Animated example placeholder - GIF will be added here](https://raw.githubusercontent.com/Protoss78/multi_thumb_slider/refs/heads/main/assets/tick-styles.gif)
 
 Configure tickmarks to appear above, below, or on the track itself:
 
@@ -428,7 +428,7 @@ The multi-thumb slider includes powerful segment visualization and editing capab
 
 ### Segment Display Options
 
-![🎬 Animated example placeholder - GIF will be added here](assets/segment-styles.gif)
+![🎬 Animated example placeholder - GIF will be added here](https://raw.githubusercontent.com/Protoss78/multi_thumb_slider/refs/heads/main/assets/segment-styles.gif)
 
 The segment display supports three different content types:
 
