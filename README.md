@@ -9,20 +9,31 @@ Try the interactive example app: **[Live Demo](https://protoss78.github.io/multi
 
 The live demo showcases all the features of the multi-thumb slider with interactive examples you can test in your browser.
 
-**Having issues with the live demo?** Check out our [Debug Page](https://protoss78.github.io/multi_thumb_slider/debug.html) to troubleshoot common problems.
-
 ## Features
 
-- **Multiple Thumbs**: Set multiple values on a single slider track
-- **Draggable Interface**: Intuitive drag-and-drop interaction for each thumb
+- **Multiple Thumbs**: Set multiple values on a single slider track with intuitive drag-and-drop interaction
+- **Generic Type Support**: Full support for `int`, `double`, `enum`, and other comparable types
 - **Range Constraints**: Thumbs automatically respect boundaries of neighboring thumbs
-- **Generic Type Support**: Use with `int`, `double`, `enum`, or other comparable types
-- **Customizable Appearance**: Customize colors, sizes, and styling
-- **Responsive Design**: Adapts to different screen sizes and orientations
-- **Smooth Animations**: Visual feedback during interactions
-- **Segment Display**: Built-in segment visualization with customizable content types and styling
-- **Custom Segment Descriptions**: Edit and customize segment descriptions with interactive popup dialogs
-- **Segment Data Access**: Retrieve complete segment information including values and custom descriptions
+- **Customizable Appearance**: Extensive styling options for colors, sizes, and visual elements
+- **Responsive Design**: Adapts to different screen sizes and orientations with smooth animations
+
+### Visual Features
+- **Tickmarks & Labels**: Configurable tickmarks with positioning options (above, below, on-track)
+- **Tooltips**: Interactive tooltips with custom formatting and styling
+- **Segment Display**: Built-in segment visualization with multiple content types
+- **Custom Formatting**: Flexible value formatting for currency, percentages, weights, and more
+
+### Interactive Features  
+- **Segment Editing**: Add and remove segments dynamically with visual buttons
+- **Custom Descriptions**: Edit segment descriptions with interactive popup dialogs
+- **Read-Only Mode**: Display-only mode for data visualization
+- **Touch-Friendly**: Optimized for mobile and desktop interaction
+
+### Advanced Features
+- **Enum Support**: Native support for enum types with educational examples (Dan ranks, difficulty levels)
+- **Value Formatting**: Built-in formatters for common use cases (currency, percentage, weight)
+- **Segment Analysis**: Calculate and display segment widths, ranges, and custom descriptions
+- **Event Callbacks**: Rich callback system for value changes, segment edits, and description updates
 
 ## Getting Started
 
@@ -35,19 +46,57 @@ dependencies:
   multi_thumb_slider: ^1.3.0
 ```
 
+## Quick Start Examples
+
+### Minimal Setup
+![🎬 Animated example placeholder - GIF will be added here](assets/minimal-slider.gif)
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [20, 80],
+  onChanged: (values) => print('Values: $values'),
+)
+```
+
+### With Visual Enhancements
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [25, 75],
+  showTickmarks: true,
+  showTooltip: true,
+  showSegments: true,
+  onChanged: (values) => print('Range: ${values[0]} - ${values[1]}'),
+)
+```
+
+### Interactive Editing Mode
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [30, 70],
+  showSegments: true,
+  enableSegmentEdit: true,
+  enableDescriptionEdit: true,
+  onSegmentAdd: (index) => handleSegmentAdd(index),
+  onSegmentRemove: (index) => handleSegmentRemove(index),
+  onChanged: (values) => setState(() => _values = values),
+)
+```
+
 ### Basic Usage
 
-#### With Int Values (Default)
+#### Basic Integer Slider with Built-in Features
+
+![🎬 Animated example placeholder - GIF will be added here](assets/segment-slider.gif)
 
 ```dart
+import 'package:flutter/material.dart';
 import 'package:multi_thumb_slider/multi_thumb_slider.dart';
 
-class MyWidget extends StatefulWidget {
+class BasicExampleWidget extends StatefulWidget {
   @override
-  _MyWidgetState createState() => _MyWidgetState();
+  State<BasicExampleWidget> createState() => _BasicExampleWidgetState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class _BasicExampleWidgetState extends State<BasicExampleWidget> {
   List<int> _values = [20, 50, 80];
 
   @override
@@ -56,6 +105,16 @@ class _MyWidgetState extends State<MyWidget> {
       values: _values,
       min: 0,
       max: 100,
+      // Visual enhancements
+      showTickmarks: true,
+      tickmarkInterval: 5,
+      showTickmarkLabels: true,
+      tickmarkLabelInterval: 10,
+      showTooltip: true,
+      valueFormatter: (value) => '$value%',
+      // Built-in segment display
+      showSegments: true,
+      segmentContentType: SegmentContentType.fromToRange,
       onChanged: (newValues) {
         setState(() {
           _values = newValues;
@@ -66,92 +125,331 @@ class _MyWidgetState extends State<MyWidget> {
 }
 ```
 
-#### With Double Values
+#### Double Precision Slider with Decimal Formatting
+
+*[🎬 Animated example placeholder - GIF will be added here]*
 
 ```dart
-List<double> _values = [20.5, 50.0, 80.7];
+class DoubleExampleWidget extends StatefulWidget {
+  @override
+  State<DoubleExampleWidget> createState() => _DoubleExampleWidgetState();
+}
 
-CustomMultiThumbSlider<double>(
-  values: _values,
-  min: 0.0,
-  max: 100.0,
-  onChanged: (newValues) {
-    setState(() {
-      _values = newValues;
-    });
-  },
-)
+class _DoubleExampleWidgetState extends State<DoubleExampleWidget> {
+  List<double> _values = [15.5, 42.3, 78.9];
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomMultiThumbSlider<double>(
+      values: _values,
+      min: 0.0,
+      max: 100.0,
+      showTooltip: true,
+      valueFormatter: (value) => value.toStringAsFixed(1),
+      // Show segment widths with decimal precision
+      showSegments: true,
+      segmentContentType: SegmentContentType.width,
+      onChanged: (newValues) {
+        setState(() {
+          _values = newValues;
+        });
+      },
+    );
+  }
+}
 ```
 
-#### With Enum Values
+#### Enum Slider with Educational Dan Rank System
+
+![🎬 Animated example placeholder - GIF will be added here](assets/enum-slider.gif)
 
 ```dart
-enum Difficulty { easy, medium, hard, expert }
+enum DanRank { 
+  firstDan, secondDan, thirdDan, fourthDan, fifthDan,
+  sixthDan, seventhDan, eighthDan, ninthDan, tenthDan 
+}
 
-List<Difficulty> _values = [Difficulty.easy, Difficulty.medium, Difficulty.hard];
+extension DanRankExtension on DanRank {
+  String get displayName {
+    switch (this) {
+      case DanRank.firstDan: return '1st Dan';
+      case DanRank.secondDan: return '2nd Dan';
+      // ... more cases
+      default: return '${index + 1}th Dan';
+    }
+  }
+}
 
-CustomMultiThumbSlider<Difficulty>(
-  values: _values,
-  min: Difficulty.easy,
-  max: Difficulty.expert,
-  onChanged: (newValues) {
-    setState(() {
-      _values = newValues;
-    });
-  },
-)
+class DanRankExampleWidget extends StatefulWidget {
+  @override
+  State<DanRankExampleWidget> createState() => _DanRankExampleWidgetState();
+}
+
+class _DanRankExampleWidgetState extends State<DanRankExampleWidget> {
+  List<DanRank> _values = [DanRank.fifthDan, DanRank.eighthDan];
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomMultiThumbSlider.withEnum<DanRank>(
+      values: _values,
+      min: DanRank.firstDan,
+      max: DanRank.tenthDan,
+      allPossibleValues: DanRank.values,
+      showTickmarks: true,
+      showTickmarkLabels: true,
+      tickmarkLabelInterval: 1,
+      showTooltip: true,
+      valueFormatter: (value) => value.displayName,
+      onChanged: (newValues) {
+        setState(() {
+          _values = newValues;
+        });
+      },
+    );
+  }
+}
 ```
 
-## Segment Display Feature
+## Advanced Examples
 
-The multi-thumb slider now includes a built-in segment display feature that shows visual representations of the segments created by your slider values. This feature is optional and highly customizable.
+### Price Range Selector for E-commerce
 
-### Enabling Segment Display
+*[🎬 Animated example placeholder - GIF will be added here]*
+
+Perfect for e-commerce applications with currency formatting and range categorization:
+
+```dart
+class PriceRangeExampleWidget extends StatefulWidget {
+  @override
+  State<PriceRangeExampleWidget> createState() => _PriceRangeExampleWidgetState();
+}
+
+class _PriceRangeExampleWidgetState extends State<PriceRangeExampleWidget> {
+  List<int> _values = [50, 150, 300];
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomMultiThumbSlider.withInt(
+      values: _values,
+      min: 0,
+      max: 500,
+      showTooltip: true,
+      valueFormatter: (value) => '\$$value',
+      // E-commerce styled segments
+      showSegments: true,
+      segmentContentType: SegmentContentType.toRange,
+      segmentCardBackgroundColor: Colors.green.shade50,
+      segmentCardBorderColor: Colors.green.shade200,
+      segmentTextColor: Colors.green.shade800,
+      onChanged: (newValues) {
+        setState(() {
+          _values = newValues;
+        });
+      },
+    );
+  }
+}
+```
+
+### Weight Class Selector for Sports Applications
+
+*[🎬 Animated example placeholder - GIF will be added here]*
+
+Ideal for sports and fitness applications with weight formatting:
+
+```dart
+class WeightClassExampleWidget extends StatefulWidget {
+  @override
+  State<WeightClassExampleWidget> createState() => _WeightClassExampleWidgetState();
+}
+
+class _WeightClassExampleWidgetState extends State<WeightClassExampleWidget> {
+  List<int> _values = [60, 70, 80, 90];
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomMultiThumbSlider.withInt(
+      values: _values,
+      min: 50,
+      max: 100,
+      height: 60,
+      thumbRadius: 18,
+      showTooltip: true,
+      valueFormatter: (value) => '${value}kg',
+      onChanged: (newValues) {
+        setState(() {
+          _values = newValues;
+        });
+      },
+    );
+  }
+}
+```
+
+### Interactive Segment Editing
+
+![🎬 Animated example placeholder - GIF will be added here](assets/segment-edit-mode.gif)
+
+Advanced segment editing capabilities with add/remove functionality:
+
+```dart
+class SegmentEditExampleWidget extends StatefulWidget {
+  @override
+  State<SegmentEditExampleWidget> createState() => _SegmentEditExampleWidgetState();
+}
+
+class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
+  List<int> _values = [25, 50, 75];
+  bool _editModeEnabled = true;
+  bool _descriptionEditEnabled = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomMultiThumbSlider.withInt(
+      values: _values,
+      min: 0,
+      max: 100,
+      // Enable segment display and editing
+      showSegments: true,
+      segmentContentType: SegmentContentType.fromToRange,
+      enableSegmentEdit: _editModeEnabled,
+      enableDescriptionEdit: _descriptionEditEnabled,
+      // Editing callbacks
+      onSegmentAdd: (segmentIndex) {
+        // Handle adding new segment
+        final newValues = calculateNewValues(segmentIndex);
+        setState(() => _values = newValues);
+      },
+      onSegmentRemove: (segmentIndex) {
+        // Handle removing segment
+        final newValues = calculateRemovedValues(segmentIndex);
+        setState(() => _values = newValues);
+      },
+      onDescriptionChanged: (segmentIndex, description) {
+        // Handle custom description changes
+        print('Segment $segmentIndex: $description');
+      },
+      onChanged: (newValues) {
+        setState(() {
+          _values = newValues;
+        });
+      },
+    );
+  }
+}
+```
+
+## Tickmark & Visual Features
+
+### Tickmark Positioning Options
+
+![🎬 Animated example placeholder - GIF will be added here](assets/tick-styles.gif)
+
+Configure tickmarks to appear above, below, or on the track itself:
+
+```dart
+class TickmarkPositioningExample extends StatefulWidget {
+  @override
+  State<TickmarkPositioningExample> createState() => _TickmarkPositioningExampleState();
+}
+
+class _TickmarkPositioningExampleState extends State<TickmarkPositioningExample> {
+  List<int> _values = [25, 75];
+  TickmarkPosition _position = TickmarkPosition.below;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomMultiThumbSlider<int>(
+      values: _values,
+      min: 0,
+      max: 100,
+      // Tickmark configuration
+      showTickmarks: true,
+      tickmarkInterval: 10,
+      tickmarkSize: 8.0,
+      tickmarkPosition: _position,     // above, below, or onTrack
+      tickmarkSpacing: 8.0,           // Distance from track
+      // Label configuration  
+      showTickmarkLabels: true,
+      tickmarkLabelInterval: 20,
+      labelSpacing: 4.0,              // Distance from tickmarks
+      onChanged: (newValues) => setState(() => _values = newValues),
+    );
+  }
+}
+```
+
+### Tooltip Configuration
+
+Interactive tooltips with custom formatting:
 
 ```dart
 CustomMultiThumbSlider.withInt(
   values: [20, 50, 80],
+  showTooltip: true,
+  tooltipColor: Colors.blue.shade700,
+  tooltipTextColor: Colors.white,
+  tooltipTextSize: 14.0,
+  valueFormatter: (value) => '$value%',    // Custom formatting
+  onChanged: (newValues) => setState(() => _values = newValues),
+)
+```
+
+### Custom Styling and Color Schemes
+
+Extensive styling options for different themes:
+
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [30, 60, 90],
   min: 0,
   max: 100,
+  // Track styling
+  height: 50,
+  trackHeight: 8.0,
+  trackColor: Colors.grey[300]!,
+  // Thumb styling
+  thumbColor: Colors.blue[600]!,
+  thumbRadius: 16,
+  // Range colors (cycles if more ranges than colors)
+  rangeColors: [
+    Colors.green.shade200,
+    Colors.blue.shade200,
+    Colors.purple.shade200,
+    Colors.red.shade200,
+  ],
   onChanged: (newValues) => setState(() => _values = newValues),
-  // Enable segment display
-  showSegments: true,
-  segmentContentType: SegmentContentType.fromToRange,
 )
 ```
 
-### Content Type Options
+## Segment Display & Editing Features
 
-The segment display supports three different ways to show segment information:
+The multi-thumb slider includes powerful segment visualization and editing capabilities that make it perfect for data analysis and interactive applications.
 
-#### 1. From-To Range Display
-Shows the complete range of each segment (e.g., "0 - 20", "20 - 50", "50 - 100"):
+### Segment Display Options
+
+![🎬 Animated example placeholder - GIF will be added here](assets/segment-styles.gif)
+
+The segment display supports three different content types:
 
 ```dart
+// 1. From-To Range Display (shows "0-20", "20-50", "50-100")
 CustomMultiThumbSlider.withInt(
   values: [20, 50, 80],
   showSegments: true,
   segmentContentType: SegmentContentType.fromToRange,
   onChanged: (newValues) => setState(() => _values = newValues),
 )
-```
 
-#### 2. To Range Display
-Shows only the "to" value, omitting the "from" (e.g., "- 20", "- 50", "- 100"):
-
-```dart
+// 2. To Range Display (shows "-20", "-50", "-100")  
 CustomMultiThumbSlider.withInt(
   values: [20, 50, 80],
   showSegments: true,
   segmentContentType: SegmentContentType.toRange,
   onChanged: (newValues) => setState(() => _values = newValues),
 )
-```
 
-#### 3. Width Display
-Shows the calculated width of each segment (e.g., "20", "30", "20"):
-
-```dart
+// 3. Width Display (shows calculated segment widths "20", "30", "20")
 CustomMultiThumbSlider.withInt(
   values: [20, 50, 80],
   showSegments: true,
@@ -160,213 +458,140 @@ CustomMultiThumbSlider.withInt(
 )
 ```
 
-### Styling Customization
+### Segment Editing Capabilities
 
-The segment display offers extensive styling options:
+Enable dynamic segment editing with visual add/remove buttons:
+
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [25, 50, 75],
+  showSegments: true,
+  enableSegmentEdit: true,              // Enable add/remove buttons
+  enableDescriptionEdit: true,          // Enable description editing
+  onSegmentAdd: (index) {
+    // Add new segment at specified position
+  },
+  onSegmentRemove: (index) {
+    // Remove segment at specified position  
+  },
+  onDescriptionChanged: (index, description) {
+    // Handle custom description changes
+  },
+  onChanged: (newValues) => setState(() => _values = newValues),
+)
+```
+
+### Custom Segment Styling
+
+Customize the appearance of segment cards with extensive styling options:
 
 ```dart
 CustomMultiThumbSlider.withInt(
   values: [20, 50, 80],
   showSegments: true,
   segmentContentType: SegmentContentType.fromToRange,
-  // Styling options
+  // Segment styling
   segmentHeight: 70,
   segmentCardPadding: 12,
   segmentCardMargin: 4,
   segmentCardBorderRadius: 12,
-  segmentCardBackgroundColor: Colors.blue.shade100,
-  segmentCardBorderColor: Colors.blue.shade400,
-  segmentTextColor: Colors.blue.shade900,
+  segmentCardBackgroundColor: Colors.purple.shade100,
+  segmentCardBorderColor: Colors.purple.shade400,
+  segmentTextColor: Colors.purple.shade900,
   segmentTextSize: 14,
   segmentTextWeight: FontWeight.bold,
   showSegmentBorders: true,
   showSegmentBackgrounds: true,
+  valueFormatter: (value) => '${value}%',
   onChanged: (newValues) => setState(() => _values = newValues),
 )
 ```
 
-### Value Formatting Integration
+## Value Formatting & Localization
 
-Segment display integrates seamlessly with custom value formatters:
+Built-in formatters for common use cases with custom formatting support:
 
 ```dart
+// Percentage formatting
+CustomMultiThumbSlider.withInt(
+  values: [20, 50, 80],
+  valueFormatter: (value) => '$value%',
+  onChanged: (newValues) => setState(() => _values = newValues),
+)
+
+// Currency formatting
+CustomMultiThumbSlider.withInt(
+  values: [50, 150, 300],
+  valueFormatter: (value) => '\$$value',
+  onChanged: (newValues) => setState(() => _values = newValues),
+)
+
+// Weight formatting
+CustomMultiThumbSlider.withInt(
+  values: [60, 80, 100],
+  valueFormatter: (value) => '${value}kg',
+  onChanged: (newValues) => setState(() => _values = newValues),
+)
+
+// Decimal precision formatting
 CustomMultiThumbSlider<double>(
-  values: [20.5, 50.0, 80.7],
-  showSegments: true,
-  segmentContentType: SegmentContentType.fromToRange,
-  valueFormatter: (value) => '${value.toStringAsFixed(1)}%',
+  values: [15.5, 42.3, 78.9],
+  valueFormatter: (value) => value.toStringAsFixed(1),
   onChanged: (newValues) => setState(() => _values = newValues),
 )
 ```
 
-### Use Cases
+## Read-Only Mode & Accessibility
 
-- **Data Visualization**: Show segment breakdowns in charts and graphs
-- **Range Selection**: Display selected ranges for better user understanding
-- **Form Controls**: Provide visual feedback for multi-value inputs
-- **E-commerce**: Show price ranges with currency formatting
-- **Analytics**: Display data segments with custom formatting
-- **Custom Labeling**: Allow users to create meaningful names for data segments
-
-## Custom Segment Descriptions Feature
-
-The multi-thumb slider now supports custom segment descriptions, allowing users to edit and personalize segment labels beyond the default generated content.
-
-### Enabling Custom Descriptions
+Perfect for data visualization and display purposes:
 
 ```dart
 CustomMultiThumbSlider.withInt(
-  values: [20, 50, 80],
+  values: [25, 50, 75],
   min: 0,
   max: 100,
-  onChanged: (newValues) => setState(() => _values = newValues),
-  // Enable segment display with edit mode
-  showSegments: true,
-  enableSegmentEdit: true,
-  // Add description change callback
-  onDescriptionChanged: (segmentIndex, customDescription) {
-    print('Segment $segmentIndex description changed to: $customDescription');
-  },
+  readOnly: true,           // Disables all interaction
+  showSegments: true,       // Can still show segment information
+  showTickmarks: true,      // Visual elements remain functional
+  onChanged: (values) {},   // Callback not called in read-only mode
 )
 ```
 
-### Interactive Description Editing
+## Use Cases
 
-When segment edit mode is enabled, users can:
-- **Tap any segment card** to open an editing dialog
-- **Customize the description** with their own text
-- **Reset to default** using the reset button in the dialog
-- **See visual indicators** for customized segments (underlined text with edit icon)
+### Data Analysis & Visualization
+- **Interactive Dashboards**: Display data breakdowns with customizable segments
+- **Analytics Tools**: Show metric ranges with editing capabilities  
+- **Chart Controls**: Define data ranges for chart filtering
+- **Report Builders**: Allow users to set threshold values
 
-### Accessing Segment Data
+### E-commerce & Business
+- **Price Range Filters**: Multi-tier pricing with currency formatting
+- **Product Categorization**: Define price brackets for product sorting
+- **Inventory Management**: Set stock level thresholds
+- **Commission Structures**: Define sales tiers with custom rates
 
-Retrieve complete segment information including custom descriptions:
+### Sports & Fitness
+- **Weight Classifications**: Boxing, wrestling, or martial arts divisions
+- **Performance Metrics**: Set training intensity zones
+- **Competition Categories**: Age groups, skill levels, or equipment classes
+- **Progress Tracking**: Milestone markers for fitness goals
 
-```dart
-// Get all segments with their value ranges and descriptions
-List<SliderSegment<num>> segments = slider.getSegmentsWithDescriptions();
-
-for (var segment in segments) {
-  print('Segment: ${segment.startValue} - ${segment.endValue}');
-  print('Custom description: ${segment.customDescription ?? 'Using default'}');
-  print('Segment width: ${segment.width}');
-}
-```
-
-### Description Change Callback
-
-Monitor when users modify segment descriptions:
-
-```dart
-CustomMultiThumbSlider.withInt(
-  values: [20, 50, 80],
-  showSegments: true,
-  enableSegmentEdit: true,
-  onDescriptionChanged: (int segmentIndex, String? customDescription) {
-    if (customDescription != null) {
-      print('Segment $segmentIndex now has custom description: $customDescription');
-    } else {
-      print('Segment $segmentIndex reset to default description');
-    }
-    // Save to your data model, send to server, etc.
-  },
-  onChanged: (newValues) => setState(() => _values = newValues),
-)
-```
-
-### Data Models
-
-#### SliderSegment<T>
-Represents a complete segment with value range and description:
-
-```dart
-class SliderSegment<T extends num> {
-  final T startValue;           // Segment start value
-  final T endValue;             // Segment end value
-  final String? customDescription; // Custom description (null = use default)
-  
-  double get width => (endValue - startValue).toDouble();
-  bool get hasCustomDescription => customDescription != null && customDescription!.isNotEmpty;
-}
-```
-
-#### SegmentDescription
-Helper class for managing descriptions:
-
-```dart
-class SegmentDescription {
-  final int segmentIndex;       // Which segment this describes
-  final String description;     // The description text
-}
-```
-
-### Advanced Usage Example
-
-```dart
-class AdvancedSegmentSlider extends StatefulWidget {
-  @override
-  _AdvancedSegmentSliderState createState() => _AdvancedSegmentSliderState();
-}
-
-class _AdvancedSegmentSliderState extends State<AdvancedSegmentSlider> {
-  List<int> _values = [20, 50, 80];
-  Map<int, String> _customDescriptions = {};
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // The slider with custom description support
-        CustomMultiThumbSlider.withInt(
-          values: _values,
-          min: 0,
-          max: 100,
-          showSegments: true,
-          enableSegmentEdit: true,
-          segmentContentType: SegmentContentType.fromToRange,
-          onChanged: (newValues) => setState(() => _values = newValues),
-          onDescriptionChanged: (segmentIndex, customDescription) {
-            setState(() {
-              if (customDescription != null) {
-                _customDescriptions[segmentIndex] = customDescription;
-              } else {
-                _customDescriptions.remove(segmentIndex);
-              }
-            });
-          },
-        ),
-        
-        // Display current segment information
-        const SizedBox(height: 20),
-        Text('Current Segments:', style: Theme.of(context).textTheme.headlineSmall),
-        
-        // Build list of segments
-        ..._buildSegmentInfo(),
-      ],
-    );
-  }
-
-  List<Widget> _buildSegmentInfo() {
-    // This would require access to the slider instance
-    // In practice, you'd store the slider as a member variable with a GlobalKey
-    return [
-      Text('Tap segments above to customize their descriptions'),
-      Text('Custom descriptions: ${_customDescriptions.length}'),
-    ];
-  }
-}
-```
+### Education & Assessment
+- **Grading Systems**: Custom grade boundaries (A, B, C, D, F)
+- **Skill Assessment**: Proficiency levels (Beginner, Intermediate, Advanced)
+- **Learning Progress**: Track student advancement through curriculum
+- **Testing Ranges**: Define score categories for standardized tests
 
 ## API Reference
 
 ### CustomMultiThumbSlider
 
-The main widget that provides the multi-thumb slider functionality. It's generic and supports various value types.
+The main widget providing multi-thumb slider functionality with support for generic value types, extensive visual customization, and interactive features.
 
 #### Constructors
 
 ##### Generic Constructor
-
 ```dart
 const CustomMultiThumbSlider<T>({
   Key? key,
@@ -374,18 +599,42 @@ const CustomMultiThumbSlider<T>({
   required ValueChanged<List<T>> onChanged,
   required T min,
   required T max,
+  
+  // Basic Layout
   double height = 45.0,
+  double trackHeight = 8.0,
+  bool readOnly = false,
+  
+  // Colors & Styling  
   Color trackColor = const Color(0xFFE0E0E0),
-  List<Color> rangeColors = const [
-    Colors.greenAccent,
-    Colors.blueAccent,
-    Colors.orangeAccent,
-    Colors.redAccent
-  ],
+  List<Color> rangeColors = defaultRangeColors,
   Color thumbColor = Colors.white,
   double thumbRadius = 14.0,
-  bool readOnly = false,
-  // Segment Display Parameters
+  
+  // Value Formatting
+  String Function(T)? valueFormatter,
+  List<T>? allPossibleValues, // Required for enum types
+  
+  // Tickmarks & Labels
+  bool showTickmarks = false,
+  int? tickmarkInterval,
+  double tickmarkSize = 6.0,
+  Color tickmarkColor = Colors.grey,
+  TickmarkPosition tickmarkPosition = TickmarkPosition.below,
+  double tickmarkSpacing = 6.0,
+  bool showTickmarkLabels = false,
+  int? tickmarkLabelInterval,
+  double tickmarkLabelSize = 12.0,
+  Color tickmarkLabelColor = Colors.black87,
+  double labelSpacing = 4.0,
+  
+  // Tooltips
+  bool showTooltip = false,
+  Color tooltipColor = Colors.black87,
+  Color tooltipTextColor = Colors.white,
+  double tooltipTextSize = 12.0,
+  
+  // Segment Display
   bool showSegments = false,
   SegmentContentType segmentContentType = SegmentContentType.fromToRange,
   double segmentHeight = 60.0,
@@ -399,245 +648,96 @@ const CustomMultiThumbSlider<T>({
   FontWeight segmentTextWeight = FontWeight.normal,
   bool showSegmentBorders = true,
   bool showSegmentBackgrounds = true,
+  
+  // Segment Editing
+  bool enableSegmentEdit = false,
+  bool enableDescriptionEdit = false,
+  Color segmentAddButtonColor = Colors.green,
+  Color segmentRemoveButtonColor = Colors.red,
+  double segmentButtonSize = 20.0,
+  Function(int)? onSegmentAdd,
+  Function(int)? onSegmentRemove,
+  Function(int, String?)? onDescriptionChanged,
 })
 ```
 
 ##### Int Convenience Constructor
-
 ```dart
 const CustomMultiThumbSlider.withInt({
-  Key? key,
-  required List<int> values,
-  required ValueChanged<List<int>> onChanged,
+  // Same parameters as generic constructor but with int defaults
   int min = 0,
   int max = 100,
-  double height = 45.0,
-  Color trackColor = const Color(0xFFE0E0E0),
-  List<Color> rangeColors = const [
-    Colors.greenAccent,
-    Colors.blueAccent,
-    Colors.orangeAccent,
-    Colors.redAccent
-  ],
-  Color thumbColor = Colors.white,
-  double thumbRadius = 14.0,
-  bool readOnly = false,
+  // ... all other parameters
 })
 ```
 
-#### Parameters
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `values` | `List<T>` | **required** | Current values of the slider thumbs |
-| `onChanged` | `ValueChanged<List<T>>` | **required** | Callback when any thumb value changes |
-| `min` | `T` | **required** | Minimum value of the slider |
-| `max` | `T` | **required** | Maximum value of the slider |
-| `height` | `double` | `45.0` | Height of the slider track |
-| `trackColor` | `Color` | `Color(0xFFE0E0E0)` | Background color of the slider track |
-| `rangeColors` | `List<Color>` | `[green, blue, orange, red]` | Colors for range segments between thumbs |
-| `thumbColor` | `Color` | `Colors.white` | Color of the thumb circles |
-| `thumbRadius` | `double` | `14.0` | Radius of each thumb circle |
-| `readOnly` | `bool` | `false` | Whether the slider is in read-only mode |
-
-#### Segment Display Parameters
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `showSegments` | `bool` | `false` | Whether to display segment information above the slider |
-| `segmentContentType` | `SegmentContentType` | `fromToRange` | Type of content to display in segment cards |
-| `segmentHeight` | `double` | `60.0` | Height of the segment display |
-| `segmentCardPadding` | `double` | `8.0` | Padding inside each segment card |
-| `segmentCardMargin` | `double` | `2.0` | Margin between segment cards |
-| `segmentCardBorderRadius` | `double` | `8.0` | Border radius of segment cards |
-| `segmentCardBackgroundColor` | `Color` | `Color(0xFFF5F5F5)` | Background color of segment cards |
-| `segmentCardBorderColor` | `Color` | `Color(0xFFE0E0E0)` | Border color of segment cards |
-| `segmentTextColor` | `Color` | `Color(0xFF424242)` | Text color of segment content |
-| `segmentTextSize` | `double` | `12.0` | Font size of segment text |
-| `segmentTextWeight` | `FontWeight` | `FontWeight.normal` | Font weight of segment text |
-| `showSegmentBorders` | `bool` | `true` | Whether to show segment borders |
-| `showSegmentBackgrounds` | `bool` | `true` | Whether to show segment backgrounds |
-| `onDescriptionChanged` | `Function(int, String?)?` | `null` | Callback when segment descriptions are changed |
-
-## Examples
-
-### Basic Range Slider (Int)
-
+##### Enum Convenience Constructor
 ```dart
-CustomMultiThumbSlider.withInt(
-  values: [25, 75],
-  min: 0,
-  max: 100,
-  onChanged: (values) => print('Range: ${values[0]} - ${values[1]}'),
-)
+const CustomMultiThumbSlider.withEnum<T extends Enum>({
+  required List<T> allPossibleValues,
+  // ... all other parameters  
+})
 ```
 
-### Double Values Slider
+#### Key Parameters
+
+| Category | Parameter | Description |
+|----------|-----------|-------------|
+| **Core** | `values` | List of current thumb values |
+| | `min` / `max` | Value range boundaries |
+| | `onChanged` | Callback for value changes |
+| | `readOnly` | Disable interaction for display-only mode |
+| **Visual** | `showTickmarks` | Enable tickmark display |
+| | `showTooltip` | Enable interactive tooltips |
+| | `showSegments` | Enable segment visualization |
+| | `valueFormatter` | Custom value formatting function |
+| **Interaction** | `enableSegmentEdit` | Enable add/remove segment buttons |
+| | `enableDescriptionEdit` | Enable segment description editing |
+| | `onSegmentAdd` / `onSegmentRemove` | Segment editing callbacks |
+| | `onDescriptionChanged` | Description change callback |
+
+#### Enums
 
 ```dart
-CustomMultiThumbSlider<double>(
-  values: [25.5, 75.3],
-  min: 0.0,
-  max: 100.0,
-  onChanged: (values) => print('Range: ${values[0]} - ${values[1]}'),
-)
+enum SegmentContentType { fromToRange, toRange, width }
+enum TickmarkPosition { above, below, onTrack }
 ```
 
-### Price Range Selector
+## Type Support & Behavior
 
-```dart
-CustomMultiThumbSlider.withInt(
-  values: [10, 50, 100],
-  min: 0,
-  max: 200,
-  rangeColors: [
-    Colors.green,
-    Colors.yellow,
-    Colors.orange,
-    Colors.red,
-  ],
-  onChanged: (values) => print('Price ranges: $values'),
-)
-```
+| Type | Usage | Behavior |
+|------|-------|----------|
+| **`int`** | Most common use case | Values automatically rounded to nearest integer |
+| **`double`** | Precise measurements | Full decimal precision maintained |
+| **`enum`** | Categorical selection | Discrete values with custom display names |
+| **Custom** | Any comparable type | Must implement comparison operators |
 
-### Weight Class Selector
+### Type-Specific Features
 
-```dart
-CustomMultiThumbSlider.withInt(
-  values: [60, 70, 80, 90],
-  min: 50,
-  max: 100,
-  height: 60,
-  thumbRadius: 18,
-  onChanged: (values) => print('Weight classes: $values'),
-)
-```
+- **All types**: Tooltips, segments, tickmarks, formatting
+- **Int/Double**: Automatic interval calculation for tickmarks
+- **Enums**: Requires `allPossibleValues` parameter for proper spacing
+- **Custom types**: Must provide custom `valueFormatter` for display
 
-### Custom Styling
+## Customization Options
 
-```dart
-CustomMultiThumbSlider.withInt(
-  values: [30, 60, 90],
-  min: 0,
-  max: 100,
-  trackColor: Colors.grey[300]!,
-  rangeColors: [
-    Colors.blue[100]!,
-    Colors.purple[100]!,
-    Colors.pink[100]!,
-    Colors.red[100]!,
-  ],
-  thumbColor: Colors.blue[600]!,
-  thumbRadius: 16,
-  height: 50,
-  onChanged: (values) => setState(() => _values = values),
-)
-```
+### Visual Theming
+- **Colors**: Track, thumb, range, and segment colors
+- **Sizing**: Height, radius, padding, and spacing controls  
+- **Typography**: Font sizes, weights, and colors for labels
+- **Borders**: Border radius, width, and styling options
 
-### Read-Only Mode
+### Layout Control
+- **Positioning**: Tickmarks above, below, or on track
+- **Spacing**: Configurable gaps between elements
+- **Responsive**: Automatic adaptation to screen sizes
+- **Overflow**: Smart handling of limited space
 
-```dart
-CustomMultiThumbSlider.withInt(
-  values: [25, 50, 75],
-  min: 0,
-  max: 100,
-  readOnly: true, // Disables dragging
-  onChanged: (values) {}, // Not called in read-only mode
-)
-```
-
-### Segment Display Examples
-
-#### Basic Segment Display
-
-```dart
-CustomMultiThumbSlider.withInt(
-  values: [20, 50, 80],
-  showSegments: true,
-  segmentContentType: SegmentContentType.fromToRange,
-  onChanged: (values) => setState(() => _values = values),
-)
-```
-
-#### Segment Display with Custom Styling
-
-```dart
-CustomMultiThumbSlider.withInt(
-  values: [20, 50, 80],
-  showSegments: true,
-  segmentContentType: SegmentContentType.width,
-  segmentHeight: 70,
-  segmentCardBackgroundColor: Colors.purple.shade100,
-  segmentCardBorderColor: Colors.purple.shade400,
-  segmentTextColor: Colors.purple.shade900,
-  segmentTextSize: 14,
-  segmentTextWeight: FontWeight.bold,
-  onChanged: (values) => setState(() => _values = values),
-)
-```
-
-#### Price Range with Segment Display
-
-```dart
-CustomMultiThumbSlider.withInt(
-  values: [10, 50, 100],
-  min: 0,
-  max: 200,
-  showSegments: true,
-  segmentContentType: SegmentContentType.toRange,
-  valueFormatter: (value) => '\$$value',
-  segmentCardBackgroundColor: Colors.green.shade50,
-  segmentCardBorderColor: Colors.green.shade200,
-  onChanged: (values) => setState(() => _values = values),
-)
-```
-
-## Type Support
-
-The slider supports various value types:
-
-- **`int`**: Integer values (default, most common use case)
-- **`double`**: Floating-point values for precise measurements
-- **`enum`**: Enumeration values for categorical selection
-- **Other numeric types**: Any type that extends `num`
-
-### Type-Specific Behavior
-
-- **Int values**: Automatically rounded to nearest integer
-- **Double values**: Maintains precision during calculations
-- **Enum values**: Treated as discrete categorical values
-- **Mixed types**: Not supported - all values must be of the same type
-
-## Use Cases
-
-- **Price Range Selection**: E-commerce filters for price ranges
-- **Weight Class Selection**: Sports or fitness applications
-- **Time Range Selection**: Scheduling or booking applications
-- **Score Thresholds**: Educational or gaming applications
-- **Data Visualization**: Interactive charts and graphs with segment breakdowns
-- **Form Controls**: Custom input widgets for multiple values
-- **Difficulty Selection**: Game or application settings
-- **Rating Systems**: Multi-point rating scales
-- **Segment Analysis**: Show data segments with custom formatting and styling
-- **Range Feedback**: Provide visual feedback for selected ranges
-- **Analytics Dashboards**: Display data breakdowns in interactive interfaces
-
-## Customization
-
-### Colors
-
-The `rangeColors` parameter allows you to define custom colors for each range segment. If there are more ranges than colors, the colors will cycle.
-
-### Sizing
-
-Adjust the `height` and `thumbRadius` parameters to match your design requirements. The widget automatically scales the track and thumb positioning accordingly.
-
-### Constraints
-
-The widget automatically enforces that:
-- All values must be within the `min` and `max` range
-- Thumbs cannot overlap or cross each other
-- At least one value must be provided
+### Interaction Design
+- **Touch Targets**: Optimized thumb sizes for mobile
+- **Visual Feedback**: Hover states and selection indicators
+- **Accessibility**: Screen reader and keyboard navigation support
+- **Animation**: Smooth transitions and state changes
 
 ## Troubleshooting
 
@@ -708,28 +808,3 @@ If you encounter any issues or have questions, please:
 - Customizable appearance and styling
 - Range constraint enforcement
 - Responsive design support
-
-### Migration Guide
-To migrate from version 1.0.0:
-
-```dart
-// Old code (v1.0.0)
-CustomMultiThumbSlider(
-  values: [20, 50, 80],
-  onChanged: (values) => print(values),
-)
-
-// New code (v1.1.0) - Option 1: Use convenience constructor
-CustomMultiThumbSlider.withInt(
-  values: [20, 50, 80],
-  onChanged: (values) => print(values),
-)
-
-// New code (v1.1.0) - Option 2: Use generic constructor with explicit min/max
-CustomMultiThumbSlider<int>(
-  values: [20, 50, 80],
-  min: 0,
-  max: 100,
-  onChanged: (values) => print(values),
-)
-```
