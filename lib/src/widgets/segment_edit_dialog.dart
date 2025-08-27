@@ -43,6 +43,7 @@ class SegmentEditDialog extends StatefulWidget {
 class _SegmentEditDialogState extends State<SegmentEditDialog> {
   late TextEditingController _controller;
   bool _isUsingCustomDescription = false;
+  bool _wasResetToDefault = false;
 
   @override
   void initState() {
@@ -66,6 +67,7 @@ class _SegmentEditDialogState extends State<SegmentEditDialog> {
   void _resetToDefault() {
     setState(() {
       _isUsingCustomDescription = false;
+      _wasResetToDefault = true;
       _controller.text = widget.defaultDescription;
     });
   }
@@ -73,6 +75,7 @@ class _SegmentEditDialogState extends State<SegmentEditDialog> {
   void _enableCustomDescription() {
     setState(() {
       _isUsingCustomDescription = true;
+      _wasResetToDefault = false; // Clear reset flag when switching to custom
       // Keep the current text but mark it as custom
     });
   }
@@ -206,6 +209,9 @@ class _SegmentEditDialogState extends State<SegmentEditDialog> {
             if (description.isEmpty) {
               // Return null for empty description (will use default)
               Navigator.of(context).pop(null);
+            } else if (_wasResetToDefault) {
+              // Return empty string to indicate reset to default
+              Navigator.of(context).pop('');
             } else if (!_isUsingCustomDescription) {
               // Return null if using default description unchanged
               Navigator.of(context).pop(null);
