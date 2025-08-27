@@ -5,7 +5,10 @@ All notable changes to the `multi_thumb_range_slider` package will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.3.0+1] - 2025-01-14
+## [1.3.0+1] - 2025-08-25
+
+
+## [1.3.0+1] - 2025-08-24
 
 🎉 **Major Release**: This version introduces comprehensive segment description editing, enhanced visual features, advanced tickmark positioning, and extensive documentation improvements with animated examples.
 
@@ -105,7 +108,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Real-World Applications**: Practical examples for business and fitness applications
 - **Interactive Features**: Toggle controls and live feedback in example applications
 
-## [1.2.0] - 2025-01-10
+## [1.2.0] - 2025-08-10
 
 ### Added
 - **Segment Display Feature**: New built-in segment visualization above the slider
@@ -147,7 +150,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Documentation**: Comprehensive examples and documentation for the new feature
 - **API Consistency**: Maintains existing API while adding new segment display parameters
 
-## [1.1.1+3] - 2025-08-26
+## [1.1.1+3] - 2025-08-22
 
 ### Added
 - **Dynamic Track Height**: Added support for dynamic track height adjustments
@@ -165,7 +168,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Position Calculator**: Enhanced position calculation logic for more accurate positioning
 - **Example Updates**: Updated example widgets to showcase new features and fixes
 
-## [1.1.0+2] - 2024-12-19
+## [1.1.0+2] - 2025-08-21
 
 ### Added
 - **Generic Type Support**: The slider now supports various value types beyond just `double`
@@ -211,7 +214,7 @@ CustomMultiThumbSlider<int>(
 )
 ```
 
-## [1.0.0+1] - 2024-12-19
+## [1.0.0+1] - 2025-08-19
 
 ### Added
 - Initial release of the Multi-Thumb Slider package
