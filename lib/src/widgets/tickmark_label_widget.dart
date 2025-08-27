@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import '../constants.dart';
 
 /// Widget for rendering tickmark labels
@@ -15,8 +16,9 @@ class TickmarkLabelWidget extends StatelessWidget {
   final double availableHeight;
   final double trackHeight;
   final double tickmarkSpacing;
+  final Logger _logger = Logger();
 
-  const TickmarkLabelWidget({
+  TickmarkLabelWidget({
     super.key,
     required this.leftPosition,
     required this.availableHeight,
@@ -36,6 +38,22 @@ class TickmarkLabelWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     double centerHeightPosition = availableHeight / 2;
 
+    // Calculate text width for centering
+    final textStyle = TextStyle(
+      color: color,
+      fontSize: fontSize,
+      fontWeight: FontWeight.w500,
+    );
+    final textPainter = TextPainter(
+      text: TextSpan(text: text, style: textStyle),
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+    final double textWidth =
+        textPainter.width + 2; // Add small padding for measurement accuracy
+    _logger.d('Text: $text, textWidth: $textWidth');
+    int divider = textWidth > 30 ? 2 : 4;
+
     // Calculate vertical position based on tickmark position
     // Labels should be positioned relative to their tickmarks, not the track
     // The track is centered at y=0 in the Stack with Alignment.center
@@ -51,7 +69,7 @@ class TickmarkLabelWidget extends StatelessWidget {
             labelSpacing -
             fontSize;
         return Positioned(
-          left: leftPosition - 16, // Center the label relative to tickmark
+          left: leftPosition - (textWidth / divider),
           top: top,
           child: _buildLabelContent(),
         );
@@ -67,7 +85,7 @@ class TickmarkLabelWidget extends StatelessWidget {
             labelSpacing -
             fontSize;
         return Positioned(
-          left: leftPosition - 16, // Center the label relative to tickmark
+          left: leftPosition - (textWidth / divider),
           bottom: bottom,
           child: _buildLabelContent(),
         );
@@ -77,7 +95,7 @@ class TickmarkLabelWidget extends StatelessWidget {
         // Track is centered at y=0, so go down from there
         final double top = (tickmarkSize / 2) + labelSpacing + 20;
         return Positioned(
-          left: leftPosition - 16, // Center the label relative to tickmark
+          left: leftPosition - (textWidth / divider),
           top: top,
           child: _buildLabelContent(),
         );
@@ -87,16 +105,12 @@ class TickmarkLabelWidget extends StatelessWidget {
   Widget _buildLabelContent() {
     return GestureDetector(
       onTap: isReadOnly ? null : onTap,
-      child: SizedBox(
-        width: 40,
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: color,
-            fontSize: fontSize,
-            fontWeight: FontWeight.w500,
-          ),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: color,
+          fontSize: fontSize,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );
