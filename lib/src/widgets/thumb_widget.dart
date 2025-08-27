@@ -22,7 +22,9 @@ class ThumbWidget extends StatelessWidget {
 
     // Use muted colors and reduced opacity when in read-only mode
     final Color thumbColor = isReadOnly ? color.withValues(alpha: 0.6) : color;
-    final Color borderColor = isReadOnly ? Colors.grey.shade300 : Colors.grey.shade400;
+    final Color borderColor = isReadOnly
+        ? Colors.grey.shade300
+        : Colors.grey.shade400;
     final double borderWidth = isReadOnly ? 1.5 : 2.0;
 
     return Container(

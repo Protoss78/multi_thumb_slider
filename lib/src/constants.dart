@@ -25,9 +25,12 @@ class SliderConstants {
   static const double defaultTooltipTextSize = 12.0;
 
   // Default tickmark positioning
-  static const TickmarkPosition defaultTickmarkPosition = TickmarkPosition.below;
-  static const double defaultTickmarkSpacing = 8.0; // Space between track and track
-  static const double defaultLabelSpacing = 4.0; // Space between tickmarks and labels
+  static const TickmarkPosition defaultTickmarkPosition =
+      TickmarkPosition.below;
+  static const double defaultTickmarkSpacing =
+      8.0; // Space between track and track
+  static const double defaultLabelSpacing =
+      4.0; // Space between tickmarks and labels
 
   // Default intervals
   static const int defaultTickmarkInterval = 1;
@@ -57,7 +60,8 @@ class SliderConstants {
   static const double defaultSegmentTextSize = 12.0;
 
   // Default segment display content type
-  static const SegmentContentType defaultSegmentContentType = SegmentContentType.fromToRange;
+  static const SegmentContentType defaultSegmentContentType =
+      SegmentContentType.fromToRange;
 
   // Default segment display colors
   static const Color defaultSegmentBackgroundColor = Color(0xFFF5F5F5);

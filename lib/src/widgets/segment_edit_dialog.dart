@@ -48,9 +48,13 @@ class _SegmentEditDialogState extends State<SegmentEditDialog> {
   @override
   void initState() {
     super.initState();
-    _isUsingCustomDescription = widget.currentDescription != null && widget.currentDescription!.isNotEmpty;
+    _isUsingCustomDescription =
+        widget.currentDescription != null &&
+        widget.currentDescription!.isNotEmpty;
     _controller = TextEditingController(
-      text: _isUsingCustomDescription ? widget.currentDescription : widget.defaultDescription,
+      text: _isUsingCustomDescription
+          ? widget.currentDescription
+          : widget.defaultDescription,
     );
   }
 
@@ -97,7 +101,11 @@ class _SegmentEditDialogState extends State<SegmentEditDialog> {
           children: [
             TextField(
               controller: _controller,
-              decoration: InputDecoration(hintText: '...', border: const OutlineInputBorder(), labelText: '...'),
+              decoration: InputDecoration(
+                hintText: '...',
+                border: const OutlineInputBorder(),
+                labelText: '...',
+              ),
               maxLines: null,
               enabled: true, // Always enabled
               onChanged: (_) {
@@ -122,7 +130,10 @@ class _SegmentEditDialogState extends State<SegmentEditDialog> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                   ),
                 ),
                 ElevatedButton.icon(
@@ -132,7 +143,10 @@ class _SegmentEditDialogState extends State<SegmentEditDialog> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                   ),
                 ),
                 ElevatedButton.icon(
@@ -157,7 +171,10 @@ class _SegmentEditDialogState extends State<SegmentEditDialog> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                   ),
                 ),
               ],

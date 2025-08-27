@@ -7,7 +7,7 @@ class TooltipWidget extends StatelessWidget {
   final Color backgroundColor;
   final Color textColor;
   final double fontSize;
-  
+
   const TooltipWidget({
     super.key,
     required this.leftPosition,
@@ -16,7 +16,7 @@ class TooltipWidget extends StatelessWidget {
     required this.textColor,
     required this.fontSize,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
