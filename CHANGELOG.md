@@ -5,7 +5,7 @@ All notable changes to the `multi_thumb_range_slider` package will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.3.0+1] - 2025-08-25
+## [1.3.1+1] - 2025-08-25
 ### Fixed
 - **README**: Fixed various issues in readme
 - **dart code format**: Fixed minor formatting issues
