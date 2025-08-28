@@ -5,6 +5,19 @@ All notable changes to the `multi_thumb_range_slider` package will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.2+1] - 2025-08-25
+### Added
+- **Open-Started Segments**: New `enableOpenStartedSegment` parameter allows the first segment to be open-started (no lower bound)
+- **Visual Indicators**: Left-pointing arrows for open-started segments, similar to existing right-pointing arrows for open-ended segments
+- **Dual Open Segments**: Support for both open-started and open-ended segments in the same slider
+- **Enhanced Weight Example**: Updated weight class example to demonstrate both open-started ("55kg or less") and open-ended ("80kg+") segments
+- **Custom Paint Arrows**: Improved arrow visibility with custom painted triangular arrows instead of icons
+
+### Changed
+- **SliderSegment Model**: Enhanced to support nullable `startValue` for open-started segments
+- **Segment Calculator**: Updated to handle open-started segment width calculations and label generation
+- **Range Segment Widget**: Redesigned to support both left and right arrows with improved painter architecture
+
 ## [1.3.1+1] - 2025-08-25
 ### Fixed
 - **README**: Fixed various issues in readme

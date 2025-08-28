@@ -9,6 +9,8 @@ import '../../constants/app_constants.dart';
 /// - Weight formatting with units
 /// - Multiple values for category boundaries
 /// - Sports/fitness themed styling
+/// - Open-ended segments for heavyweight categories (80kg+)
+/// - Open-started segments for lightweight categories (55kg or less)
 class WeightClassExampleWidget extends StatefulWidget {
   const WeightClassExampleWidget({super.key});
 
@@ -46,6 +48,13 @@ class _WeightClassExampleWidgetState extends State<WeightClassExampleWidget> {
       tooltipTextSize: 14.0,
       valueFormatter: Formatters.weight,
       onChanged: _handleValueChange,
+      enableOpenEndedSegment: true,
+      enableOpenStartedSegment: true,
+      showSegments: true,
+      segmentContentType: SegmentContentType.toRange,
+      tickmarkInterval: 10,
+      showTickmarks: true,
+      showTickmarkLabels: true,
     );
   }
 
@@ -95,7 +104,6 @@ class _WeightClassExampleWidgetState extends State<WeightClassExampleWidget> {
   /// Gets weight class information
   List<Map<String, dynamic>> _getWeightClasses() {
     final sortedValues = List<int>.from(_values)..sort();
-    final boundaries = [ExampleData.weightMin, ...sortedValues, ExampleData.weightMax];
 
     final classNames = ['Lightweight', 'Welterweight', 'Middleweight', 'Light Heavyweight', 'Heavyweight'];
     final colors = [
@@ -106,13 +114,30 @@ class _WeightClassExampleWidgetState extends State<WeightClassExampleWidget> {
       Colors.purple.shade300,
     ];
 
-    return List.generate(boundaries.length - 1, (index) {
-      return {
-        'name': classNames[index % classNames.length],
-        'range': '${Formatters.weight(boundaries[index])} - ${Formatters.weight(boundaries[index + 1])}',
-        'color': colors[index % colors.length],
-      };
-    });
+    final List<Map<String, dynamic>> classes = [];
+
+    if (sortedValues.isNotEmpty) {
+      // First class is open-started (lightweight class)
+      classes.add({'name': classNames[0], 'range': '- ${Formatters.weight(sortedValues.first)}', 'color': colors[0]});
+
+      // Middle classes (with upper and lower bounds)
+      for (int i = 0; i < sortedValues.length - 1; i++) {
+        classes.add({
+          'name': classNames[(i + 1) % classNames.length],
+          'range': '${Formatters.weight(sortedValues[i])} - ${Formatters.weight(sortedValues[i + 1])}',
+          'color': colors[(i + 1) % colors.length],
+        });
+      }
+
+      // Last class is open-ended (heavyweight class)
+      classes.add({
+        'name': classNames[sortedValues.length % classNames.length],
+        'range': '${Formatters.weight(sortedValues.last)}+',
+        'color': colors[sortedValues.length % colors.length],
+      });
+    }
+
+    return classes;
   }
 
   /// Builds a weight class information row

@@ -13,6 +13,7 @@ The live demo showcases all the features of the multi-thumb slider with interact
 
 - **Multiple Thumbs**: Set multiple values on a single slider track with intuitive drag-and-drop interaction
 - **Generic Type Support**: Full support for `int`, `double`, `enum`, and other comparable types
+- **Open Segments**: Support for open-ended ("80kg+") and open-started ("55kg or less") segments with visual arrows
 - **Customizable Appearance**: Extensive styling options for colors, sizes, and visual elements
 - **Responsive Design**: Adapts to different screen sizes and orientations with smooth animations
 - **Tickmarks & Labels**: Configurable tickmarks with positioning options (above, below, on-track)
@@ -492,6 +493,84 @@ CustomMultiThumbSlider.withInt(
 )
 ```
 
+## Open Segments
+
+The multi-thumb slider supports open segments that extend infinitely in one direction, perfect for representing ranges like "55kg or less" or "80kg and above".
+
+### Open-Ended Segments
+
+Enable segments with no upper bound using `enableOpenEndedSegment`:
+
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [60, 80],
+  min: 40,
+  max: 120,
+  enableOpenEndedSegment: true,
+  showSegments: true,
+  segmentContentType: SegmentContentType.fromToRange,
+  valueFormatter: (value) => '${value}kg',
+  onChanged: (values) => print(values),
+)
+```
+
+This creates segments:
+- `40kg - 60kg` (Light)
+- `60kg - 80kg` (Medium) 
+- `80kg+` (Heavy) ← **Open-ended with right arrow**
+
+### Open-Started Segments
+
+Enable segments with no lower bound using `enableOpenStartedSegment`:
+
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [55, 75],
+  min: 40,
+  max: 120,
+  enableOpenStartedSegment: true,
+  showSegments: true,
+  segmentContentType: SegmentContentType.fromToRange,
+  valueFormatter: (value) => '${value}kg',
+  onChanged: (values) => print(values),
+)
+```
+
+This creates segments:
+- `- 55kg` (Light) ← **Open-started with left arrow**
+- `55kg - 75kg` (Medium)
+- `75kg - 120kg` (Heavy)
+
+### Dual Open Segments
+
+Combine both for maximum flexibility:
+
+```dart
+CustomMultiThumbSlider.withInt(
+  values: [55, 75],
+  min: 40,
+  max: 120,
+  enableOpenStartedSegment: true,
+  enableOpenEndedSegment: true,
+  showSegments: true,
+  segmentContentType: SegmentContentType.fromToRange,
+  valueFormatter: (value) => '${value}kg',
+  onChanged: (values) => print(values),
+)
+```
+
+This creates segments:
+- `- 55kg` (Light) ← **Left arrow**
+- `55kg - 75kg` (Medium)
+- `75kg+` (Heavy) ← **Right arrow**
+
+### Visual Indicators
+
+Open segments are clearly indicated with:
+- **Custom painted arrows** on the track itself
+- **Appropriate labels** (e.g., "55kg+", "- 80kg")
+- **Proportional widths** for visual balance
+
 ## Value Formatting & Localization
 
 Built-in formatters for common use cases with custom formatting support:
@@ -652,6 +731,8 @@ const CustomMultiThumbSlider.withEnum<T extends Enum>({
 | | `enableDescriptionEdit` | Enable segment description editing |
 | | `onSegmentAdd` / `onSegmentRemove` | Segment editing callbacks |
 | | `onDescriptionChanged` | Description change callback |
+| **Open Segments** | `enableOpenEndedSegment` | Enable open-ended segments (no upper bound) |
+| | `enableOpenStartedSegment` | Enable open-started segments (no lower bound) |
 
 #### Enums
 

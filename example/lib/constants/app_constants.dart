@@ -94,7 +94,7 @@ class ExampleData {
   // Weight classes
   static const List<int> weightValues = [60, 70, 80, 90];
   static const int weightMin = 50;
-  static const int weightMax = 100;
+  static const int weightMax = 120;
 
   // Custom styling
   static const List<int> customValues = [30, 60, 90];
