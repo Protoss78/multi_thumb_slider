@@ -73,14 +73,22 @@ extension DanRankExtension on DanRank {
   int get level => index + 1;
 
   /// Returns true if this is a master-level Dan rank (8th Dan and above)
-  bool get isMasterLevel => this == DanRank.eighthDan || this == DanRank.ninthDan || this == DanRank.tenthDan;
+  bool get isMasterLevel =>
+      this == DanRank.eighthDan ||
+      this == DanRank.ninthDan ||
+      this == DanRank.tenthDan;
 
   /// Returns true if this is a senior-level Dan rank (6th-7th Dan)
-  bool get isSeniorLevel => this == DanRank.sixthDan || this == DanRank.seventhDan;
+  bool get isSeniorLevel =>
+      this == DanRank.sixthDan || this == DanRank.seventhDan;
 
   /// Returns true if this is an intermediate-level Dan rank (3rd-5th Dan)
-  bool get isIntermediateLevel => this == DanRank.thirdDan || this == DanRank.fourthDan || this == DanRank.fifthDan;
+  bool get isIntermediateLevel =>
+      this == DanRank.thirdDan ||
+      this == DanRank.fourthDan ||
+      this == DanRank.fifthDan;
 
   /// Returns true if this is a junior-level Dan rank (1st-2nd Dan)
-  bool get isJuniorLevel => this == DanRank.firstDan || this == DanRank.secondDan;
+  bool get isJuniorLevel =>
+      this == DanRank.firstDan || this == DanRank.secondDan;
 }

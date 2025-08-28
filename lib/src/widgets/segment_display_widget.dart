@@ -80,7 +80,8 @@ class SegmentDisplayWidget<T extends num> extends StatelessWidget {
   final Map<int, String> customDescriptions;
 
   /// Callback for editing segment descriptions
-  final void Function(int segmentIndex, String defaultDescription)? onDescriptionEdit;
+  final void Function(int segmentIndex, String defaultDescription)?
+  onDescriptionEdit;
 
   /// Whether to enable open-ended segments
   final bool enableOpenEndedSegment;
@@ -157,18 +158,28 @@ class SegmentDisplayWidget<T extends num> extends StatelessWidget {
   }
 
   /// Builds the display-only layout (original behavior)
-  Widget _buildDisplayModeLayout(List<double> segmentWidths, List<String> segmentLabels) {
+  Widget _buildDisplayModeLayout(
+    List<double> segmentWidths,
+    List<String> segmentLabels,
+  ) {
     return Row(
       children: List.generate(segmentWidths.length, (index) {
         final width = segmentWidths[index];
         final label = segmentLabels[index];
-        return Expanded(flex: (width * 100).toInt(), child: _buildSegmentCard(label));
+        return Expanded(
+          flex: (width * 100).toInt(),
+          child: _buildSegmentCard(label),
+        );
       }),
     );
   }
 
   /// Builds the edit mode layout with optional add/remove buttons and editable segment cards
-  Widget _buildEditModeLayout(List<double> segmentWidths, List<String> displayLabels, List<String> defaultLabels) {
+  Widget _buildEditModeLayout(
+    List<double> segmentWidths,
+    List<String> displayLabels,
+    List<String> defaultLabels,
+  ) {
     List<Widget> children = [];
 
     for (int i = 0; i < segmentWidths.length; i++) {
@@ -182,7 +193,12 @@ class SegmentDisplayWidget<T extends num> extends StatelessWidget {
       }
 
       // Add the segment card (always editable when this layout is used)
-      children.add(Expanded(flex: (width * 100).toInt(), child: _buildEditableSegmentCard(label, defaultLabel, i)));
+      children.add(
+        Expanded(
+          flex: (width * 100).toInt(),
+          child: _buildEditableSegmentCard(label, defaultLabel, i),
+        ),
+      );
     }
 
     // Add final + button after last segment (only when segment editing is enabled)
@@ -206,7 +222,11 @@ class SegmentDisplayWidget<T extends num> extends StatelessWidget {
       child: Center(
         child: Text(
           label,
-          style: TextStyle(color: textColor, fontSize: textSize, fontWeight: textWeight),
+          style: TextStyle(
+            color: textColor,
+            fontSize: textSize,
+            fontWeight: textWeight,
+          ),
           textAlign: TextAlign.center,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
@@ -216,7 +236,11 @@ class SegmentDisplayWidget<T extends num> extends StatelessWidget {
   }
 
   /// Builds an editable segment card with remove button
-  Widget _buildEditableSegmentCard(String label, String defaultLabel, int segmentIndex) {
+  Widget _buildEditableSegmentCard(
+    String label,
+    String defaultLabel,
+    int segmentIndex,
+  ) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: cardMargin),
       padding: EdgeInsets.all(cardPadding),
@@ -246,7 +270,8 @@ class SegmentDisplayWidget<T extends num> extends StatelessWidget {
                                 color: textColor,
                                 fontSize: textSize,
                                 fontWeight: textWeight,
-                                decoration: customDescriptions.containsKey(segmentIndex)
+                                decoration:
+                                    customDescriptions.containsKey(segmentIndex)
                                     ? TextDecoration.underline
                                     : null,
                               ),
@@ -260,14 +285,21 @@ class SegmentDisplayWidget<T extends num> extends StatelessWidget {
                             Icons.edit,
                             size: textSize * 1.2, // Bigger icon
                             color: customDescriptions.containsKey(segmentIndex)
-                                ? Colors.orange[700] // Orange for custom descriptions
-                                : textColor.withValues(alpha: 0.7), // More visible
+                                ? Colors
+                                      .orange[700] // Orange for custom descriptions
+                                : textColor.withValues(
+                                    alpha: 0.7,
+                                  ), // More visible
                           ),
                         ],
                       )
                     : Text(
                         label,
-                        style: TextStyle(color: textColor, fontSize: textSize, fontWeight: textWeight),
+                        style: TextStyle(
+                          color: textColor,
+                          fontSize: textSize,
+                          fontWeight: textWeight,
+                        ),
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -277,7 +309,11 @@ class SegmentDisplayWidget<T extends num> extends StatelessWidget {
           ),
           // Only show remove button when segment editing is enabled and there are more than 1 segments
           if (enableEditMode && values.isNotEmpty)
-            Positioned(top: 0, right: 0, child: _buildRemoveButton(segmentIndex)),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: _buildRemoveButton(segmentIndex),
+            ),
         ],
       ),
     );
@@ -291,7 +327,10 @@ class SegmentDisplayWidget<T extends num> extends StatelessWidget {
         width: buttonSize,
         height: buttonSize,
         margin: const EdgeInsets.symmetric(horizontal: 2.0),
-        decoration: BoxDecoration(color: addButtonColor, shape: BoxShape.circle),
+        decoration: BoxDecoration(
+          color: addButtonColor,
+          shape: BoxShape.circle,
+        ),
         child: Icon(Icons.add, color: Colors.white, size: buttonSize * 0.6),
       ),
     );
@@ -304,7 +343,10 @@ class SegmentDisplayWidget<T extends num> extends StatelessWidget {
       child: Container(
         width: buttonSize * 0.8,
         height: buttonSize * 0.8,
-        decoration: BoxDecoration(color: removeButtonColor, shape: BoxShape.circle),
+        decoration: BoxDecoration(
+          color: removeButtonColor,
+          shape: BoxShape.circle,
+        ),
         child: Icon(Icons.close, color: Colors.white, size: buttonSize * 0.5),
       ),
     );

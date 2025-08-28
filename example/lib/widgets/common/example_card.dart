@@ -32,7 +32,10 @@ class ExampleCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
-            if (showDivider) ...[const SizedBox(height: AppConstants.itemSpacing), _buildDivider()],
+            if (showDivider) ...[
+              const SizedBox(height: AppConstants.itemSpacing),
+              _buildDivider(),
+            ],
             const SizedBox(height: AppConstants.largeSpacing),
             child,
           ],
@@ -57,7 +60,10 @@ class ExampleCard extends StatelessWidget {
         const SizedBox(height: AppConstants.itemSpacing),
         Text(
           description,
-          style: TextStyle(fontSize: AppConstants.captionFontSize, color: AppConstants.textCaptionColor),
+          style: TextStyle(
+            fontSize: AppConstants.captionFontSize,
+            color: AppConstants.textCaptionColor,
+          ),
         ),
       ],
     );
@@ -68,7 +74,13 @@ class ExampleCard extends StatelessWidget {
     return Container(
       height: 1,
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Colors.transparent, Colors.grey.shade300, Colors.transparent]),
+        gradient: LinearGradient(
+          colors: [
+            Colors.transparent,
+            Colors.grey.shade300,
+            Colors.transparent,
+          ],
+        ),
       ),
     );
   }
@@ -98,7 +110,9 @@ class FeatureCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor ?? Colors.blue[50],
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: (iconColor ?? Colors.blue).withValues(alpha: 0.3)),
+        border: Border.all(
+          color: (iconColor ?? Colors.blue).withValues(alpha: 0.3),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +136,10 @@ class FeatureCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             description,
-            style: TextStyle(fontSize: AppConstants.smallFontSize, color: iconColor ?? Colors.blue[700]),
+            style: TextStyle(
+              fontSize: AppConstants.smallFontSize,
+              color: iconColor ?? Colors.blue[700],
+            ),
           ),
         ],
       ),
@@ -136,7 +153,12 @@ class InfoChip extends StatelessWidget {
   final Color color;
   final IconData? icon;
 
-  const InfoChip({super.key, required this.label, required this.color, this.icon});
+  const InfoChip({
+    super.key,
+    required this.label,
+    required this.color,
+    this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -150,10 +172,17 @@ class InfoChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (icon != null) ...[Icon(icon, size: 12, color: color), const SizedBox(width: 4)],
+          if (icon != null) ...[
+            Icon(icon, size: 12, color: color),
+            const SizedBox(width: 4),
+          ],
           Text(
             label,
-            style: TextStyle(fontSize: AppConstants.smallFontSize, fontWeight: FontWeight.w500, color: color),
+            style: TextStyle(
+              fontSize: AppConstants.smallFontSize,
+              fontWeight: FontWeight.w500,
+              color: color,
+            ),
           ),
         ],
       ),

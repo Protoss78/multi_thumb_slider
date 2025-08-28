@@ -14,7 +14,8 @@ class SegmentEditExampleWidget extends StatefulWidget {
   const SegmentEditExampleWidget({super.key});
 
   @override
-  State<SegmentEditExampleWidget> createState() => _SegmentEditExampleWidgetState();
+  State<SegmentEditExampleWidget> createState() =>
+      _SegmentEditExampleWidgetState();
 }
 
 class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
@@ -55,7 +56,10 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
               children: [
                 Text(
                   'Segment Edit Mode:',
-                  style: TextStyle(fontSize: AppConstants.bodyFontSize, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                    fontSize: AppConstants.bodyFontSize,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 const SizedBox(width: 16.0),
                 Switch(
@@ -83,7 +87,10 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
               children: [
                 Text(
                   'Description Edit Mode:',
-                  style: TextStyle(fontSize: AppConstants.bodyFontSize, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                    fontSize: AppConstants.bodyFontSize,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 const SizedBox(width: 16.0),
                 Switch(
@@ -122,7 +129,10 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
           children: [
             Text(
               'How to use Edit Modes:',
-              style: TextStyle(fontSize: AppConstants.bodyFontSize, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: AppConstants.bodyFontSize,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 8.0),
             Text(
@@ -133,9 +143,15 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
                 color: Colors.blue.shade800,
               ),
             ),
-            _buildInstructionItem('• Click the green + buttons to add new segments'),
-            _buildInstructionItem('• Click the red × buttons on segment cards to remove segments'),
-            _buildInstructionItem('• New segments are automatically positioned at the midpoint'),
+            _buildInstructionItem(
+              '• Click the green + buttons to add new segments',
+            ),
+            _buildInstructionItem(
+              '• Click the red × buttons on segment cards to remove segments',
+            ),
+            _buildInstructionItem(
+              '• New segments are automatically positioned at the midpoint',
+            ),
             const SizedBox(height: 8.0),
             Text(
               'Description Edit Mode:',
@@ -145,12 +161,22 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
                 color: Colors.blue.shade800,
               ),
             ),
-            _buildInstructionItem('• Click on any segment card to edit its description'),
-            _buildInstructionItem('• Edit icons (✏️) are visible next to segment text'),
-            _buildInstructionItem('• Use "Reset to Default" in the dialog to restore original text'),
+            _buildInstructionItem(
+              '• Click on any segment card to edit its description',
+            ),
+            _buildInstructionItem(
+              '• Edit icons (✏️) are visible next to segment text',
+            ),
+            _buildInstructionItem(
+              '• Use "Reset to Default" in the dialog to restore original text',
+            ),
             const SizedBox(height: 8.0),
-            _buildInstructionItem('• Toggle each mode independently using the switches above'),
-            _buildInstructionItem('• Slider thumbs can still be dragged normally'),
+            _buildInstructionItem(
+              '• Toggle each mode independently using the switches above',
+            ),
+            _buildInstructionItem(
+              '• Slider thumbs can still be dragged normally',
+            ),
           ],
         ),
       ),
@@ -162,7 +188,10 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
       padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: Text(
         text,
-        style: TextStyle(fontSize: AppConstants.bodyFontSize - 1, color: Colors.blue.shade800),
+        style: TextStyle(
+          fontSize: AppConstants.bodyFontSize - 1,
+          color: Colors.blue.shade800,
+        ),
       ),
     );
   }
@@ -176,7 +205,9 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
       // Enable segments display
       showSegments: true,
       segmentContentType: SegmentContentType.fromToRange,
-      segmentCardBackgroundColor: AppConstants.primaryColor.withValues(alpha: 0.1),
+      segmentCardBackgroundColor: AppConstants.primaryColor.withValues(
+        alpha: 0.1,
+      ),
       segmentCardBorderColor: Colors.teal.shade200,
       segmentTextColor: Colors.teal.shade900,
       // Enable segment edit modes
@@ -209,11 +240,20 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
           children: [
             Text(
               'Current Configuration:',
-              style: TextStyle(fontSize: AppConstants.bodyFontSize, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: AppConstants.bodyFontSize,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 8.0),
-            Text('Thumb Values: ${_values.join(", ")}', style: TextStyle(fontSize: AppConstants.bodyFontSize)),
-            Text('Number of Segments: ${_values.length + 1}', style: TextStyle(fontSize: AppConstants.bodyFontSize)),
+            Text(
+              'Thumb Values: ${_values.join(", ")}',
+              style: TextStyle(fontSize: AppConstants.bodyFontSize),
+            ),
+            Text(
+              'Number of Segments: ${_values.length + 1}',
+              style: TextStyle(fontSize: AppConstants.bodyFontSize),
+            ),
             Text(
               'Segment Edit Mode: ${_editModeEnabled ? "Enabled" : "Disabled"}',
               style: TextStyle(fontSize: AppConstants.bodyFontSize),
@@ -242,7 +282,9 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
       }
     }
 
-    final segmentPercentages = segmentWidths.map((w) => (w * 100).toStringAsFixed(1)).toList();
+    final segmentPercentages = segmentWidths
+        .map((w) => (w * 100).toStringAsFixed(1))
+        .toList();
 
     return Card(
       child: Padding(
@@ -252,7 +294,10 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
           children: [
             Text(
               'Segment Analysis:',
-              style: TextStyle(fontSize: AppConstants.bodyFontSize, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: AppConstants.bodyFontSize,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 8.0),
             for (int i = 0; i < segmentPercentages.length; i++)
@@ -342,14 +387,22 @@ class _SegmentEditExampleWidgetState extends State<SegmentEditExampleWidget> {
   /// Shows success feedback to the user
   void _showFeedback(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.green, duration: const Duration(seconds: 2)),
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 2),
+      ),
     );
   }
 
   /// Shows error feedback to the user
   void _showError(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red, duration: const Duration(seconds: 3)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+      ),
+    );
   }
 }

@@ -32,7 +32,10 @@ void main() {
 
     group('Default Positioning', () {
       test('has correct default tickmark position', () {
-        expect(SliderConstants.defaultTickmarkPosition, equals(TickmarkPosition.below));
+        expect(
+          SliderConstants.defaultTickmarkPosition,
+          equals(TickmarkPosition.below),
+        );
       });
 
       test('has correct default tickmark spacing', () {
@@ -56,7 +59,10 @@ void main() {
 
     group('Default Colors', () {
       test('has correct default track color', () {
-        expect(SliderConstants.defaultTrackColor, equals(const Color(0xFFE0E0E0)));
+        expect(
+          SliderConstants.defaultTrackColor,
+          equals(const Color(0xFFE0E0E0)),
+        );
       });
 
       test('has correct default thumb color', () {
@@ -82,7 +88,12 @@ void main() {
 
     group('Default Range Colors', () {
       test('has correct default range colors list', () {
-        const expectedColors = [Colors.greenAccent, Colors.blueAccent, Colors.orangeAccent, Colors.redAccent];
+        const expectedColors = [
+          Colors.greenAccent,
+          Colors.blueAccent,
+          Colors.orangeAccent,
+          Colors.redAccent,
+        ];
 
         expect(SliderConstants.defaultRangeColors, equals(expectedColors));
         expect(SliderConstants.defaultRangeColors.length, equals(4));
@@ -119,35 +130,56 @@ void main() {
 
     group('Default Segment Display Content Type', () {
       test('has correct default segment content type', () {
-        expect(SliderConstants.defaultSegmentContentType, equals(SegmentContentType.fromToRange));
+        expect(
+          SliderConstants.defaultSegmentContentType,
+          equals(SegmentContentType.fromToRange),
+        );
       });
     });
 
     group('Default Segment Display Colors', () {
       test('has correct default segment background color', () {
-        expect(SliderConstants.defaultSegmentBackgroundColor, equals(const Color(0xFFF5F5F5)));
+        expect(
+          SliderConstants.defaultSegmentBackgroundColor,
+          equals(const Color(0xFFF5F5F5)),
+        );
       });
 
       test('has correct default segment border color', () {
-        expect(SliderConstants.defaultSegmentBorderColor, equals(const Color(0xFFE0E0E0)));
+        expect(
+          SliderConstants.defaultSegmentBorderColor,
+          equals(const Color(0xFFE0E0E0)),
+        );
       });
 
       test('has correct default segment text color', () {
-        expect(SliderConstants.defaultSegmentTextColor, equals(const Color(0xFF424242)));
+        expect(
+          SliderConstants.defaultSegmentTextColor,
+          equals(const Color(0xFF424242)),
+        );
       });
 
       test('has correct default segment card background color', () {
-        expect(SliderConstants.defaultSegmentCardBackgroundColor, equals(const Color(0xFFF5F5F5)));
+        expect(
+          SliderConstants.defaultSegmentCardBackgroundColor,
+          equals(const Color(0xFFF5F5F5)),
+        );
       });
 
       test('has correct default segment card border color', () {
-        expect(SliderConstants.defaultSegmentCardBorderColor, equals(const Color(0xFFE0E0E0)));
+        expect(
+          SliderConstants.defaultSegmentCardBorderColor,
+          equals(const Color(0xFFE0E0E0)),
+        );
       });
     });
 
     group('Default Segment Display Text Properties', () {
       test('has correct default segment text weight', () {
-        expect(SliderConstants.defaultSegmentTextWeight, equals(FontWeight.normal));
+        expect(
+          SliderConstants.defaultSegmentTextWeight,
+          equals(FontWeight.normal),
+        );
       });
 
       test('has correct default show segment borders', () {
@@ -161,11 +193,17 @@ void main() {
 
     group('Segment Edit Mode Constants', () {
       test('has correct default segment add button color', () {
-        expect(SliderConstants.defaultSegmentAddButtonColor, equals(Colors.green));
+        expect(
+          SliderConstants.defaultSegmentAddButtonColor,
+          equals(Colors.green),
+        );
       });
 
       test('has correct default segment remove button color', () {
-        expect(SliderConstants.defaultSegmentRemoveButtonColor, equals(Colors.red));
+        expect(
+          SliderConstants.defaultSegmentRemoveButtonColor,
+          equals(Colors.red),
+        );
       });
 
       test('has correct default segment button size', () {
@@ -175,14 +213,22 @@ void main() {
 
     group('Enum Definitions', () {
       test('TickmarkPosition enum has all expected values', () {
-        const expectedValues = [TickmarkPosition.above, TickmarkPosition.below, TickmarkPosition.onTrack];
+        const expectedValues = [
+          TickmarkPosition.above,
+          TickmarkPosition.below,
+          TickmarkPosition.onTrack,
+        ];
 
         expect(TickmarkPosition.values, equals(expectedValues));
         expect(TickmarkPosition.values.length, equals(3));
       });
 
       test('SegmentContentType enum has all expected values', () {
-        const expectedValues = [SegmentContentType.fromToRange, SegmentContentType.toRange, SegmentContentType.width];
+        const expectedValues = [
+          SegmentContentType.fromToRange,
+          SegmentContentType.toRange,
+          SegmentContentType.width,
+        ];
 
         expect(SegmentContentType.values, equals(expectedValues));
         expect(SegmentContentType.values.length, equals(3));
@@ -236,8 +282,14 @@ void main() {
       });
 
       test('enum constants have correct types', () {
-        expect(SliderConstants.defaultTickmarkPosition, isA<TickmarkPosition>());
-        expect(SliderConstants.defaultSegmentContentType, isA<SegmentContentType>());
+        expect(
+          SliderConstants.defaultTickmarkPosition,
+          isA<TickmarkPosition>(),
+        );
+        expect(
+          SliderConstants.defaultSegmentContentType,
+          isA<SegmentContentType>(),
+        );
         expect(SliderConstants.defaultSegmentTextWeight, isA<FontWeight>());
       });
     });
@@ -245,21 +297,39 @@ void main() {
     group('Logical Consistency', () {
       test('thumb radius is reasonable compared to track height', () {
         // Thumb should be larger than track height for good UX
-        expect(SliderConstants.defaultThumbRadius, greaterThan(SliderConstants.defaultTrackHeight / 2));
+        expect(
+          SliderConstants.defaultThumbRadius,
+          greaterThan(SliderConstants.defaultTrackHeight / 2),
+        );
       });
 
       test('tickmark size is reasonable compared to track height', () {
         // Tickmarks should be similar size to track height
-        expect(SliderConstants.defaultTickmarkSize, lessThanOrEqualTo(SliderConstants.defaultTrackHeight * 2));
+        expect(
+          SliderConstants.defaultTickmarkSize,
+          lessThanOrEqualTo(SliderConstants.defaultTrackHeight * 2),
+        );
       });
 
       test('text sizes are in reasonable range', () {
         // Text sizes should be reasonable for UI
-        expect(SliderConstants.defaultTickmarkLabelSize, greaterThanOrEqualTo(8.0));
-        expect(SliderConstants.defaultTickmarkLabelSize, lessThanOrEqualTo(20.0));
-        expect(SliderConstants.defaultTooltipTextSize, greaterThanOrEqualTo(8.0));
+        expect(
+          SliderConstants.defaultTickmarkLabelSize,
+          greaterThanOrEqualTo(8.0),
+        );
+        expect(
+          SliderConstants.defaultTickmarkLabelSize,
+          lessThanOrEqualTo(20.0),
+        );
+        expect(
+          SliderConstants.defaultTooltipTextSize,
+          greaterThanOrEqualTo(8.0),
+        );
         expect(SliderConstants.defaultTooltipTextSize, lessThanOrEqualTo(20.0));
-        expect(SliderConstants.defaultSegmentTextSize, greaterThanOrEqualTo(8.0));
+        expect(
+          SliderConstants.defaultSegmentTextSize,
+          greaterThanOrEqualTo(8.0),
+        );
         expect(SliderConstants.defaultSegmentTextSize, lessThanOrEqualTo(20.0));
       });
 
@@ -267,8 +337,14 @@ void main() {
         // Spacing should be positive but not too large
         expect(SliderConstants.defaultTickmarkSpacing, lessThanOrEqualTo(20.0));
         expect(SliderConstants.defaultLabelSpacing, lessThanOrEqualTo(20.0));
-        expect(SliderConstants.defaultSegmentCardPadding, lessThanOrEqualTo(20.0));
-        expect(SliderConstants.defaultSegmentCardMargin, lessThanOrEqualTo(10.0));
+        expect(
+          SliderConstants.defaultSegmentCardPadding,
+          lessThanOrEqualTo(20.0),
+        );
+        expect(
+          SliderConstants.defaultSegmentCardMargin,
+          lessThanOrEqualTo(10.0),
+        );
       });
 
       test('label interval is greater than or equal to tickmark interval', () {

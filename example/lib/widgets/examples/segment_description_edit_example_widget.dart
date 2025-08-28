@@ -14,10 +14,12 @@ class SegmentDescriptionEditExampleWidget extends StatefulWidget {
   const SegmentDescriptionEditExampleWidget({super.key});
 
   @override
-  State<SegmentDescriptionEditExampleWidget> createState() => _SegmentDescriptionEditExampleWidgetState();
+  State<SegmentDescriptionEditExampleWidget> createState() =>
+      _SegmentDescriptionEditExampleWidgetState();
 }
 
-class _SegmentDescriptionEditExampleWidgetState extends State<SegmentDescriptionEditExampleWidget> {
+class _SegmentDescriptionEditExampleWidgetState
+    extends State<SegmentDescriptionEditExampleWidget> {
   List<int> _values = [20, 60, 80];
   final int _min = 0;
   final int _max = 100;
@@ -41,7 +43,10 @@ class _SegmentDescriptionEditExampleWidgetState extends State<SegmentDescription
         _buildValueDisplay(),
         const SizedBox(height: AppConstants.largeSpacing),
         _buildSegmentDescriptions(),
-        if (_editHistory.isNotEmpty) ...[const SizedBox(height: AppConstants.largeSpacing), _buildEditHistory()],
+        if (_editHistory.isNotEmpty) ...[
+          const SizedBox(height: AppConstants.largeSpacing),
+          _buildEditHistory(),
+        ],
       ],
     );
   }
@@ -58,7 +63,10 @@ class _SegmentDescriptionEditExampleWidgetState extends State<SegmentDescription
               color: _descriptionEditEnabled ? Colors.green : Colors.grey,
             ),
             const SizedBox(width: 8),
-            const Text('Description Edit Mode:', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              'Description Edit Mode:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(width: 16),
             Switch(
               value: _descriptionEditEnabled,
@@ -66,7 +74,11 @@ class _SegmentDescriptionEditExampleWidgetState extends State<SegmentDescription
                 setState(() {
                   _descriptionEditEnabled = value;
                 });
-                _addToHistory(_descriptionEditEnabled ? 'Description editing enabled' : 'Description editing disabled');
+                _addToHistory(
+                  _descriptionEditEnabled
+                      ? 'Description editing enabled'
+                      : 'Description editing disabled',
+                );
               },
             ),
             const Spacer(),
@@ -97,7 +109,10 @@ class _SegmentDescriptionEditExampleWidgetState extends State<SegmentDescription
                 const SizedBox(width: 8),
                 Text(
                   'Segment Description Editing',
-                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue[700]),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[700],
+                  ),
                 ),
               ],
             ),
@@ -161,10 +176,16 @@ class _SegmentDescriptionEditExampleWidgetState extends State<SegmentDescription
           children: [
             const Icon(Icons.tune, color: Colors.orange),
             const SizedBox(width: 8),
-            const Text('Current Values:', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              'Current Values:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(width: 16),
             Expanded(
-              child: Text(_values.join(', '), style: const TextStyle(fontFamily: 'monospace', fontSize: 16)),
+              child: Text(
+                _values.join(', '),
+                style: const TextStyle(fontFamily: 'monospace', fontSize: 16),
+              ),
             ),
           ],
         ),
@@ -175,7 +196,12 @@ class _SegmentDescriptionEditExampleWidgetState extends State<SegmentDescription
   /// Builds a display of current segment descriptions
   Widget _buildSegmentDescriptions() {
     // Get segments using the new API
-    final slider = CustomMultiThumbSlider<int>(values: _values, min: _min, max: _max, onChanged: (_) {});
+    final slider = CustomMultiThumbSlider<int>(
+      values: _values,
+      min: _min,
+      max: _max,
+      onChanged: (_) {},
+    );
 
     final segments = slider.getSegmentsWithDescriptions();
 
@@ -189,7 +215,10 @@ class _SegmentDescriptionEditExampleWidgetState extends State<SegmentDescription
               children: [
                 const Icon(Icons.segment, color: Colors.purple),
                 const SizedBox(width: 8),
-                const Text('Segment Descriptions:', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text(
+                  'Segment Descriptions:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ],
             ),
             const SizedBox(height: 12),
@@ -228,13 +257,16 @@ class _SegmentDescriptionEditExampleWidgetState extends State<SegmentDescription
                       child: Text(
                         description,
                         style: TextStyle(
-                          decoration: isCustom ? TextDecoration.underline : null,
+                          decoration: isCustom
+                              ? TextDecoration.underline
+                              : null,
                           fontWeight: isCustom ? FontWeight.bold : null,
                           color: isCustom ? Colors.orange[700] : null,
                         ),
                       ),
                     ),
-                    if (isCustom) Icon(Icons.edit, size: 16, color: Colors.orange[700]),
+                    if (isCustom)
+                      Icon(Icons.edit, size: 16, color: Colors.orange[700]),
                   ],
                 ),
               );
@@ -257,9 +289,16 @@ class _SegmentDescriptionEditExampleWidgetState extends State<SegmentDescription
               children: [
                 const Icon(Icons.history, color: Colors.green),
                 const SizedBox(width: 8),
-                const Text('Edit History:', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text(
+                  'Edit History:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 const Spacer(),
-                TextButton.icon(onPressed: _clearHistory, icon: const Icon(Icons.clear), label: const Text('Clear')),
+                TextButton.icon(
+                  onPressed: _clearHistory,
+                  icon: const Icon(Icons.clear),
+                  label: const Text('Clear'),
+                ),
               ],
             ),
             const SizedBox(height: 8),
@@ -306,7 +345,9 @@ class _SegmentDescriptionEditExampleWidgetState extends State<SegmentDescription
   /// Adds an entry to the edit history
   void _addToHistory(String entry) {
     setState(() {
-      _editHistory.add('${DateTime.now().toString().substring(11, 19)} - $entry');
+      _editHistory.add(
+        '${DateTime.now().toString().substring(11, 19)} - $entry',
+      );
       // Keep only the last 20 entries
       if (_editHistory.length > 20) {
         _editHistory.removeAt(0);

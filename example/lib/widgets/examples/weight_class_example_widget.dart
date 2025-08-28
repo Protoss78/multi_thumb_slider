@@ -15,7 +15,8 @@ class WeightClassExampleWidget extends StatefulWidget {
   const WeightClassExampleWidget({super.key});
 
   @override
-  State<WeightClassExampleWidget> createState() => _WeightClassExampleWidgetState();
+  State<WeightClassExampleWidget> createState() =>
+      _WeightClassExampleWidgetState();
 }
 
 class _WeightClassExampleWidgetState extends State<WeightClassExampleWidget> {
@@ -62,7 +63,10 @@ class _WeightClassExampleWidgetState extends State<WeightClassExampleWidget> {
   Widget _buildWeightDisplay() {
     return Text(
       'Weight classes: ${_values.map(Formatters.weight).join(", ")}',
-      style: TextStyle(fontSize: AppConstants.bodyFontSize, color: AppConstants.textSecondaryColor),
+      style: TextStyle(
+        fontSize: AppConstants.bodyFontSize,
+        color: AppConstants.textSecondaryColor,
+      ),
     );
   }
 
@@ -105,7 +109,13 @@ class _WeightClassExampleWidgetState extends State<WeightClassExampleWidget> {
   List<Map<String, dynamic>> _getWeightClasses() {
     final sortedValues = List<int>.from(_values)..sort();
 
-    final classNames = ['Lightweight', 'Welterweight', 'Middleweight', 'Light Heavyweight', 'Heavyweight'];
+    final classNames = [
+      'Lightweight',
+      'Welterweight',
+      'Middleweight',
+      'Light Heavyweight',
+      'Heavyweight',
+    ];
     final colors = [
       Colors.green.shade300,
       Colors.blue.shade300,
@@ -118,13 +128,18 @@ class _WeightClassExampleWidgetState extends State<WeightClassExampleWidget> {
 
     if (sortedValues.isNotEmpty) {
       // First class is open-started (lightweight class)
-      classes.add({'name': classNames[0], 'range': '- ${Formatters.weight(sortedValues.first)}', 'color': colors[0]});
+      classes.add({
+        'name': classNames[0],
+        'range': '- ${Formatters.weight(sortedValues.first)}',
+        'color': colors[0],
+      });
 
       // Middle classes (with upper and lower bounds)
       for (int i = 0; i < sortedValues.length - 1; i++) {
         classes.add({
           'name': classNames[(i + 1) % classNames.length],
-          'range': '${Formatters.weight(sortedValues[i])} - ${Formatters.weight(sortedValues[i + 1])}',
+          'range':
+              '${Formatters.weight(sortedValues[i])} - ${Formatters.weight(sortedValues[i + 1])}',
           'color': colors[(i + 1) % colors.length],
         });
       }
@@ -159,7 +174,10 @@ class _WeightClassExampleWidgetState extends State<WeightClassExampleWidget> {
           Expanded(
             child: Text(
               '${weightClass['name']}: ${weightClass['range']}',
-              style: TextStyle(fontSize: AppConstants.smallFontSize, color: Colors.purple[700]),
+              style: TextStyle(
+                fontSize: AppConstants.smallFontSize,
+                color: Colors.purple[700],
+              ),
             ),
           ),
         ],

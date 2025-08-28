@@ -6,15 +6,20 @@ import 'test_config.dart';
 void main() {
   group('SegmentEditDialog', () {
     group('widget creation', () {
-      testWidgets('should create dialog with required parameters', (tester) async {
+      testWidgets('should create dialog with required parameters', (
+        tester,
+      ) async {
         await tester.pumpWidget(
           TestConfig.createTestApp(
             child: Builder(
               builder: (context) => ElevatedButton(
                 onPressed: () => showDialog(
                   context: context,
-                  builder: (_) =>
-                      const SegmentEditDialog(currentDescription: null, defaultDescription: '0 - 50', segmentIndex: 0),
+                  builder: (_) => const SegmentEditDialog(
+                    currentDescription: null,
+                    defaultDescription: '0 - 50',
+                    segmentIndex: 0,
+                  ),
                 ),
                 child: const Text('Show Dialog'),
               ),
@@ -56,7 +61,9 @@ void main() {
 
         // Dialog should not have a title
         expect(find.byType(AlertDialog), findsOneWidget);
-        final alertDialog = tester.widget<AlertDialog>(find.byType(AlertDialog));
+        final alertDialog = tester.widget<AlertDialog>(
+          find.byType(AlertDialog),
+        );
         expect(alertDialog.title, isNull);
       });
     });
@@ -91,37 +98,45 @@ void main() {
     });
 
     group('default description mode', () {
-      testWidgets('should initialize with default description when no custom description', (tester) async {
-        await tester.pumpWidget(
-          TestConfig.createTestApp(
-            child: Builder(
-              builder: (context) => ElevatedButton(
-                onPressed: () => showDialog(
-                  context: context,
-                  builder: (_) =>
-                      const SegmentEditDialog(currentDescription: null, defaultDescription: '10 - 30', segmentIndex: 0),
+      testWidgets(
+        'should initialize with default description when no custom description',
+        (tester) async {
+          await tester.pumpWidget(
+            TestConfig.createTestApp(
+              child: Builder(
+                builder: (context) => ElevatedButton(
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (_) => const SegmentEditDialog(
+                      currentDescription: null,
+                      defaultDescription: '10 - 30',
+                      segmentIndex: 0,
+                    ),
+                  ),
+                  child: const Text('Show Dialog'),
                 ),
-                child: const Text('Show Dialog'),
               ),
             ),
-          ),
-        );
+          );
 
-        await tester.tap(find.text('Show Dialog'));
-        await tester.pumpAndSettle();
+          await tester.tap(find.text('Show Dialog'));
+          await tester.pumpAndSettle();
 
-        // Text field should contain default description
-        final textField = find.byType(TextField);
-        expect(textField, findsOneWidget);
+          // Text field should contain default description
+          final textField = find.byType(TextField);
+          expect(textField, findsOneWidget);
 
-        final textFieldWidget = tester.widget<TextField>(textField);
-        expect(textFieldWidget.controller?.text, equals('10 - 30'));
-        expect(textFieldWidget.enabled, isTrue);
-      });
+          final textFieldWidget = tester.widget<TextField>(textField);
+          expect(textFieldWidget.controller?.text, equals('10 - 30'));
+          expect(textFieldWidget.enabled, isTrue);
+        },
+      );
     });
 
     group('custom description mode', () {
-      testWidgets('should initialize with custom description when provided', (tester) async {
+      testWidgets('should initialize with custom description when provided', (
+        tester,
+      ) async {
         await tester.pumpWidget(
           TestConfig.createTestApp(
             child: Builder(
@@ -148,7 +163,10 @@ void main() {
         expect(textField, findsOneWidget);
 
         final textFieldWidget = tester.widget<TextField>(textField);
-        expect(textFieldWidget.controller?.text, equals('Custom segment description'));
+        expect(
+          textFieldWidget.controller?.text,
+          equals('Custom segment description'),
+        );
         expect(textFieldWidget.enabled, isTrue);
       });
     });
@@ -181,7 +199,9 @@ void main() {
         await tester.pumpAndSettle();
 
         // Verify text was entered
-        final textFieldWidget = tester.widget<TextField>(find.byType(TextField));
+        final textFieldWidget = tester.widget<TextField>(
+          find.byType(TextField),
+        );
         expect(textFieldWidget.controller?.text, equals('Test input'));
       });
 
@@ -208,12 +228,20 @@ void main() {
         await tester.pumpAndSettle();
 
         // Enter multiline text
-        await tester.enterText(find.byType(TextField), 'Line 1\nLine 2\nLine 3');
+        await tester.enterText(
+          find.byType(TextField),
+          'Line 1\nLine 2\nLine 3',
+        );
         await tester.pumpAndSettle();
 
         // Verify multiline text was entered
-        final textFieldWidget = tester.widget<TextField>(find.byType(TextField));
-        expect(textFieldWidget.controller?.text, equals('Line 1\nLine 2\nLine 3'));
+        final textFieldWidget = tester.widget<TextField>(
+          find.byType(TextField),
+        );
+        expect(
+          textFieldWidget.controller?.text,
+          equals('Line 1\nLine 2\nLine 3'),
+        );
         expect(textFieldWidget.maxLines, isNull); // Should allow multiple lines
       });
     });
@@ -226,8 +254,11 @@ void main() {
               builder: (context) => ElevatedButton(
                 onPressed: () => showDialog(
                   context: context,
-                  builder: (_) =>
-                      const SegmentEditDialog(currentDescription: null, defaultDescription: '10 - 30', segmentIndex: 0),
+                  builder: (_) => const SegmentEditDialog(
+                    currentDescription: null,
+                    defaultDescription: '10 - 30',
+                    segmentIndex: 0,
+                  ),
                 ),
                 child: const Text('Show Dialog'),
               ),
@@ -250,8 +281,11 @@ void main() {
               builder: (context) => ElevatedButton(
                 onPressed: () => showDialog(
                   context: context,
-                  builder: (_) =>
-                      const SegmentEditDialog(currentDescription: null, defaultDescription: '10 - 30', segmentIndex: 0),
+                  builder: (_) => const SegmentEditDialog(
+                    currentDescription: null,
+                    defaultDescription: '10 - 30',
+                    segmentIndex: 0,
+                  ),
                 ),
                 child: const Text('Show Dialog'),
               ),
@@ -268,15 +302,20 @@ void main() {
         expect(textField.decoration?.border, isA<OutlineInputBorder>());
       });
 
-      testWidgets('should show three buttons with correct icons', (tester) async {
+      testWidgets('should show three buttons with correct icons', (
+        tester,
+      ) async {
         await tester.pumpWidget(
           TestConfig.createTestApp(
             child: Builder(
               builder: (context) => ElevatedButton(
                 onPressed: () => showDialog(
                   context: context,
-                  builder: (_) =>
-                      const SegmentEditDialog(currentDescription: null, defaultDescription: '10 - 30', segmentIndex: 0),
+                  builder: (_) => const SegmentEditDialog(
+                    currentDescription: null,
+                    defaultDescription: '10 - 30',
+                    segmentIndex: 0,
+                  ),
                 ),
                 child: const Text('Show Dialog'),
               ),
@@ -295,47 +334,60 @@ void main() {
     });
 
     group('state management', () {
-      testWidgets('should enable custom description mode when text is changed', (tester) async {
-        await tester.pumpWidget(
-          TestConfig.createTestApp(
-            child: Builder(
-              builder: (context) => ElevatedButton(
-                onPressed: () => showDialog(
-                  context: context,
-                  builder: (_) =>
-                      const SegmentEditDialog(currentDescription: null, defaultDescription: '10 - 30', segmentIndex: 0),
+      testWidgets(
+        'should enable custom description mode when text is changed',
+        (tester) async {
+          await tester.pumpWidget(
+            TestConfig.createTestApp(
+              child: Builder(
+                builder: (context) => ElevatedButton(
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (_) => const SegmentEditDialog(
+                      currentDescription: null,
+                      defaultDescription: '10 - 30',
+                      segmentIndex: 0,
+                    ),
+                  ),
+                  child: const Text('Show Dialog'),
                 ),
-                child: const Text('Show Dialog'),
               ),
             ),
-          ),
-        );
+          );
 
-        await tester.tap(find.text('Show Dialog'));
-        await tester.pumpAndSettle();
+          await tester.tap(find.text('Show Dialog'));
+          await tester.pumpAndSettle();
 
-        // Initially should be in default mode
-        final textFieldWidget = tester.widget<TextField>(find.byType(TextField));
-        expect(textFieldWidget.controller?.text, equals('10 - 30'));
+          // Initially should be in default mode
+          final textFieldWidget = tester.widget<TextField>(
+            find.byType(TextField),
+          );
+          expect(textFieldWidget.controller?.text, equals('10 - 30'));
 
-        // Change text to enable custom mode
-        await tester.enterText(find.byType(TextField), 'Modified text');
-        await tester.pumpAndSettle();
+          // Change text to enable custom mode
+          await tester.enterText(find.byType(TextField), 'Modified text');
+          await tester.pumpAndSettle();
 
-        expect(textFieldWidget.controller?.text, equals('Modified text'));
-      });
+          expect(textFieldWidget.controller?.text, equals('Modified text'));
+        },
+      );
     });
 
     group('button interactions', () {
-      testWidgets('should close dialog when cancel button is pressed', (tester) async {
+      testWidgets('should close dialog when cancel button is pressed', (
+        tester,
+      ) async {
         await tester.pumpWidget(
           TestConfig.createTestApp(
             child: Builder(
               builder: (context) => ElevatedButton(
                 onPressed: () => showDialog(
                   context: context,
-                  builder: (_) =>
-                      const SegmentEditDialog(currentDescription: null, defaultDescription: '10 - 30', segmentIndex: 0),
+                  builder: (_) => const SegmentEditDialog(
+                    currentDescription: null,
+                    defaultDescription: '10 - 30',
+                    segmentIndex: 0,
+                  ),
                 ),
                 child: const Text('Show Dialog'),
               ),
@@ -356,7 +408,9 @@ void main() {
         expect(find.byType(SegmentEditDialog), findsNothing);
       });
 
-      testWidgets('should reset to default when refresh button is pressed', (tester) async {
+      testWidgets('should reset to default when refresh button is pressed', (
+        tester,
+      ) async {
         await tester.pumpWidget(
           TestConfig.createTestApp(
             child: Builder(
@@ -378,7 +432,9 @@ void main() {
         await tester.tap(find.text('Show Dialog'));
         await tester.pumpAndSettle();
 
-        final textFieldWidget = tester.widget<TextField>(find.byType(TextField));
+        final textFieldWidget = tester.widget<TextField>(
+          find.byType(TextField),
+        );
         expect(textFieldWidget.controller?.text, equals('Custom description'));
 
         // Tap refresh button
@@ -389,7 +445,9 @@ void main() {
         expect(textFieldWidget.controller?.text, equals('Default text'));
       });
 
-      testWidgets('should save and close dialog when save button is pressed', (tester) async {
+      testWidgets('should save and close dialog when save button is pressed', (
+        tester,
+      ) async {
         String? result;
 
         await tester.pumpWidget(
@@ -428,7 +486,9 @@ void main() {
     });
 
     group('save logic', () {
-      testWidgets('should return null for empty description in default mode', (tester) async {
+      testWidgets('should return null for empty description in default mode', (
+        tester,
+      ) async {
         String? result;
 
         await tester.pumpWidget(
@@ -464,7 +524,9 @@ void main() {
         expect(result, isNull);
       });
 
-      testWidgets('should return empty string when reset to default was used', (tester) async {
+      testWidgets('should return empty string when reset to default was used', (
+        tester,
+      ) async {
         String? result;
 
         await tester.pumpWidget(
@@ -501,39 +563,44 @@ void main() {
         expect(result, equals(''));
       });
 
-      testWidgets('should return null when using default description unchanged', (tester) async {
-        String? result;
+      testWidgets(
+        'should return null when using default description unchanged',
+        (tester) async {
+          String? result;
 
-        await tester.pumpWidget(
-          TestConfig.createTestApp(
-            child: Builder(
-              builder: (context) => ElevatedButton(
-                onPressed: () async {
-                  result = await SegmentEditDialog.show(
-                    context: context,
-                    currentDescription: null,
-                    defaultDescription: '10 - 30',
-                    segmentIndex: 0,
-                  );
-                },
-                child: const Text('Show Dialog'),
+          await tester.pumpWidget(
+            TestConfig.createTestApp(
+              child: Builder(
+                builder: (context) => ElevatedButton(
+                  onPressed: () async {
+                    result = await SegmentEditDialog.show(
+                      context: context,
+                      currentDescription: null,
+                      defaultDescription: '10 - 30',
+                      segmentIndex: 0,
+                    );
+                  },
+                  child: const Text('Show Dialog'),
+                ),
               ),
             ),
-          ),
-        );
+          );
 
-        await tester.tap(find.text('Show Dialog'));
-        await tester.pumpAndSettle();
+          await tester.tap(find.text('Show Dialog'));
+          await tester.pumpAndSettle();
 
-        // Don't change anything, just save
-        final saveButton = find.byIcon(Icons.save);
-        await tester.tap(saveButton);
-        await tester.pumpAndSettle();
+          // Don't change anything, just save
+          final saveButton = find.byIcon(Icons.save);
+          await tester.tap(saveButton);
+          await tester.pumpAndSettle();
 
-        expect(result, isNull);
-      });
+          expect(result, isNull);
+        },
+      );
 
-      testWidgets('should return custom description when modified', (tester) async {
+      testWidgets('should return custom description when modified', (
+        tester,
+      ) async {
         String? result;
 
         await tester.pumpWidget(
@@ -578,8 +645,11 @@ void main() {
               builder: (context) => ElevatedButton(
                 onPressed: () => showDialog(
                   context: context,
-                  builder: (_) =>
-                      const SegmentEditDialog(currentDescription: null, defaultDescription: '10 - 30', segmentIndex: 0),
+                  builder: (_) => const SegmentEditDialog(
+                    currentDescription: null,
+                    defaultDescription: '10 - 30',
+                    segmentIndex: 0,
+                  ),
                 ),
                 child: const Text('Show Dialog'),
               ),
@@ -591,7 +661,9 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(SegmentEditDialog), findsOneWidget);
-        final textFieldWidget = tester.widget<TextField>(find.byType(TextField));
+        final textFieldWidget = tester.widget<TextField>(
+          find.byType(TextField),
+        );
         expect(textFieldWidget.controller?.text, equals('10 - 30'));
       });
 
@@ -602,8 +674,11 @@ void main() {
               builder: (context) => ElevatedButton(
                 onPressed: () => showDialog(
                   context: context,
-                  builder: (_) =>
-                      const SegmentEditDialog(currentDescription: '', defaultDescription: '10 - 30', segmentIndex: 0),
+                  builder: (_) => const SegmentEditDialog(
+                    currentDescription: '',
+                    defaultDescription: '10 - 30',
+                    segmentIndex: 0,
+                  ),
                 ),
                 child: const Text('Show Dialog'),
               ),
@@ -615,7 +690,9 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(SegmentEditDialog), findsOneWidget);
-        final textFieldWidget = tester.widget<TextField>(find.byType(TextField));
+        final textFieldWidget = tester.widget<TextField>(
+          find.byType(TextField),
+        );
         // When currentDescription is empty string, it should use the default description
         expect(textFieldWidget.controller?.text, equals('10 - 30'));
       });
@@ -645,7 +722,9 @@ void main() {
         expect(find.byType(SegmentEditDialog), findsOneWidget);
       });
 
-      testWidgets('should handle special characters in text input', (tester) async {
+      testWidgets('should handle special characters in text input', (
+        tester,
+      ) async {
         await tester.pumpWidget(
           TestConfig.createTestApp(
             child: Builder(
@@ -668,11 +747,14 @@ void main() {
         await tester.pumpAndSettle();
 
         // Enter text with special characters
-        const specialText = 'Text with !@#\$%^&*()_+-=[]{}|;:,.<>? and emojis 🚀🎉✨';
+        const specialText =
+            'Text with !@#\$%^&*()_+-=[]{}|;:,.<>? and emojis 🚀🎉✨';
         await tester.enterText(find.byType(TextField), specialText);
         await tester.pumpAndSettle();
 
-        final textFieldWidget = tester.widget<TextField>(find.byType(TextField));
+        final textFieldWidget = tester.widget<TextField>(
+          find.byType(TextField),
+        );
         expect(textFieldWidget.controller?.text, equals(specialText));
       });
     });
@@ -685,8 +767,11 @@ void main() {
               builder: (context) => ElevatedButton(
                 onPressed: () => showDialog(
                   context: context,
-                  builder: (_) =>
-                      const SegmentEditDialog(currentDescription: null, defaultDescription: '10 - 30', segmentIndex: 0),
+                  builder: (_) => const SegmentEditDialog(
+                    currentDescription: null,
+                    defaultDescription: '10 - 30',
+                    segmentIndex: 0,
+                  ),
                 ),
                 child: const Text('Show Dialog'),
               ),
@@ -707,7 +792,9 @@ void main() {
     });
 
     group('responsive behavior', () {
-      testWidgets('should create dialog with responsive width calculation', (WidgetTester tester) async {
+      testWidgets('should create dialog with responsive width calculation', (
+        WidgetTester tester,
+      ) async {
         // Test that the dialog can be created and displays properly
         await tester.pumpWidget(
           TestConfig.createTestApp(
@@ -715,8 +802,11 @@ void main() {
               builder: (context) => ElevatedButton(
                 onPressed: () => showDialog(
                   context: context,
-                  builder: (_) =>
-                      const SegmentEditDialog(currentDescription: null, defaultDescription: '10 - 30', segmentIndex: 0),
+                  builder: (_) => const SegmentEditDialog(
+                    currentDescription: null,
+                    defaultDescription: '10 - 30',
+                    segmentIndex: 0,
+                  ),
                 ),
                 child: const Text('Show Dialog'),
               ),

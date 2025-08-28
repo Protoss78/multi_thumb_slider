@@ -22,9 +22,18 @@ class SliderSegment<T extends num> {
     this.customDescription,
     this.isOpenEnded = false,
     this.isOpenStarted = false,
-  }) : assert(!isOpenEnded || endValue == null, 'Open-ended segments cannot have an end value'),
-       assert(!isOpenStarted || startValue == null, 'Open-started segments cannot have a start value'),
-       assert(!(isOpenEnded && isOpenStarted), 'Segments cannot be both open-ended and open-started');
+  }) : assert(
+         !isOpenEnded || endValue == null,
+         'Open-ended segments cannot have an end value',
+       ),
+       assert(
+         !isOpenStarted || startValue == null,
+         'Open-started segments cannot have a start value',
+       ),
+       assert(
+         !(isOpenEnded && isOpenStarted),
+         'Segments cannot be both open-ended and open-started',
+       );
 
   /// Creates a copy of this segment with updated values
   SliderSegment<T> copyWith({
@@ -52,7 +61,8 @@ class SliderSegment<T extends num> {
   }
 
   /// Returns whether this segment has a custom description
-  bool get hasCustomDescription => customDescription != null && customDescription!.trim().isNotEmpty;
+  bool get hasCustomDescription =>
+      customDescription != null && customDescription!.trim().isNotEmpty;
 
   @override
   bool operator ==(Object other) {
@@ -66,7 +76,13 @@ class SliderSegment<T extends num> {
   }
 
   @override
-  int get hashCode => Object.hash(startValue, endValue, customDescription, isOpenEnded, isOpenStarted);
+  int get hashCode => Object.hash(
+    startValue,
+    endValue,
+    customDescription,
+    isOpenEnded,
+    isOpenStarted,
+  );
 
   @override
   String toString() =>
@@ -82,7 +98,10 @@ class SegmentDescription {
   final String description;
 
   /// Creates a segment description
-  const SegmentDescription({required this.segmentIndex, required this.description});
+  const SegmentDescription({
+    required this.segmentIndex,
+    required this.description,
+  });
 
   /// Creates a copy of this description with updated values
   SegmentDescription copyWith({int? segmentIndex, String? description}) {
@@ -95,12 +114,15 @@ class SegmentDescription {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is SegmentDescription && other.segmentIndex == segmentIndex && other.description == description;
+    return other is SegmentDescription &&
+        other.segmentIndex == segmentIndex &&
+        other.description == description;
   }
 
   @override
   int get hashCode => Object.hash(segmentIndex, description);
 
   @override
-  String toString() => 'SegmentDescription(segmentIndex: $segmentIndex, description: $description)';
+  String toString() =>
+      'SegmentDescription(segmentIndex: $segmentIndex, description: $description)';
 }

@@ -64,13 +64,17 @@ void main() {
     });
 
     group('Widget Rendering', () {
-      testWidgets('Widget renders with correct text', (WidgetTester tester) async {
+      testWidgets('Widget renders with correct text', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         expect(find.text(testText), findsOneWidget);
       });
 
-      testWidgets('Widget renders with correct positioning', (WidgetTester tester) async {
+      testWidgets('Widget renders with correct positioning', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         final tooltipFinder = find.byType(TooltipWidget);
@@ -80,7 +84,9 @@ void main() {
         expect(tooltip.leftPosition, equals(testLeftPosition));
       });
 
-      testWidgets('Widget renders with correct styling', (WidgetTester tester) async {
+      testWidgets('Widget renders with correct styling', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         final textFinder = find.text(testText);
@@ -92,7 +98,9 @@ void main() {
         expect(textWidget.style?.fontWeight, equals(FontWeight.w500));
       });
 
-      testWidgets('Widget renders with correct background color', (WidgetTester tester) async {
+      testWidgets('Widget renders with correct background color', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         final containerFinder = find.byType(Container);
@@ -105,7 +113,9 @@ void main() {
     });
 
     group('Widget Layout', () {
-      testWidgets('Widget is positioned correctly in Stack', (WidgetTester tester) async {
+      testWidgets('Widget is positioned correctly in Stack', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         final positionedFinder = find.byType(Positioned);
@@ -116,14 +126,19 @@ void main() {
         expect(positioned.top, equals(-35));
       });
 
-      testWidgets('Widget has correct padding and decoration', (WidgetTester tester) async {
+      testWidgets('Widget has correct padding and decoration', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         final containerFinder = find.byType(Container);
         final container = tester.widget<Container>(containerFinder);
 
         // Check padding
-        expect(container.padding, equals(const EdgeInsets.symmetric(horizontal: 8, vertical: 4)));
+        expect(
+          container.padding,
+          equals(const EdgeInsets.symmetric(horizontal: 8, vertical: 4)),
+        );
 
         // Check decoration
         final decoration = container.decoration as BoxDecoration;
@@ -139,11 +154,18 @@ void main() {
     });
 
     group('Widget Customization', () {
-      testWidgets('Widget renders with custom colors', (WidgetTester tester) async {
+      testWidgets('Widget renders with custom colors', (
+        WidgetTester tester,
+      ) async {
         const customBackgroundColor = Colors.red;
         const customTextColor = Colors.yellow;
 
-        await tester.pumpWidget(createTestWidget(backgroundColor: customBackgroundColor, textColor: customTextColor));
+        await tester.pumpWidget(
+          createTestWidget(
+            backgroundColor: customBackgroundColor,
+            textColor: customTextColor,
+          ),
+        );
 
         // Check background color
         final containerFinder = find.byType(Container);
@@ -157,7 +179,9 @@ void main() {
         expect(textWidget.style?.color, equals(customTextColor));
       });
 
-      testWidgets('Widget renders with custom font size', (WidgetTester tester) async {
+      testWidgets('Widget renders with custom font size', (
+        WidgetTester tester,
+      ) async {
         const customFontSize = 18.0;
 
         await tester.pumpWidget(createTestWidget(fontSize: customFontSize));
@@ -167,17 +191,23 @@ void main() {
         expect(textWidget.style?.fontSize, equals(customFontSize));
       });
 
-      testWidgets('Widget renders with custom position', (WidgetTester tester) async {
+      testWidgets('Widget renders with custom position', (
+        WidgetTester tester,
+      ) async {
         const customLeftPosition = 200.0;
 
-        await tester.pumpWidget(createTestWidget(leftPosition: customLeftPosition));
+        await tester.pumpWidget(
+          createTestWidget(leftPosition: customLeftPosition),
+        );
 
         final positionedFinder = find.byType(Positioned);
         final positioned = tester.widget<Positioned>(positionedFinder);
         expect(positioned.left, equals(customLeftPosition));
       });
 
-      testWidgets('Widget renders with custom text', (WidgetTester tester) async {
+      testWidgets('Widget renders with custom text', (
+        WidgetTester tester,
+      ) async {
         const customText = 'Custom Tooltip Text';
 
         await tester.pumpWidget(createTestWidget(text: customText));
@@ -187,7 +217,9 @@ void main() {
     });
 
     group('Widget Behavior', () {
-      testWidgets('Widget rebuilds when parameters change', (WidgetTester tester) async {
+      testWidgets('Widget rebuilds when parameters change', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         // Initial state
@@ -202,11 +234,15 @@ void main() {
         expect(find.text(testText), findsNothing);
       });
 
-      testWidgets('Widget maintains position when other parameters change', (WidgetTester tester) async {
+      testWidgets('Widget maintains position when other parameters change', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         // Change background color
-        await tester.pumpWidget(createTestWidget(backgroundColor: Colors.green));
+        await tester.pumpWidget(
+          createTestWidget(backgroundColor: Colors.green),
+        );
 
         // Position should remain the same
         final positionedFinder = find.byType(Positioned);
@@ -240,7 +276,9 @@ void main() {
         expect(positioned.left, equals(0.0));
       });
 
-      testWidgets('Widget handles negative position', (WidgetTester tester) async {
+      testWidgets('Widget handles negative position', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget(leftPosition: -50.0));
 
         final positionedFinder = find.byType(Positioned);
@@ -248,7 +286,9 @@ void main() {
         expect(positioned.left, equals(-50.0));
       });
 
-      testWidgets('Widget handles very small font size', (WidgetTester tester) async {
+      testWidgets('Widget handles very small font size', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget(fontSize: 8.0));
 
         final textFinder = find.text(testText);
@@ -256,7 +296,9 @@ void main() {
         expect(textWidget.style?.fontSize, equals(8.0));
       });
 
-      testWidgets('Widget handles very large font size', (WidgetTester tester) async {
+      testWidgets('Widget handles very large font size', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget(fontSize: 32.0));
 
         final textFinder = find.text(testText);

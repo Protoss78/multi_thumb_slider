@@ -135,7 +135,10 @@ class DanRankUtils {
               color: Colors.white,
             ),
           ),
-          Text(rank.japaneseName, style: const TextStyle(fontSize: 10, color: Colors.white70)),
+          Text(
+            rank.japaneseName,
+            style: const TextStyle(fontSize: 10, color: Colors.white70),
+          ),
         ],
       ),
     );

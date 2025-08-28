@@ -58,7 +58,11 @@ class SliderColorSchemes {
     Colors.red[100]!,
   ];
 
-  static final List<Color> customRangeColors = [Colors.blue[100]!, Colors.pink[100]!, Colors.red[100]!];
+  static final List<Color> customRangeColors = [
+    Colors.blue[100]!,
+    Colors.pink[100]!,
+    Colors.red[100]!,
+  ];
 
   // Dan Rank Colors
   static final Color juniorDanColor = Colors.brown.shade600;

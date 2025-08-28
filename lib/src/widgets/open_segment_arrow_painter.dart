@@ -18,7 +18,8 @@ class OpenSegmentArrowPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final double arrowWidth = 16.0;
     final double centerY = size.height / 2;
-    final double arrowHeight = trackHeight * 1.25; // Arrow extends trackHeight above and below center
+    final double arrowHeight =
+        trackHeight * 1.25; // Arrow extends trackHeight above and below center
     final Paint arrowPaint = Paint()
       ..color =
           color // Use the track color
@@ -40,7 +41,10 @@ class OpenSegmentArrowPainter extends CustomPainter {
       final double startX = arrowWidth / 2;
       final Path leftArrowPath = Path()
         ..moveTo(startX, centerY - arrowHeight) // Top point of the arrow
-        ..lineTo(startX - arrowWidth, centerY) // Tip of the arrow (pointing left)
+        ..lineTo(
+          startX - arrowWidth,
+          centerY,
+        ) // Tip of the arrow (pointing left)
         ..lineTo(startX, centerY + arrowHeight) // Bottom point of the arrow
         ..close();
       canvas.drawPath(leftArrowPath, arrowPaint);

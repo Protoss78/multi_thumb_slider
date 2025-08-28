@@ -10,7 +10,10 @@ void main() {
     group('Constructor', () {
       test('Painter can be instantiated with required parameters', () {
         expect(() {
-          OpenSegmentArrowPainter(color: testColor, trackHeight: testTrackHeight);
+          OpenSegmentArrowPainter(
+            color: testColor,
+            trackHeight: testTrackHeight,
+          );
         }, returnsNormally);
       });
 
@@ -26,7 +29,10 @@ void main() {
       });
 
       test('Painter has correct default parameter values', () {
-        final painter = OpenSegmentArrowPainter(color: testColor, trackHeight: testTrackHeight);
+        final painter = OpenSegmentArrowPainter(
+          color: testColor,
+          trackHeight: testTrackHeight,
+        );
 
         expect(painter.color, equals(testColor));
         expect(painter.trackHeight, equals(testTrackHeight));
@@ -116,33 +122,61 @@ void main() {
       });
 
       test('shouldRepaint returns true when color changes', () {
-        final painter1 = OpenSegmentArrowPainter(color: Colors.red, trackHeight: testTrackHeight);
+        final painter1 = OpenSegmentArrowPainter(
+          color: Colors.red,
+          trackHeight: testTrackHeight,
+        );
 
-        final painter2 = OpenSegmentArrowPainter(color: Colors.blue, trackHeight: testTrackHeight);
+        final painter2 = OpenSegmentArrowPainter(
+          color: Colors.blue,
+          trackHeight: testTrackHeight,
+        );
 
         expect(painter1.shouldRepaint(painter2), equals(true));
       });
 
       test('shouldRepaint returns true when trackHeight changes', () {
-        final painter1 = OpenSegmentArrowPainter(color: testColor, trackHeight: 8.0);
+        final painter1 = OpenSegmentArrowPainter(
+          color: testColor,
+          trackHeight: 8.0,
+        );
 
-        final painter2 = OpenSegmentArrowPainter(color: testColor, trackHeight: 12.0);
+        final painter2 = OpenSegmentArrowPainter(
+          color: testColor,
+          trackHeight: 12.0,
+        );
 
         expect(painter1.shouldRepaint(painter2), equals(true));
       });
 
       test('shouldRepaint returns true when isOpenEnded changes', () {
-        final painter1 = OpenSegmentArrowPainter(color: testColor, trackHeight: testTrackHeight, isOpenEnded: true);
+        final painter1 = OpenSegmentArrowPainter(
+          color: testColor,
+          trackHeight: testTrackHeight,
+          isOpenEnded: true,
+        );
 
-        final painter2 = OpenSegmentArrowPainter(color: testColor, trackHeight: testTrackHeight, isOpenEnded: false);
+        final painter2 = OpenSegmentArrowPainter(
+          color: testColor,
+          trackHeight: testTrackHeight,
+          isOpenEnded: false,
+        );
 
         expect(painter1.shouldRepaint(painter2), equals(true));
       });
 
       test('shouldRepaint returns true when isOpenStarted changes', () {
-        final painter1 = OpenSegmentArrowPainter(color: testColor, trackHeight: testTrackHeight, isOpenStarted: true);
+        final painter1 = OpenSegmentArrowPainter(
+          color: testColor,
+          trackHeight: testTrackHeight,
+          isOpenStarted: true,
+        );
 
-        final painter2 = OpenSegmentArrowPainter(color: testColor, trackHeight: testTrackHeight, isOpenStarted: false);
+        final painter2 = OpenSegmentArrowPainter(
+          color: testColor,
+          trackHeight: testTrackHeight,
+          isOpenStarted: false,
+        );
 
         expect(painter1.shouldRepaint(painter2), equals(true));
       });
@@ -166,7 +200,10 @@ void main() {
       });
 
       test('shouldRepaint returns true for different painter types', () {
-        final painter1 = OpenSegmentArrowPainter(color: testColor, trackHeight: testTrackHeight);
+        final painter1 = OpenSegmentArrowPainter(
+          color: testColor,
+          trackHeight: testTrackHeight,
+        );
 
         final painter2 = MockCustomPainter();
 
@@ -175,12 +212,18 @@ void main() {
     });
 
     group('Paint Method Integration', () {
-      testWidgets('Paint method executes without errors for open ended arrow', (WidgetTester tester) async {
+      testWidgets('Paint method executes without errors for open ended arrow', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
               body: CustomPaint(
-                painter: OpenSegmentArrowPainter(color: testColor, trackHeight: testTrackHeight, isOpenEnded: true),
+                painter: OpenSegmentArrowPainter(
+                  color: testColor,
+                  trackHeight: testTrackHeight,
+                  isOpenEnded: true,
+                ),
                 size: const Size(20.0, 16.0),
               ),
             ),
@@ -190,22 +233,31 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('Paint method executes without errors for open started arrow', (WidgetTester tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: CustomPaint(
-                painter: OpenSegmentArrowPainter(color: testColor, trackHeight: testTrackHeight, isOpenStarted: true),
-                size: const Size(20.0, 16.0),
+      testWidgets(
+        'Paint method executes without errors for open started arrow',
+        (WidgetTester tester) async {
+          await tester.pumpWidget(
+            MaterialApp(
+              home: Scaffold(
+                body: CustomPaint(
+                  painter: OpenSegmentArrowPainter(
+                    color: testColor,
+                    trackHeight: testTrackHeight,
+                    isOpenStarted: true,
+                  ),
+                  size: const Size(20.0, 16.0),
+                ),
               ),
             ),
-          ),
-        );
+          );
 
-        expect(tester.takeException(), isNull);
-      });
+          expect(tester.takeException(), isNull);
+        },
+      );
 
-      testWidgets('Paint method executes without errors for both arrows', (WidgetTester tester) async {
+      testWidgets('Paint method executes without errors for both arrows', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -225,7 +277,9 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('Paint method executes without errors for no arrows', (WidgetTester tester) async {
+      testWidgets('Paint method executes without errors for no arrows', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -245,7 +299,9 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('Paint method handles different track heights', (WidgetTester tester) async {
+      testWidgets('Paint method handles different track heights', (
+        WidgetTester tester,
+      ) async {
         final List<double> trackHeights = [1.0, 4.0, 8.0, 12.0, 20.0];
 
         for (final height in trackHeights) {
@@ -269,8 +325,15 @@ void main() {
         }
       });
 
-      testWidgets('Paint method handles different colors', (WidgetTester tester) async {
-        final List<Color> colors = [Colors.red, Colors.green, Colors.transparent, Colors.amber.withValues(alpha: 0.5)];
+      testWidgets('Paint method handles different colors', (
+        WidgetTester tester,
+      ) async {
+        final List<Color> colors = [
+          Colors.red,
+          Colors.green,
+          Colors.transparent,
+          Colors.amber.withValues(alpha: 0.5),
+        ];
 
         for (final color in colors) {
           await tester.pumpWidget(
@@ -293,7 +356,9 @@ void main() {
         }
       });
 
-      testWidgets('Paint method handles zero track height', (WidgetTester tester) async {
+      testWidgets('Paint method handles zero track height', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -313,7 +378,9 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('Paint method handles very large track height', (WidgetTester tester) async {
+      testWidgets('Paint method handles very large track height', (
+        WidgetTester tester,
+      ) async {
         const largeHeight = 100.0;
         await tester.pumpWidget(
           MaterialApp(
@@ -334,7 +401,9 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('Paint method handles very small size', (WidgetTester tester) async {
+      testWidgets('Paint method handles very small size', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -354,7 +423,9 @@ void main() {
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('Paint method handles very large size', (WidgetTester tester) async {
+      testWidgets('Paint method handles very large size', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -377,7 +448,10 @@ void main() {
 
     group('Arrow Calculations', () {
       test('Arrow calculations are consistent with track height', () {
-        final painter = OpenSegmentArrowPainter(color: testColor, trackHeight: 10.0);
+        final painter = OpenSegmentArrowPainter(
+          color: testColor,
+          trackHeight: 10.0,
+        );
 
         // These calculations are based on the implementation
         const double expectedArrowHeight = 10.0 * 1.25; // trackHeight * 1.25
@@ -390,7 +464,9 @@ void main() {
         expect(expectedArrowWidth, equals(16.0));
       });
 
-      testWidgets('Arrow positioning adapts to different canvas sizes', (WidgetTester tester) async {
+      testWidgets('Arrow positioning adapts to different canvas sizes', (
+        WidgetTester tester,
+      ) async {
         final List<Size> canvasSizes = [
           const Size(10.0, 10.0),
           const Size(20.0, 16.0),
@@ -437,7 +513,12 @@ void main() {
       });
 
       test('Painter handles extreme track height values', () {
-        final List<double> extremeHeights = [0.0, 0.001, 1000.0, double.infinity];
+        final List<double> extremeHeights = [
+          0.0,
+          0.001,
+          1000.0,
+          double.infinity,
+        ];
 
         for (final height in extremeHeights) {
           if (height.isFinite) {
@@ -448,12 +529,18 @@ void main() {
         }
       });
 
-      testWidgets('Painter handles negative track height gracefully', (WidgetTester tester) async {
+      testWidgets('Painter handles negative track height gracefully', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
               body: CustomPaint(
-                painter: OpenSegmentArrowPainter(color: testColor, trackHeight: -10.0, isOpenEnded: true),
+                painter: OpenSegmentArrowPainter(
+                  color: testColor,
+                  trackHeight: -10.0,
+                  isOpenEnded: true,
+                ),
                 size: const Size(20.0, 16.0),
               ),
             ),
@@ -467,7 +554,9 @@ void main() {
     });
 
     group('Performance', () {
-      testWidgets('Painter performs efficiently with complex scenarios', (WidgetTester tester) async {
+      testWidgets('Painter performs efficiently with complex scenarios', (
+        WidgetTester tester,
+      ) async {
         // Test multiple repaints to ensure there are no performance issues
         for (int i = 0; i < 10; i++) {
           await tester.pumpWidget(

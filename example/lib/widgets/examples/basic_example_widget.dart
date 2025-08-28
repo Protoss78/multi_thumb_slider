@@ -53,7 +53,9 @@ class _BasicExampleWidgetState extends State<BasicExampleWidget> {
       // Enable the built-in segment display
       showSegments: true,
       segmentContentType: SegmentContentType.fromToRange,
-      segmentCardBackgroundColor: AppConstants.primaryColor.withValues(alpha: 0.1),
+      segmentCardBackgroundColor: AppConstants.primaryColor.withValues(
+        alpha: 0.1,
+      ),
       segmentCardBorderColor: Colors.teal.shade200,
       segmentTextColor: Colors.teal.shade900,
       onChanged: _handleValueChange,
@@ -64,7 +66,10 @@ class _BasicExampleWidgetState extends State<BasicExampleWidget> {
   Widget _buildValueDisplay() {
     return Text(
       'Values: ${_values.join(", ")}',
-      style: TextStyle(fontSize: AppConstants.bodyFontSize, color: AppConstants.textSecondaryColor),
+      style: TextStyle(
+        fontSize: AppConstants.bodyFontSize,
+        color: AppConstants.textSecondaryColor,
+      ),
     );
   }
 

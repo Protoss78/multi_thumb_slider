@@ -97,16 +97,23 @@ void main() {
     });
 
     group('Widget Rendering', () {
-      testWidgets('Widget renders with correct basic structure', (WidgetTester tester) async {
+      testWidgets('Widget renders with correct basic structure', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         expect(find.byType(TickmarkWidget), findsOneWidget);
         expect(find.byType(Positioned), findsOneWidget);
         expect(find.byType(GestureDetector), findsOneWidget);
-        expect(find.byType(Container), findsNWidgets(2)); // Outer and inner containers
+        expect(
+          find.byType(Container),
+          findsNWidgets(2),
+        ); // Outer and inner containers
       });
 
-      testWidgets('Widget renders with correct dimensions', (WidgetTester tester) async {
+      testWidgets('Widget renders with correct dimensions', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         final outerContainerFinder = find.byType(Container).first;
@@ -116,7 +123,9 @@ void main() {
         expect(outerContainer.constraints?.maxHeight, equals(testSize + 4.0));
       });
 
-      testWidgets('Widget renders with correct inner tickmark dimensions', (WidgetTester tester) async {
+      testWidgets('Widget renders with correct inner tickmark dimensions', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         final innerContainerFinder = find.byType(Container).last;
@@ -126,7 +135,9 @@ void main() {
         expect(innerContainer.constraints?.maxHeight, equals(testSize));
       });
 
-      testWidgets('Widget renders with correct color', (WidgetTester tester) async {
+      testWidgets('Widget renders with correct color', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         final innerContainerFinder = find.byType(Container).last;
@@ -136,7 +147,9 @@ void main() {
         expect(decoration.color, equals(testColor));
       });
 
-      testWidgets('Widget renders with correct border radius', (WidgetTester tester) async {
+      testWidgets('Widget renders with correct border radius', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         final innerContainerFinder = find.byType(Container).last;
@@ -148,8 +161,12 @@ void main() {
     });
 
     group('Widget Positioning - Below Track', () {
-      testWidgets('Widget positions correctly below track', (WidgetTester tester) async {
-        await tester.pumpWidget(createTestWidget(tickmarkPosition: TickmarkPosition.below));
+      testWidgets('Widget positions correctly below track', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          createTestWidget(tickmarkPosition: TickmarkPosition.below),
+        );
 
         final positionedFinder = find.byType(Positioned);
         final positioned = tester.widget<Positioned>(positionedFinder);
@@ -158,11 +175,16 @@ void main() {
         expect(positioned.bottom, isNotNull);
 
         // Calculate expected bottom position
-        final expectedBottom = (testAvailableHeight / 2) - (testSize + testSpacing) - (testTrackHeight / 2);
+        final expectedBottom =
+            (testAvailableHeight / 2) -
+            (testSize + testSpacing) -
+            (testTrackHeight / 2);
         expect(positioned.bottom, equals(expectedBottom));
       });
 
-      testWidgets('Widget positioning below track changes with parameters', (WidgetTester tester) async {
+      testWidgets('Widget positioning below track changes with parameters', (
+        WidgetTester tester,
+      ) async {
         const customSize = 12.0;
         const customSpacing = 16.0;
         const customAvailableHeight = 200.0;
@@ -181,14 +203,21 @@ void main() {
         final positionedFinder = find.byType(Positioned);
         final positioned = tester.widget<Positioned>(positionedFinder);
 
-        final expectedBottom = (customAvailableHeight / 2) - (customSize + customSpacing) - (customTrackHeight / 2);
+        final expectedBottom =
+            (customAvailableHeight / 2) -
+            (customSize + customSpacing) -
+            (customTrackHeight / 2);
         expect(positioned.bottom, equals(expectedBottom));
       });
     });
 
     group('Widget Positioning - Above Track', () {
-      testWidgets('Widget positions correctly above track', (WidgetTester tester) async {
-        await tester.pumpWidget(createTestWidget(tickmarkPosition: TickmarkPosition.above));
+      testWidgets('Widget positions correctly above track', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          createTestWidget(tickmarkPosition: TickmarkPosition.above),
+        );
 
         final positionedFinder = find.byType(Positioned);
         final positioned = tester.widget<Positioned>(positionedFinder);
@@ -197,11 +226,15 @@ void main() {
         expect(positioned.top, isNotNull);
 
         // Calculate expected top position
-        final expectedTop = (testAvailableHeight / 2) - ((testTrackHeight / 2) + testSpacing + testSize);
+        final expectedTop =
+            (testAvailableHeight / 2) -
+            ((testTrackHeight / 2) + testSpacing + testSize);
         expect(positioned.top, equals(expectedTop));
       });
 
-      testWidgets('Widget positioning above track changes with parameters', (WidgetTester tester) async {
+      testWidgets('Widget positioning above track changes with parameters', (
+        WidgetTester tester,
+      ) async {
         const customSize = 12.0;
         const customSpacing = 16.0;
         const customAvailableHeight = 200.0;
@@ -220,14 +253,20 @@ void main() {
         final positionedFinder = find.byType(Positioned);
         final positioned = tester.widget<Positioned>(positionedFinder);
 
-        final expectedTop = (customAvailableHeight / 2) - ((customTrackHeight / 2) + customSpacing + customSize);
+        final expectedTop =
+            (customAvailableHeight / 2) -
+            ((customTrackHeight / 2) + customSpacing + customSize);
         expect(positioned.top, equals(expectedTop));
       });
     });
 
     group('Widget Positioning - On Track', () {
-      testWidgets('Widget positions correctly on track', (WidgetTester tester) async {
-        await tester.pumpWidget(createTestWidget(tickmarkPosition: TickmarkPosition.onTrack));
+      testWidgets('Widget positions correctly on track', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          createTestWidget(tickmarkPosition: TickmarkPosition.onTrack),
+        );
 
         final positionedFinder = find.byType(Positioned);
         final positioned = tester.widget<Positioned>(positionedFinder);
@@ -236,11 +275,17 @@ void main() {
         expect(positioned.top, isNotNull);
 
         // Calculate expected top position (including the +2 offset mentioned in the code)
-        final expectedTop = (testAvailableHeight / 2) - ((testSize) / 2) - (testTrackHeight / 2) + 2;
+        final expectedTop =
+            (testAvailableHeight / 2) -
+            ((testSize) / 2) -
+            (testTrackHeight / 2) +
+            2;
         expect(positioned.top, equals(expectedTop));
       });
 
-      testWidgets('Widget positioning on track changes with parameters', (WidgetTester tester) async {
+      testWidgets('Widget positioning on track changes with parameters', (
+        WidgetTester tester,
+      ) async {
         const customSize = 12.0;
         const customAvailableHeight = 200.0;
         const customTrackHeight = 16.0;
@@ -257,14 +302,22 @@ void main() {
         final positionedFinder = find.byType(Positioned);
         final positioned = tester.widget<Positioned>(positionedFinder);
 
-        final expectedTop = (customAvailableHeight / 2) - ((customSize) / 2) - (customTrackHeight / 2) + 2;
+        final expectedTop =
+            (customAvailableHeight / 2) -
+            ((customSize) / 2) -
+            (customTrackHeight / 2) +
+            2;
         expect(positioned.top, equals(expectedTop));
       });
     });
 
     group('Widget Interaction', () {
-      testWidgets('Widget responds to tap when not read-only', (WidgetTester tester) async {
-        await tester.pumpWidget(createTestWidget(isReadOnly: false, onTap: mockCallback));
+      testWidgets('Widget responds to tap when not read-only', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          createTestWidget(isReadOnly: false, onTap: mockCallback),
+        );
 
         final gestureDetectorFinder = find.byType(GestureDetector);
         expect(gestureDetectorFinder, findsOneWidget);
@@ -276,8 +329,12 @@ void main() {
         expect(callbackCalled, isTrue);
       });
 
-      testWidgets('Widget does not respond to tap when read-only', (WidgetTester tester) async {
-        await tester.pumpWidget(createTestWidget(isReadOnly: true, onTap: mockCallback));
+      testWidgets('Widget does not respond to tap when read-only', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          createTestWidget(isReadOnly: true, onTap: mockCallback),
+        );
 
         final gestureDetectorFinder = find.byType(GestureDetector);
         expect(gestureDetectorFinder, findsOneWidget);
@@ -289,8 +346,12 @@ void main() {
         expect(callbackCalled, isFalse);
       });
 
-      testWidgets('Widget handles null onTap callback', (WidgetTester tester) async {
-        await tester.pumpWidget(createTestWidget(isReadOnly: false, onTap: null));
+      testWidgets('Widget handles null onTap callback', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          createTestWidget(isReadOnly: false, onTap: null),
+        );
 
         final gestureDetectorFinder = find.byType(GestureDetector);
         expect(gestureDetectorFinder, findsOneWidget);
@@ -305,7 +366,9 @@ void main() {
     });
 
     group('Widget Customization', () {
-      testWidgets('Widget renders with custom size', (WidgetTester tester) async {
+      testWidgets('Widget renders with custom size', (
+        WidgetTester tester,
+      ) async {
         const customSize = 16.0;
 
         await tester.pumpWidget(createTestWidget(size: customSize));
@@ -322,7 +385,9 @@ void main() {
         expect(innerContainer.constraints?.maxHeight, equals(customSize));
       });
 
-      testWidgets('Widget renders with custom color', (WidgetTester tester) async {
+      testWidgets('Widget renders with custom color', (
+        WidgetTester tester,
+      ) async {
         const customColor = Colors.red;
 
         await tester.pumpWidget(createTestWidget(color: customColor));
@@ -334,10 +399,14 @@ void main() {
         expect(decoration.color, equals(customColor));
       });
 
-      testWidgets('Widget renders with custom left position', (WidgetTester tester) async {
+      testWidgets('Widget renders with custom left position', (
+        WidgetTester tester,
+      ) async {
         const customLeftPosition = 200.0;
 
-        await tester.pumpWidget(createTestWidget(leftPosition: customLeftPosition));
+        await tester.pumpWidget(
+          createTestWidget(leftPosition: customLeftPosition),
+        );
 
         final positionedFinder = find.byType(Positioned);
         final positioned = tester.widget<Positioned>(positionedFinder);
@@ -347,7 +416,9 @@ void main() {
     });
 
     group('Widget Behavior', () {
-      testWidgets('Widget rebuilds when parameters change', (WidgetTester tester) async {
+      testWidgets('Widget rebuilds when parameters change', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         // Initial state
@@ -366,22 +437,34 @@ void main() {
         expect(decoration.color, equals(Colors.red));
       });
 
-      testWidgets('Widget maintains position when non-positioning parameters change', (WidgetTester tester) async {
-        await tester.pumpWidget(createTestWidget(tickmarkPosition: TickmarkPosition.below));
+      testWidgets(
+        'Widget maintains position when non-positioning parameters change',
+        (WidgetTester tester) async {
+          await tester.pumpWidget(
+            createTestWidget(tickmarkPosition: TickmarkPosition.below),
+          );
 
-        // Get initial position
-        final initialPositionedFinder = find.byType(Positioned);
-        final initialPositioned = tester.widget<Positioned>(initialPositionedFinder);
-        final initialBottom = initialPositioned.bottom;
+          // Get initial position
+          final initialPositionedFinder = find.byType(Positioned);
+          final initialPositioned = tester.widget<Positioned>(
+            initialPositionedFinder,
+          );
+          final initialBottom = initialPositioned.bottom;
 
-        // Change color and rebuild
-        await tester.pumpWidget(createTestWidget(tickmarkPosition: TickmarkPosition.below, color: Colors.red));
+          // Change color and rebuild
+          await tester.pumpWidget(
+            createTestWidget(
+              tickmarkPosition: TickmarkPosition.below,
+              color: Colors.red,
+            ),
+          );
 
-        // Position should remain the same
-        final newPositionedFinder = find.byType(Positioned);
-        final newPositioned = tester.widget<Positioned>(newPositionedFinder);
-        expect(newPositioned.bottom, equals(initialBottom));
-      });
+          // Position should remain the same
+          final newPositionedFinder = find.byType(Positioned);
+          final newPositioned = tester.widget<Positioned>(newPositionedFinder);
+          expect(newPositioned.bottom, equals(initialBottom));
+        },
+      );
     });
 
     group('Edge Cases', () {
@@ -400,7 +483,9 @@ void main() {
         expect(innerContainer.constraints?.maxHeight, equals(0.0));
       });
 
-      testWidgets('Widget handles very large size', (WidgetTester tester) async {
+      testWidgets('Widget handles very large size', (
+        WidgetTester tester,
+      ) async {
         const largeSize = 100.0;
 
         await tester.pumpWidget(createTestWidget(size: largeSize));
@@ -418,42 +503,70 @@ void main() {
       });
 
       testWidgets('Widget handles zero spacing', (WidgetTester tester) async {
-        await tester.pumpWidget(createTestWidget(tickmarkPosition: TickmarkPosition.below, spacing: 0.0));
+        await tester.pumpWidget(
+          createTestWidget(
+            tickmarkPosition: TickmarkPosition.below,
+            spacing: 0.0,
+          ),
+        );
 
         final positionedFinder = find.byType(Positioned);
         final positioned = tester.widget<Positioned>(positionedFinder);
 
         // Should still calculate position correctly with zero spacing
-        final expectedBottom = (testAvailableHeight / 2) - (testSize + 0.0) - (testTrackHeight / 2);
+        final expectedBottom =
+            (testAvailableHeight / 2) -
+            (testSize + 0.0) -
+            (testTrackHeight / 2);
         expect(positioned.bottom, equals(expectedBottom));
       });
 
-      testWidgets('Widget handles zero available height', (WidgetTester tester) async {
-        await tester.pumpWidget(createTestWidget(tickmarkPosition: TickmarkPosition.below, availableHeight: 0.0));
+      testWidgets('Widget handles zero available height', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          createTestWidget(
+            tickmarkPosition: TickmarkPosition.below,
+            availableHeight: 0.0,
+          ),
+        );
 
         final positionedFinder = find.byType(Positioned);
         final positioned = tester.widget<Positioned>(positionedFinder);
 
         // Should still calculate position correctly with zero height
-        final expectedBottom = (0.0 / 2) - (testSize + testSpacing) - (testTrackHeight / 2);
+        final expectedBottom =
+            (0.0 / 2) - (testSize + testSpacing) - (testTrackHeight / 2);
         expect(positioned.bottom, equals(expectedBottom));
       });
 
-      testWidgets('Widget handles zero track height', (WidgetTester tester) async {
-        await tester.pumpWidget(createTestWidget(tickmarkPosition: TickmarkPosition.below, trackHeight: 0.0));
+      testWidgets('Widget handles zero track height', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(
+          createTestWidget(
+            tickmarkPosition: TickmarkPosition.below,
+            trackHeight: 0.0,
+          ),
+        );
 
         final positionedFinder = find.byType(Positioned);
         final positioned = tester.widget<Positioned>(positionedFinder);
 
         // Should still calculate position correctly with zero track height
-        final expectedBottom = (testAvailableHeight / 2) - (testSize + testSpacing) - (0.0 / 2);
+        final expectedBottom =
+            (testAvailableHeight / 2) - (testSize + testSpacing) - (0.0 / 2);
         expect(positioned.bottom, equals(expectedBottom));
       });
 
-      testWidgets('Widget handles negative left position', (WidgetTester tester) async {
+      testWidgets('Widget handles negative left position', (
+        WidgetTester tester,
+      ) async {
         const negativePosition = -50.0;
 
-        await tester.pumpWidget(createTestWidget(leftPosition: negativePosition));
+        await tester.pumpWidget(
+          createTestWidget(leftPosition: negativePosition),
+        );
 
         final positionedFinder = find.byType(Positioned);
         final positioned = tester.widget<Positioned>(positionedFinder);
@@ -461,7 +574,9 @@ void main() {
         expect(positioned.left, equals(negativePosition));
       });
 
-      testWidgets('Widget handles very large left position', (WidgetTester tester) async {
+      testWidgets('Widget handles very large left position', (
+        WidgetTester tester,
+      ) async {
         const largePosition = 1000.0;
 
         await tester.pumpWidget(createTestWidget(leftPosition: largePosition));

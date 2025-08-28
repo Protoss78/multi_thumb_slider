@@ -13,10 +13,12 @@ class CustomStylingExampleWidget extends StatefulWidget {
   const CustomStylingExampleWidget({super.key});
 
   @override
-  State<CustomStylingExampleWidget> createState() => _CustomStylingExampleWidgetState();
+  State<CustomStylingExampleWidget> createState() =>
+      _CustomStylingExampleWidgetState();
 }
 
-class _CustomStylingExampleWidgetState extends State<CustomStylingExampleWidget> {
+class _CustomStylingExampleWidgetState
+    extends State<CustomStylingExampleWidget> {
   List<int> _values = List.from(ExampleData.customValues);
 
   @override
@@ -56,7 +58,10 @@ class _CustomStylingExampleWidgetState extends State<CustomStylingExampleWidget>
   Widget _buildValueDisplay() {
     return Text(
       'Custom values: ${_values.join(", ")}',
-      style: TextStyle(fontSize: AppConstants.bodyFontSize, color: AppConstants.textSecondaryColor),
+      style: TextStyle(
+        fontSize: AppConstants.bodyFontSize,
+        color: AppConstants.textSecondaryColor,
+      ),
     );
   }
 
@@ -121,13 +126,19 @@ class _CustomStylingExampleWidgetState extends State<CustomStylingExampleWidget>
             margin: const EdgeInsets.only(top: 6),
             width: 4,
             height: 4,
-            decoration: BoxDecoration(color: Colors.blue[600], shape: BoxShape.circle),
+            decoration: BoxDecoration(
+              color: Colors.blue[600],
+              shape: BoxShape.circle,
+            ),
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               feature,
-              style: TextStyle(fontSize: AppConstants.smallFontSize, color: Colors.blue[700]),
+              style: TextStyle(
+                fontSize: AppConstants.smallFontSize,
+                color: Colors.blue[700],
+              ),
             ),
           ),
         ],

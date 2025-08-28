@@ -13,7 +13,8 @@ class PriceRangeExampleWidget extends StatefulWidget {
   const PriceRangeExampleWidget({super.key});
 
   @override
-  State<PriceRangeExampleWidget> createState() => _PriceRangeExampleWidgetState();
+  State<PriceRangeExampleWidget> createState() =>
+      _PriceRangeExampleWidgetState();
 }
 
 class _PriceRangeExampleWidgetState extends State<PriceRangeExampleWidget> {
@@ -60,7 +61,10 @@ class _PriceRangeExampleWidgetState extends State<PriceRangeExampleWidget> {
   Widget _buildPriceDisplay() {
     return Text(
       'Price ranges: ${_values.map(Formatters.price).join(", ")}',
-      style: TextStyle(fontSize: AppConstants.bodyFontSize, color: AppConstants.textSecondaryColor),
+      style: TextStyle(
+        fontSize: AppConstants.bodyFontSize,
+        color: AppConstants.textSecondaryColor,
+      ),
     );
   }
 
@@ -102,21 +106,28 @@ class _PriceRangeExampleWidgetState extends State<PriceRangeExampleWidget> {
   /// Gets price category information
   List<Map<String, dynamic>> _getPriceCategories() {
     final sortedValues = List<int>.from(_values)..sort();
-    final ranges = [ExampleData.priceMin, ...sortedValues, ExampleData.priceMax];
+    final ranges = [
+      ExampleData.priceMin,
+      ...sortedValues,
+      ExampleData.priceMax,
+    ];
 
     return [
       {
-        'range': '${Formatters.price(ranges[0])} - ${Formatters.price(ranges[1])}',
+        'range':
+            '${Formatters.price(ranges[0])} - ${Formatters.price(ranges[1])}',
         'category': 'Budget',
         'color': SliderColorSchemes.priceRangeColors[0],
       },
       {
-        'range': '${Formatters.price(ranges[1])} - ${Formatters.price(ranges[2])}',
+        'range':
+            '${Formatters.price(ranges[1])} - ${Formatters.price(ranges[2])}',
         'category': 'Mid-range',
         'color': SliderColorSchemes.priceRangeColors[1],
       },
       {
-        'range': '${Formatters.price(ranges[2])} - ${Formatters.price(ranges[3])}',
+        'range':
+            '${Formatters.price(ranges[2])} - ${Formatters.price(ranges[3])}',
         'category': 'Premium',
         'color': SliderColorSchemes.priceRangeColors[2],
       },
@@ -142,7 +153,10 @@ class _PriceRangeExampleWidgetState extends State<PriceRangeExampleWidget> {
           Expanded(
             child: Text(
               '${category['category']}: ${category['range']}',
-              style: TextStyle(fontSize: AppConstants.smallFontSize, color: Colors.green[700]),
+              style: TextStyle(
+                fontSize: AppConstants.smallFontSize,
+                color: Colors.green[700],
+              ),
             ),
           ),
         ],

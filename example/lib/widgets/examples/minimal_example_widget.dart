@@ -62,14 +62,22 @@ class _MinimalExampleWidgetState extends State<MinimalExampleWidget> {
 
   /// Builds the main slider widget with minimal configuration
   Widget _buildSlider() {
-    return CustomMultiThumbSlider<int>(values: _values, min: 0, max: 100, onChanged: _handleValueChange);
+    return CustomMultiThumbSlider<int>(
+      values: _values,
+      min: 0,
+      max: 100,
+      onChanged: _handleValueChange,
+    );
   }
 
   /// Builds the current values display
   Widget _buildValueDisplay() {
     return Text(
       'Current values: ${_values.join(", ")}',
-      style: TextStyle(fontSize: AppConstants.bodyFontSize, color: AppConstants.textSecondaryColor),
+      style: TextStyle(
+        fontSize: AppConstants.bodyFontSize,
+        color: AppConstants.textSecondaryColor,
+      ),
     );
   }
 

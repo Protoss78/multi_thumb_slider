@@ -59,7 +59,10 @@ class _DoubleExampleWidgetState extends State<DoubleExampleWidget> {
   Widget _buildValueDisplay() {
     return Text(
       'Values: ${_values.map(Formatters.decimalSingle).join(", ")}',
-      style: TextStyle(fontSize: AppConstants.bodyFontSize, color: AppConstants.textSecondaryColor),
+      style: TextStyle(
+        fontSize: AppConstants.bodyFontSize,
+        color: AppConstants.textSecondaryColor,
+      ),
     );
   }
 
@@ -74,7 +77,11 @@ class _DoubleExampleWidgetState extends State<DoubleExampleWidget> {
       ),
       child: Text(
         'Drag the thumbs to see decimal precision and segment width calculations',
-        style: TextStyle(fontSize: AppConstants.smallFontSize, color: Colors.blue[800], fontWeight: FontWeight.w500),
+        style: TextStyle(
+          fontSize: AppConstants.smallFontSize,
+          color: Colors.blue[800],
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }

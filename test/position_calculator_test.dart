@@ -13,99 +13,159 @@ void main() {
     });
 
     group('calculateNormalizedPosition', () {
-      testWidgets('returns 0.0 when slider key has no context', (WidgetTester tester) async {
-        final result = calculator.calculateNormalizedPosition(const Offset(100, 100));
+      testWidgets('returns 0.0 when slider key has no context', (
+        WidgetTester tester,
+      ) async {
+        final result = calculator.calculateNormalizedPosition(
+          const Offset(100, 100),
+        );
         expect(result, equals(0.0));
       });
 
-      testWidgets('calculates normalized position correctly for left edge', (WidgetTester tester) async {
+      testWidgets('calculates normalized position correctly for left edge', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
-              body: SizedBox(width: 200, height: 50, child: Container(key: sliderKey)),
+              body: SizedBox(
+                width: 200,
+                height: 50,
+                child: Container(key: sliderKey),
+              ),
             ),
           ),
         );
 
-        final result = calculator.calculateNormalizedPosition(const Offset(0, 25));
+        final result = calculator.calculateNormalizedPosition(
+          const Offset(0, 25),
+        );
         expect(result, equals(0.0));
       });
 
-      testWidgets('calculates normalized position correctly for center', (WidgetTester tester) async {
+      testWidgets('calculates normalized position correctly for center', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
-              body: SizedBox(width: 200, height: 50, child: Container(key: sliderKey)),
+              body: SizedBox(
+                width: 200,
+                height: 50,
+                child: Container(key: sliderKey),
+              ),
             ),
           ),
         );
 
-        final result = calculator.calculateNormalizedPosition(const Offset(100, 25));
+        final result = calculator.calculateNormalizedPosition(
+          const Offset(100, 25),
+        );
         expect(result, equals(0.5));
       });
 
-      testWidgets('calculates normalized position correctly for right edge', (WidgetTester tester) async {
+      testWidgets('calculates normalized position correctly for right edge', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
-              body: SizedBox(width: 200, height: 50, child: Container(key: sliderKey)),
+              body: SizedBox(
+                width: 200,
+                height: 50,
+                child: Container(key: sliderKey),
+              ),
             ),
           ),
         );
 
-        final result = calculator.calculateNormalizedPosition(const Offset(200, 25));
+        final result = calculator.calculateNormalizedPosition(
+          const Offset(200, 25),
+        );
         expect(result, equals(1.0));
       });
 
-      testWidgets('clamps position to 0.0 when position is negative', (WidgetTester tester) async {
+      testWidgets('clamps position to 0.0 when position is negative', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
-              body: SizedBox(width: 200, height: 50, child: Container(key: sliderKey)),
+              body: SizedBox(
+                width: 200,
+                height: 50,
+                child: Container(key: sliderKey),
+              ),
             ),
           ),
         );
 
-        final result = calculator.calculateNormalizedPosition(const Offset(-50, 25));
+        final result = calculator.calculateNormalizedPosition(
+          const Offset(-50, 25),
+        );
         expect(result, equals(0.0));
       });
 
-      testWidgets('clamps position to 1.0 when position exceeds width', (WidgetTester tester) async {
+      testWidgets('clamps position to 1.0 when position exceeds width', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
-              body: SizedBox(width: 200, height: 50, child: Container(key: sliderKey)),
+              body: SizedBox(
+                width: 200,
+                height: 50,
+                child: Container(key: sliderKey),
+              ),
             ),
           ),
         );
 
-        final result = calculator.calculateNormalizedPosition(const Offset(250, 25));
+        final result = calculator.calculateNormalizedPosition(
+          const Offset(250, 25),
+        );
         expect(result, equals(1.0));
       });
 
-      testWidgets('handles different slider widths correctly', (WidgetTester tester) async {
+      testWidgets('handles different slider widths correctly', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
-              body: SizedBox(width: 400, height: 50, child: Container(key: sliderKey)),
+              body: SizedBox(
+                width: 400,
+                height: 50,
+                child: Container(key: sliderKey),
+              ),
             ),
           ),
         );
 
-        final result = calculator.calculateNormalizedPosition(const Offset(200, 25));
+        final result = calculator.calculateNormalizedPosition(
+          const Offset(200, 25),
+        );
         expect(result, equals(0.5));
       });
 
-      testWidgets('handles fractional positions correctly', (WidgetTester tester) async {
+      testWidgets('handles fractional positions correctly', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
-              body: SizedBox(width: 100, height: 50, child: Container(key: sliderKey)),
+              body: SizedBox(
+                width: 100,
+                height: 50,
+                child: Container(key: sliderKey),
+              ),
             ),
           ),
         );
 
-        final result = calculator.calculateNormalizedPosition(const Offset(75, 25));
+        final result = calculator.calculateNormalizedPosition(
+          const Offset(75, 25),
+        );
         expect(result, equals(0.75));
       });
     });
@@ -135,7 +195,10 @@ void main() {
 
         expect(calculator.findNearestThumbIndex(0.0, positions), equals(0));
         expect(calculator.findNearestThumbIndex(1.0, positions), equals(1));
-        expect(calculator.findNearestThumbIndex(0.5, positions), equals(0)); // Closer to 0.0
+        expect(
+          calculator.findNearestThumbIndex(0.5, positions),
+          equals(0),
+        ); // Closer to 0.0
       });
 
       test('handles single thumb', () {
@@ -252,7 +315,10 @@ void main() {
         final positions = [0.2, 0.5, 0.8];
 
         // For calculateLowerBound(-1, positions): tries to access positions[-2] which throws RangeError
-        expect(() => calculator.calculateLowerBound(-1, positions), throwsRangeError);
+        expect(
+          () => calculator.calculateLowerBound(-1, positions),
+          throwsRangeError,
+        );
         // For calculateUpperBound(-1, positions): tries to access positions[0] which is valid
         expect(calculator.calculateUpperBound(-1, positions), equals(0.2));
       });
@@ -260,8 +326,14 @@ void main() {
       test('throws RangeError for indices beyond list length', () {
         final positions = [0.2, 0.5, 0.8];
 
-        expect(() => calculator.calculateLowerBound(5, positions), throwsRangeError);
-        expect(() => calculator.calculateUpperBound(5, positions), throwsRangeError);
+        expect(
+          () => calculator.calculateLowerBound(5, positions),
+          throwsRangeError,
+        );
+        expect(
+          () => calculator.calculateUpperBound(5, positions),
+          throwsRangeError,
+        );
       });
 
       test('handles empty list with valid index', () {
@@ -269,7 +341,10 @@ void main() {
 
         expect(calculator.calculateLowerBound(0, positions), equals(0.0));
         // calculateUpperBound(0, []) tries to access positions[1] which throws RangeError
-        expect(() => calculator.calculateUpperBound(0, positions), throwsRangeError);
+        expect(
+          () => calculator.calculateUpperBound(0, positions),
+          throwsRangeError,
+        );
       });
     });
 
@@ -295,10 +370,23 @@ void main() {
         final positions = [0.2, 0.5, 0.8];
 
         // Test that finding nearest thumb and calculating boundaries work together
-        for (double testPosition = 0.0; testPosition <= 1.0; testPosition += 0.1) {
-          final nearestIndex = calculator.findNearestThumbIndex(testPosition, positions);
-          final lowerBound = calculator.calculateLowerBound(nearestIndex, positions);
-          final upperBound = calculator.calculateUpperBound(nearestIndex, positions);
+        for (
+          double testPosition = 0.0;
+          testPosition <= 1.0;
+          testPosition += 0.1
+        ) {
+          final nearestIndex = calculator.findNearestThumbIndex(
+            testPosition,
+            positions,
+          );
+          final lowerBound = calculator.calculateLowerBound(
+            nearestIndex,
+            positions,
+          );
+          final upperBound = calculator.calculateUpperBound(
+            nearestIndex,
+            positions,
+          );
 
           // The nearest thumb should be within its calculated boundaries
           expect(positions[nearestIndex], greaterThanOrEqualTo(lowerBound));
@@ -313,7 +401,10 @@ void main() {
         final testPositions = [0.0, 0.1, 0.3, 0.4, 0.6, 0.7, 0.9, 1.0];
 
         for (final testPosition in testPositions) {
-          final nearestIndex = calculator.findNearestThumbIndex(testPosition, positions);
+          final nearestIndex = calculator.findNearestThumbIndex(
+            testPosition,
+            positions,
+          );
           final actualPosition = positions[nearestIndex];
 
           // Verify that the found thumb is indeed the closest

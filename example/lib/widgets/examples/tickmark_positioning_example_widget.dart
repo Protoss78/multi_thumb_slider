@@ -7,10 +7,12 @@ class TickmarkPositioningExampleWidget extends StatefulWidget {
   const TickmarkPositioningExampleWidget({super.key});
 
   @override
-  State<TickmarkPositioningExampleWidget> createState() => _TickmarkPositioningExampleWidgetState();
+  State<TickmarkPositioningExampleWidget> createState() =>
+      _TickmarkPositioningExampleWidgetState();
 }
 
-class _TickmarkPositioningExampleWidgetState extends State<TickmarkPositioningExampleWidget> {
+class _TickmarkPositioningExampleWidgetState
+    extends State<TickmarkPositioningExampleWidget> {
   List<int> _values = [25, 75];
   TickmarkPosition _tickmarkPosition = TickmarkPosition.below;
   double _tickmarkSize = 8.0;
@@ -51,18 +53,28 @@ class _TickmarkPositioningExampleWidgetState extends State<TickmarkPositioningEx
         children: [
           Text(
             'Tickmark Positioning Controls',
-            style: TextStyle(fontSize: AppConstants.bodyFontSize, fontWeight: FontWeight.bold, color: Colors.blue[800]),
+            style: TextStyle(
+              fontSize: AppConstants.bodyFontSize,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue[800],
+            ),
           ),
           const SizedBox(height: AppConstants.itemSpacing),
 
           // Position selector
           Row(
             children: [
-              Text('Position: ', style: TextStyle(fontSize: AppConstants.captionFontSize)),
+              Text(
+                'Position: ',
+                style: TextStyle(fontSize: AppConstants.captionFontSize),
+              ),
               DropdownButton<TickmarkPosition>(
                 value: _tickmarkPosition,
                 items: TickmarkPosition.values.map((position) {
-                  return DropdownMenuItem(value: position, child: Text(position.name));
+                  return DropdownMenuItem(
+                    value: position,
+                    child: Text(position.name),
+                  );
                 }).toList(),
                 onChanged: (value) {
                   if (value != null) {
@@ -78,7 +90,10 @@ class _TickmarkPositioningExampleWidgetState extends State<TickmarkPositioningEx
           // Size slider
           Row(
             children: [
-              Text('Tickmark Size: ', style: TextStyle(fontSize: AppConstants.captionFontSize)),
+              Text(
+                'Tickmark Size: ',
+                style: TextStyle(fontSize: AppConstants.captionFontSize),
+              ),
               Expanded(
                 child: Slider(
                   value: tickmarkSize,
@@ -96,7 +111,10 @@ class _TickmarkPositioningExampleWidgetState extends State<TickmarkPositioningEx
           // Spacing sliders
           Row(
             children: [
-              Text('Track Spacing: ', style: TextStyle(fontSize: AppConstants.captionFontSize)),
+              Text(
+                'Track Spacing: ',
+                style: TextStyle(fontSize: AppConstants.captionFontSize),
+              ),
               Expanded(
                 child: Slider(
                   value: tickmarkSpacing,
@@ -104,7 +122,8 @@ class _TickmarkPositioningExampleWidgetState extends State<TickmarkPositioningEx
                   max: 20.0,
                   divisions: 10,
                   label: tickmarkSpacing.toStringAsFixed(1),
-                  onChanged: (value) => setState(() => _tickmarkSpacing = value),
+                  onChanged: (value) =>
+                      setState(() => _tickmarkSpacing = value),
                 ),
               ),
               Text(tickmarkSpacing.toStringAsFixed(1)),
@@ -113,7 +132,10 @@ class _TickmarkPositioningExampleWidgetState extends State<TickmarkPositioningEx
 
           Row(
             children: [
-              Text('Label Spacing: ', style: TextStyle(fontSize: AppConstants.captionFontSize)),
+              Text(
+                'Label Spacing: ',
+                style: TextStyle(fontSize: AppConstants.captionFontSize),
+              ),
               Expanded(
                 child: Slider(
                   value: labelSpacing,
@@ -133,7 +155,10 @@ class _TickmarkPositioningExampleWidgetState extends State<TickmarkPositioningEx
           // Track height slider
           Row(
             children: [
-              Text('Track Height: ', style: TextStyle(fontSize: AppConstants.captionFontSize)),
+              Text(
+                'Track Height: ',
+                style: TextStyle(fontSize: AppConstants.captionFontSize),
+              ),
               Expanded(
                 child: Slider(
                   value: trackHeight,
@@ -165,7 +190,10 @@ class _TickmarkPositioningExampleWidgetState extends State<TickmarkPositioningEx
         children: [
           Text(
             'Current Settings: ${_tickmarkPosition.name} | Size: ${_tickmarkSize.toStringAsFixed(1)} | Spacing: ${_tickmarkSpacing.toStringAsFixed(1)} | Track: ${_trackHeight.toStringAsFixed(1)}',
-            style: TextStyle(fontSize: AppConstants.captionFontSize, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              fontSize: AppConstants.captionFontSize,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: AppConstants.itemSpacing),
           CustomMultiThumbSlider<int>(
@@ -203,7 +231,8 @@ class _TickmarkPositioningExampleWidgetState extends State<TickmarkPositioningEx
     switch (_tickmarkPosition) {
       case TickmarkPosition.above:
         description = 'Tickmarks appear above the track';
-        tip = 'Great for when you want tickmarks to be more prominent and not interfere with the track';
+        tip =
+            'Great for when you want tickmarks to be more prominent and not interfere with the track';
         break;
       case TickmarkPosition.below:
         description = 'Tickmarks appear below the track';

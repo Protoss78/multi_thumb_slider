@@ -10,7 +10,12 @@ void main() {
     const bool testIsDragged = false;
     const bool testIsReadOnly = false;
 
-    Widget createTestWidget({double? radius, Color? color, bool? isDragged, bool? isReadOnly}) {
+    Widget createTestWidget({
+      double? radius,
+      Color? color,
+      bool? isDragged,
+      bool? isReadOnly,
+    }) {
       return TestConfig.createTestApp(
         child: Center(
           child: ThumbWidget(
@@ -26,7 +31,12 @@ void main() {
     group('Widget Construction', () {
       test('Widget can be instantiated with all required parameters', () {
         expect(() {
-          ThumbWidget(radius: testRadius, color: testColor, isDragged: testIsDragged, isReadOnly: testIsReadOnly);
+          ThumbWidget(
+            radius: testRadius,
+            color: testColor,
+            isDragged: testIsDragged,
+            isReadOnly: testIsReadOnly,
+          );
         }, returnsNormally);
       });
 
@@ -46,7 +56,9 @@ void main() {
     });
 
     group('Widget Rendering', () {
-      testWidgets('Widget renders with correct basic structure', (WidgetTester tester) async {
+      testWidgets('Widget renders with correct basic structure', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         final Finder containerFinder = find.byType(Container);
@@ -58,7 +70,9 @@ void main() {
         expect(containerSize.height, equals(testRadius * 2));
       });
 
-      testWidgets('Widget renders with correct decoration properties', (WidgetTester tester) async {
+      testWidgets('Widget renders with correct decoration properties', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         final Finder containerFinder = find.byType(Container);
@@ -70,7 +84,9 @@ void main() {
         expect(decoration.border, isNotNull);
       });
 
-      testWidgets('Widget renders with correct border properties', (WidgetTester tester) async {
+      testWidgets('Widget renders with correct border properties', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         final Finder containerFinder = find.byType(Container);
@@ -82,7 +98,9 @@ void main() {
         expect(border.top.color, equals(Colors.grey.shade400));
       });
 
-      testWidgets('Widget renders with correct shadow when not read-only', (WidgetTester tester) async {
+      testWidgets('Widget renders with correct shadow when not read-only', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget());
 
         final Finder containerFinder = find.byType(Container);
@@ -101,7 +119,9 @@ void main() {
     });
 
     group('Dragged State Behavior', () {
-      testWidgets('Widget enlarges when isDragged is true', (WidgetTester tester) async {
+      testWidgets('Widget enlarges when isDragged is true', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget(isDragged: true));
 
         final Finder containerFinder = find.byType(Container);
@@ -113,7 +133,9 @@ void main() {
         expect(containerSize.height, equals(expectedSize));
       });
 
-      testWidgets('Widget maintains normal size when isDragged is false', (WidgetTester tester) async {
+      testWidgets('Widget maintains normal size when isDragged is false', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget(isDragged: false));
 
         final Finder containerFinder = find.byType(Container);
@@ -125,7 +147,9 @@ void main() {
         expect(containerSize.height, equals(expectedSize));
       });
 
-      testWidgets('Widget transitions between dragged and normal states', (WidgetTester tester) async {
+      testWidgets('Widget transitions between dragged and normal states', (
+        WidgetTester tester,
+      ) async {
         // Start with not dragged
         await tester.pumpWidget(createTestWidget(isDragged: false));
 
@@ -147,7 +171,9 @@ void main() {
     });
 
     group('Read-Only State Behavior', () {
-      testWidgets('Widget applies read-only styling when isReadOnly is true', (WidgetTester tester) async {
+      testWidgets('Widget applies read-only styling when isReadOnly is true', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget(isReadOnly: true));
 
         final Finder containerFinder = find.byType(Container);
@@ -166,7 +192,9 @@ void main() {
         expect(decoration.boxShadow, isEmpty);
       });
 
-      testWidgets('Widget applies normal styling when isReadOnly is false', (WidgetTester tester) async {
+      testWidgets('Widget applies normal styling when isReadOnly is false', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget(isReadOnly: false));
 
         final Finder containerFinder = find.byType(Container);
@@ -188,29 +216,37 @@ void main() {
     });
 
     group('Combined State Behavior', () {
-      testWidgets('Widget handles both dragged and read-only states correctly', (WidgetTester tester) async {
-        await tester.pumpWidget(createTestWidget(isDragged: true, isReadOnly: true));
+      testWidgets(
+        'Widget handles both dragged and read-only states correctly',
+        (WidgetTester tester) async {
+          await tester.pumpWidget(
+            createTestWidget(isDragged: true, isReadOnly: true),
+          );
 
-        final Finder containerFinder = find.byType(Container);
-        final Container container = tester.widget(containerFinder);
-        final BoxDecoration decoration = container.decoration as BoxDecoration;
+          final Finder containerFinder = find.byType(Container);
+          final Container container = tester.widget(containerFinder);
+          final BoxDecoration decoration =
+              container.decoration as BoxDecoration;
 
-        // Should be enlarged due to dragged state
-        final Size containerSize = tester.getSize(containerFinder);
-        final double expectedSize = testRadius * 1.2 * 2;
-        expect(containerSize.width, equals(expectedSize));
-        expect(containerSize.height, equals(expectedSize));
+          // Should be enlarged due to dragged state
+          final Size containerSize = tester.getSize(containerFinder);
+          final double expectedSize = testRadius * 1.2 * 2;
+          expect(containerSize.width, equals(expectedSize));
+          expect(containerSize.height, equals(expectedSize));
 
-        // Should have read-only styling
-        expect(decoration.color, equals(testColor.withValues(alpha: 0.6)));
-        expect(decoration.boxShadow, isEmpty);
+          // Should have read-only styling
+          expect(decoration.color, equals(testColor.withValues(alpha: 0.6)));
+          expect(decoration.boxShadow, isEmpty);
 
-        final Border border = decoration.border as Border;
-        expect(border.top.width, equals(1.5));
-        expect(border.top.color, equals(Colors.grey.shade300));
-      });
+          final Border border = decoration.border as Border;
+          expect(border.top.width, equals(1.5));
+          expect(border.top.color, equals(Colors.grey.shade300));
+        },
+      );
 
-      testWidgets('Widget handles all state combinations correctly', (WidgetTester tester) async {
+      testWidgets('Widget handles all state combinations correctly', (
+        WidgetTester tester,
+      ) async {
         // Test all four combinations
         final List<Map<String, bool>> stateCombinations = [
           {'isDragged': false, 'isReadOnly': false},
@@ -220,19 +256,29 @@ void main() {
         ];
 
         for (final state in stateCombinations) {
-          await tester.pumpWidget(createTestWidget(isDragged: state['isDragged']!, isReadOnly: state['isReadOnly']!));
+          await tester.pumpWidget(
+            createTestWidget(
+              isDragged: state['isDragged']!,
+              isReadOnly: state['isReadOnly']!,
+            ),
+          );
 
           final Container container = tester.widget(find.byType(Container));
-          final BoxDecoration decoration = container.decoration as BoxDecoration;
+          final BoxDecoration decoration =
+              container.decoration as BoxDecoration;
           final Size containerSize = tester.getSize(find.byType(Container));
 
           // Verify size based on dragged state
-          final double expectedSize = state['isDragged']! ? testRadius * 1.2 * 2 : testRadius * 2;
+          final double expectedSize = state['isDragged']!
+              ? testRadius * 1.2 * 2
+              : testRadius * 2;
           expect(containerSize.width, equals(expectedSize));
           expect(containerSize.height, equals(expectedSize));
 
           // Verify color based on read-only state
-          final Color expectedColor = state['isReadOnly']! ? testColor.withValues(alpha: 0.6) : testColor;
+          final Color expectedColor = state['isReadOnly']!
+              ? testColor.withValues(alpha: 0.6)
+              : testColor;
           expect(decoration.color, equals(expectedColor));
 
           // Verify shadow based on read-only state
@@ -247,7 +293,9 @@ void main() {
     });
 
     group('Edge Cases', () {
-      testWidgets('Widget handles zero radius gracefully', (WidgetTester tester) async {
+      testWidgets('Widget handles zero radius gracefully', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(createTestWidget(radius: 0.0));
 
         final Finder containerFinder = find.byType(Container);
@@ -257,7 +305,9 @@ void main() {
         expect(containerSize.height, equals(0.0));
       });
 
-      testWidgets('Widget handles very small radius', (WidgetTester tester) async {
+      testWidgets('Widget handles very small radius', (
+        WidgetTester tester,
+      ) async {
         const double smallRadius = 0.1;
         await tester.pumpWidget(createTestWidget(radius: smallRadius));
 
@@ -268,7 +318,9 @@ void main() {
         expect(containerSize.height, equals(smallRadius * 2));
       });
 
-      testWidgets('Widget handles transparent color', (WidgetTester tester) async {
+      testWidgets('Widget handles transparent color', (
+        WidgetTester tester,
+      ) async {
         const Color transparentColor = Colors.transparent;
         await tester.pumpWidget(createTestWidget(color: transparentColor));
 
@@ -279,14 +331,17 @@ void main() {
         expect(decoration.color, equals(transparentColor));
       });
 
-      testWidgets('Widget maintains circular shape regardless of radius', (WidgetTester tester) async {
+      testWidgets('Widget maintains circular shape regardless of radius', (
+        WidgetTester tester,
+      ) async {
         final List<double> radiusValues = [1.0, 5.0, 10.0, 20.0, 50.0];
 
         for (final radius in radiusValues) {
           await tester.pumpWidget(createTestWidget(radius: radius));
 
           final Container container = tester.widget(find.byType(Container));
-          final BoxDecoration decoration = container.decoration as BoxDecoration;
+          final BoxDecoration decoration =
+              container.decoration as BoxDecoration;
 
           expect(decoration.shape, equals(BoxShape.circle));
         }

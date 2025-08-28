@@ -33,7 +33,10 @@ class MultiThumbSliderExampleApp extends StatelessWidget {
     return ThemeData(
       fontFamily: AppConstants.fontFamily,
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(seedColor: AppConstants.primaryColor, brightness: Brightness.light),
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppConstants.primaryColor,
+        brightness: Brightness.light,
+      ),
     );
   }
 }
@@ -49,7 +52,11 @@ class ExamplesScreen extends StatefulWidget {
 class _ExamplesScreenState extends State<ExamplesScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: _buildAppBar(), backgroundColor: AppConstants.backgroundColor, body: _buildBody());
+    return Scaffold(
+      appBar: _buildAppBar(),
+      backgroundColor: AppConstants.backgroundColor,
+      body: _buildBody(),
+    );
   }
 
   /// Builds the application bar
@@ -93,7 +100,10 @@ class _ExamplesScreenState extends State<ExamplesScreen> {
         const SizedBox(height: AppConstants.itemSpacing),
         Text(
           'Explore the various features and use cases of the Multi-Thumb Slider',
-          style: TextStyle(fontSize: AppConstants.bodyFontSize, color: AppConstants.textSecondaryColor),
+          style: TextStyle(
+            fontSize: AppConstants.bodyFontSize,
+            color: AppConstants.textSecondaryColor,
+          ),
         ),
       ],
     );

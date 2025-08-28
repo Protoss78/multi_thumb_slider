@@ -42,7 +42,10 @@ class ReadOnlyExampleWidget extends StatelessWidget {
   Widget _buildValueDisplay() {
     return Text(
       'Read-only values: ${ExampleData.readOnlyValues.join(", ")}',
-      style: TextStyle(fontSize: AppConstants.bodyFontSize, color: AppConstants.textSecondaryColor),
+      style: TextStyle(
+        fontSize: AppConstants.bodyFontSize,
+        color: AppConstants.textSecondaryColor,
+      ),
     );
   }
 
@@ -146,13 +149,19 @@ class ReadOnlyExampleWidget extends StatelessWidget {
             margin: const EdgeInsets.only(top: 6),
             width: 4,
             height: 4,
-            decoration: BoxDecoration(color: Colors.grey[600], shape: BoxShape.circle),
+            decoration: BoxDecoration(
+              color: Colors.grey[600],
+              shape: BoxShape.circle,
+            ),
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               useCase,
-              style: TextStyle(fontSize: AppConstants.smallFontSize, color: Colors.grey[700]),
+              style: TextStyle(
+                fontSize: AppConstants.smallFontSize,
+                color: Colors.grey[700],
+              ),
             ),
           ),
         ],

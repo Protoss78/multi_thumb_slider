@@ -42,17 +42,27 @@ class RangeSegmentWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: color,
                 borderRadius: BorderRadius.horizontal(
-                  left: (isFirst && !isOpenStarted) ? const Radius.circular(4) : Radius.zero,
-                  right: (isLast && !isOpenEnded) ? const Radius.circular(4) : Radius.zero,
+                  left: (isFirst && !isOpenStarted)
+                      ? const Radius.circular(4)
+                      : Radius.zero,
+                  right: (isLast && !isOpenEnded)
+                      ? const Radius.circular(4)
+                      : Radius.zero,
                 ),
               ),
             ),
             // Arrows for open segments
             if ((isOpenEnded && isLast) || (isOpenStarted && isFirst))
               Positioned(
-                left: isOpenStarted && isFirst ? -4 : null, // Position at the very start of the track
-                right: isOpenEnded && isLast ? 4 : null, // Position at the very end of the track
-                top: -(trackHeight / 2), // Center the double-height arrow on the track
+                left: isOpenStarted && isFirst
+                    ? -4
+                    : null, // Position at the very start of the track
+                right: isOpenEnded && isLast
+                    ? 4
+                    : null, // Position at the very end of the track
+                top:
+                    -(trackHeight /
+                        2), // Center the double-height arrow on the track
                 child: CustomPaint(
                   painter: OpenSegmentArrowPainter(
                     color: color,

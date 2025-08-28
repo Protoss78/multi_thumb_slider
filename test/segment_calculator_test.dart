@@ -6,7 +6,11 @@ void main() {
   group('SegmentCalculator Tests', () {
     group('calculateSegmentWidths', () {
       test('handles empty values list', () {
-        final widths = SegmentCalculator.calculateSegmentWidths<int>([], 0, 100);
+        final widths = SegmentCalculator.calculateSegmentWidths<int>(
+          [],
+          0,
+          100,
+        );
         expect(widths, equals([1.0]));
       });
 
@@ -19,7 +23,11 @@ void main() {
       });
 
       test('calculates widths for multiple values correctly', () {
-        final widths = SegmentCalculator.calculateSegmentWidths([25, 75], 0, 100);
+        final widths = SegmentCalculator.calculateSegmentWidths(
+          [25, 75],
+          0,
+          100,
+        );
 
         expect(widths.length, equals(3));
         expect(widths[0], equals(0.25)); // 0 to 25
@@ -28,7 +36,11 @@ void main() {
       });
 
       test('handles unsorted values by sorting them', () {
-        final widths = SegmentCalculator.calculateSegmentWidths([75, 25], 0, 100);
+        final widths = SegmentCalculator.calculateSegmentWidths(
+          [75, 25],
+          0,
+          100,
+        );
 
         expect(widths.length, equals(3));
         expect(widths[0], equals(0.25)); // 0 to 25 (sorted)
@@ -37,7 +49,11 @@ void main() {
       });
 
       test('works with double values', () {
-        final widths = SegmentCalculator.calculateSegmentWidths([25.5, 74.5], 0.0, 100.0);
+        final widths = SegmentCalculator.calculateSegmentWidths(
+          [25.5, 74.5],
+          0.0,
+          100.0,
+        );
 
         expect(widths.length, equals(3));
         expect(widths[0], equals(0.255)); // 0.0 to 25.5
@@ -46,7 +62,11 @@ void main() {
       });
 
       test('handles negative ranges', () {
-        final widths = SegmentCalculator.calculateSegmentWidths([-25, 25], -50, 50);
+        final widths = SegmentCalculator.calculateSegmentWidths(
+          [-25, 25],
+          -50,
+          50,
+        );
 
         expect(widths.length, equals(3));
         expect(widths[0], equals(0.25)); // -50 to -25
@@ -55,7 +75,11 @@ void main() {
       });
 
       test('handles values at boundaries', () {
-        final widths = SegmentCalculator.calculateSegmentWidths([0, 100], 0, 100);
+        final widths = SegmentCalculator.calculateSegmentWidths(
+          [0, 100],
+          0,
+          100,
+        );
 
         expect(widths.length, equals(3));
         expect(widths[0], equals(0.0)); // 0 to 0 (no width)
@@ -64,7 +88,11 @@ void main() {
       });
 
       test('handles duplicate values', () {
-        final widths = SegmentCalculator.calculateSegmentWidths([50, 50], 0, 100);
+        final widths = SegmentCalculator.calculateSegmentWidths(
+          [50, 50],
+          0,
+          100,
+        );
 
         expect(widths.length, equals(3));
         expect(widths[0], equals(0.5)); // 0 to 50
@@ -83,7 +111,11 @@ void main() {
 
     group('calculateSegmentPercentages', () {
       test('converts widths to percentages correctly', () {
-        final percentages = SegmentCalculator.calculateSegmentPercentages([25, 75], 0, 100);
+        final percentages = SegmentCalculator.calculateSegmentPercentages(
+          [25, 75],
+          0,
+          100,
+        );
 
         expect(percentages.length, equals(3));
         expect(percentages[0], equals(25.0)); // 25% of total
@@ -92,12 +124,20 @@ void main() {
       });
 
       test('handles empty values list', () {
-        final percentages = SegmentCalculator.calculateSegmentPercentages<int>([], 0, 100);
+        final percentages = SegmentCalculator.calculateSegmentPercentages<int>(
+          [],
+          0,
+          100,
+        );
         expect(percentages, equals([100.0]));
       });
 
       test('works with double values', () {
-        final percentages = SegmentCalculator.calculateSegmentPercentages([33.3], 0.0, 100.0);
+        final percentages = SegmentCalculator.calculateSegmentPercentages(
+          [33.3],
+          0.0,
+          100.0,
+        );
 
         expect(percentages.length, equals(2));
         expect(percentages[0], closeTo(33.3, 0.01)); // ~33.3% of total
@@ -129,7 +169,12 @@ void main() {
       });
 
       test('uses custom formatter when provided', () {
-        final labels = SegmentCalculator.createSegmentLabels([25, 75], 0, 100, formatter: (value) => '$value%');
+        final labels = SegmentCalculator.createSegmentLabels(
+          [25, 75],
+          0,
+          100,
+          formatter: (value) => '$value%',
+        );
 
         expect(labels.length, equals(3));
         expect(labels[0], equals('0% - 25%'));
@@ -138,7 +183,11 @@ void main() {
       });
 
       test('works with double values', () {
-        final labels = SegmentCalculator.createSegmentLabels([25.5, 74.5], 0.0, 100.0);
+        final labels = SegmentCalculator.createSegmentLabels(
+          [25.5, 74.5],
+          0.0,
+          100.0,
+        );
 
         expect(labels.length, equals(3));
         expect(labels[0], equals('0.0 - 25.5'));
@@ -147,7 +196,11 @@ void main() {
       });
 
       test('handles negative ranges', () {
-        final labels = SegmentCalculator.createSegmentLabels([-25, 25], -50, 50);
+        final labels = SegmentCalculator.createSegmentLabels(
+          [-25, 25],
+          -50,
+          50,
+        );
 
         expect(labels.length, equals(3));
         expect(labels[0], equals('-50 - -25'));
@@ -249,7 +302,11 @@ void main() {
 
     group('Edge Cases and Error Conditions', () {
       test('handles very small differences', () {
-        final widths = SegmentCalculator.calculateSegmentWidths([0.001], 0.0, 0.002);
+        final widths = SegmentCalculator.calculateSegmentWidths(
+          [0.001],
+          0.0,
+          0.002,
+        );
 
         expect(widths.length, equals(2));
         expect(widths[0], equals(0.5)); // Should handle small numbers
@@ -257,7 +314,11 @@ void main() {
       });
 
       test('handles very large numbers', () {
-        final widths = SegmentCalculator.calculateSegmentWidths([500000], 0, 1000000);
+        final widths = SegmentCalculator.calculateSegmentWidths(
+          [500000],
+          0,
+          1000000,
+        );
 
         expect(widths.length, equals(2));
         expect(widths[0], equals(0.5));
@@ -272,7 +333,11 @@ void main() {
       });
 
       test('handles many duplicate values', () {
-        final widths = SegmentCalculator.calculateSegmentWidths([50, 50, 50, 50], 0, 100);
+        final widths = SegmentCalculator.calculateSegmentWidths(
+          [50, 50, 50, 50],
+          0,
+          100,
+        );
 
         expect(widths.length, equals(5)); // 4 values + 1 creates 5 segments
         expect(widths[0], equals(0.5)); // 0 to 50
@@ -283,7 +348,11 @@ void main() {
       });
 
       test('handles many closely spaced values', () {
-        final widths = SegmentCalculator.calculateSegmentWidths([49, 50, 51], 0, 100);
+        final widths = SegmentCalculator.calculateSegmentWidths(
+          [49, 50, 51],
+          0,
+          100,
+        );
 
         expect(widths.length, equals(4));
         expect(widths[0], equals(0.49)); // 0 to 49
@@ -320,7 +389,11 @@ void main() {
       });
 
       test('works with double values', () {
-        final isValid = SegmentCalculator.validateValues([25.5, 50.0, 74.5], 0.0, 100.0);
+        final isValid = SegmentCalculator.validateValues(
+          [25.5, 50.0, 74.5],
+          0.0,
+          100.0,
+        );
         expect(isValid, isTrue);
       });
 
@@ -438,7 +511,12 @@ void main() {
 
     group('calculateValuesAfterSegmentAdd', () {
       test('adds segment at beginning correctly', () {
-        final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd([50, 75], 0, 100, 0);
+        final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd(
+          [50, 75],
+          0,
+          100,
+          0,
+        );
         expect(newValues.length, equals(3));
         expect(newValues[0], equals(25)); // Midpoint between 0 and 50
         expect(newValues[1], equals(50));
@@ -446,7 +524,12 @@ void main() {
       });
 
       test('adds segment between existing segments correctly', () {
-        final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd([25, 75], 0, 100, 1);
+        final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd(
+          [25, 75],
+          0,
+          100,
+          1,
+        );
         expect(newValues.length, equals(3));
         expect(newValues[0], equals(25));
         expect(newValues[1], equals(50)); // Midpoint between 25 and 75
@@ -454,7 +537,12 @@ void main() {
       });
 
       test('adds segment at end correctly', () {
-        final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd([25, 50], 0, 100, 2);
+        final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd(
+          [25, 50],
+          0,
+          100,
+          2,
+        );
         expect(newValues.length, equals(3));
         expect(newValues[0], equals(25));
         expect(newValues[1], equals(50));
@@ -462,19 +550,34 @@ void main() {
       });
 
       test('handles empty values list correctly', () {
-        final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd(<int>[], 0, 100, 0);
+        final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd(
+          <int>[],
+          0,
+          100,
+          0,
+        );
         expect(newValues.length, equals(1));
         expect(newValues[0], equals(50)); // Midpoint between 0 and 100
       });
 
       test('works with double values', () {
-        final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd([25.0, 75.0], 0.0, 100.0, 1);
+        final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd(
+          [25.0, 75.0],
+          0.0,
+          100.0,
+          1,
+        );
         expect(newValues.length, equals(3));
         expect(newValues[1], equals(50.0)); // Midpoint between 25.0 and 75.0
       });
 
       test('handles unsorted values correctly', () {
-        final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd([75, 25], 0, 100, 1);
+        final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd(
+          [75, 25],
+          0,
+          100,
+          1,
+        );
         expect(newValues.length, equals(3));
         expect(newValues[0], equals(25)); // Values are sorted first
         expect(newValues[1], equals(50)); // Midpoint between 25 and 75
@@ -482,7 +585,12 @@ void main() {
       });
 
       test('works with negative ranges', () {
-        final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd([-25, 25], -50, 50, 1);
+        final newValues = SegmentCalculator.calculateValuesAfterSegmentAdd(
+          [-25, 25],
+          -50,
+          50,
+          1,
+        );
         expect(newValues.length, equals(3));
         expect(newValues[1], equals(0)); // Midpoint between -25 and 25
       });
@@ -490,75 +598,142 @@ void main() {
 
     group('calculateValuesAfterSegmentRemove', () {
       test('removes segment at beginning correctly', () {
-        final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove([25, 50, 75], 0, 100, 0);
+        final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove(
+          [25, 50, 75],
+          0,
+          100,
+          0,
+        );
         expect(newValues.length, equals(2));
         expect(newValues[0], equals(50));
         expect(newValues[1], equals(75));
       });
 
       test('removes segment between existing segments correctly', () {
-        final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove([25, 50, 75], 0, 100, 1);
+        final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove(
+          [25, 50, 75],
+          0,
+          100,
+          1,
+        );
         expect(newValues.length, equals(2));
-        expect(newValues[0], equals(50)); // Removed the thumb at index 0 (25) - left boundary
+        expect(
+          newValues[0],
+          equals(50),
+        ); // Removed the thumb at index 0 (25) - left boundary
         expect(newValues[1], equals(75));
       });
 
       test('removes segment at end correctly', () {
-        final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove([25, 50, 75], 0, 100, 3);
+        final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove(
+          [25, 50, 75],
+          0,
+          100,
+          3,
+        );
         expect(newValues.length, equals(2));
         expect(newValues[0], equals(25));
         expect(newValues[1], equals(50));
       });
 
       test('handles empty values list correctly', () {
-        final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove(<int>[], 0, 100, 0);
+        final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove(
+          <int>[],
+          0,
+          100,
+          0,
+        );
         expect(newValues.length, equals(0));
       });
 
       test('handles single value correctly', () {
-        final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove([50], 0, 100, 0);
+        final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove(
+          [50],
+          0,
+          100,
+          0,
+        );
         expect(newValues.length, equals(0));
       });
 
       test('works with double values', () {
-        final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove([25.0, 50.0, 75.0], 0.0, 100.0, 1);
+        final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove(
+          [25.0, 50.0, 75.0],
+          0.0,
+          100.0,
+          1,
+        );
         expect(newValues.length, equals(2));
-        expect(newValues[0], equals(50.0)); // Removed the thumb at index 0 (25.0)
+        expect(
+          newValues[0],
+          equals(50.0),
+        ); // Removed the thumb at index 0 (25.0)
         expect(newValues[1], equals(75.0));
       });
 
       test('handles unsorted values correctly', () {
-        final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove([75, 25, 50], 0, 100, 1);
+        final newValues = SegmentCalculator.calculateValuesAfterSegmentRemove(
+          [75, 25, 50],
+          0,
+          100,
+          1,
+        );
         expect(newValues.length, equals(2));
-        expect(newValues[0], equals(50)); // Values are sorted first, then thumb at index 0 (25) is removed
+        expect(
+          newValues[0],
+          equals(50),
+        ); // Values are sorted first, then thumb at index 0 (25) is removed
         expect(newValues[1], equals(75));
       });
     });
 
     group('validateNewValues', () {
       test('returns true for valid values within bounds', () {
-        final isValid = SegmentCalculator.validateNewValues([25, 50, 75], 0, 100);
+        final isValid = SegmentCalculator.validateNewValues(
+          [25, 50, 75],
+          0,
+          100,
+        );
         expect(isValid, isTrue);
       });
 
       test('returns false for values below minimum', () {
-        final isValid = SegmentCalculator.validateNewValues([-10, 25, 75], 0, 100);
+        final isValid = SegmentCalculator.validateNewValues(
+          [-10, 25, 75],
+          0,
+          100,
+        );
         expect(isValid, isFalse);
       });
 
       test('returns false for values above maximum', () {
-        final isValid = SegmentCalculator.validateNewValues([25, 50, 110], 0, 100);
+        final isValid = SegmentCalculator.validateNewValues(
+          [25, 50, 110],
+          0,
+          100,
+        );
         expect(isValid, isFalse);
       });
 
       test('returns false for duplicate values', () {
-        final isValid = SegmentCalculator.validateNewValues([25, 50, 50], 0, 100);
+        final isValid = SegmentCalculator.validateNewValues(
+          [25, 50, 50],
+          0,
+          100,
+        );
         expect(isValid, isFalse);
       });
 
       test('returns false for unsorted values', () {
-        final isValid = SegmentCalculator.validateNewValues([75, 25, 50], 0, 100);
-        expect(isValid, isTrue); // validateNewValues sorts values first, so unsorted input is valid
+        final isValid = SegmentCalculator.validateNewValues(
+          [75, 25, 50],
+          0,
+          100,
+        );
+        expect(
+          isValid,
+          isTrue,
+        ); // validateNewValues sorts values first, so unsorted input is valid
       });
 
       test('returns true for empty values list', () {
@@ -572,32 +747,55 @@ void main() {
       });
 
       test('works with double values', () {
-        final isValid = SegmentCalculator.validateNewValues([25.5, 50.0, 74.5], 0.0, 100.0);
+        final isValid = SegmentCalculator.validateNewValues(
+          [25.5, 50.0, 74.5],
+          0.0,
+          100.0,
+        );
         expect(isValid, isTrue);
       });
 
       test('works with negative ranges', () {
-        final isValid = SegmentCalculator.validateNewValues([-25, 0, 25], -50, 50);
+        final isValid = SegmentCalculator.validateNewValues(
+          [-25, 0, 25],
+          -50,
+          50,
+        );
         expect(isValid, isTrue);
       });
     });
 
     group('redistributeSegmentsEvenly', () {
       test('redistributes single value evenly', () {
-        final newValues = SegmentCalculator.redistributeSegmentsEvenly([50], 0, 100);
+        final newValues = SegmentCalculator.redistributeSegmentsEvenly(
+          [50],
+          0,
+          100,
+        );
         expect(newValues.length, equals(1));
-        expect(newValues[0], equals(50)); // Should be at 50 (middle of 2 segments)
+        expect(
+          newValues[0],
+          equals(50),
+        ); // Should be at 50 (middle of 2 segments)
       });
 
       test('redistributes multiple values evenly', () {
-        final newValues = SegmentCalculator.redistributeSegmentsEvenly([25, 75], 0, 100);
+        final newValues = SegmentCalculator.redistributeSegmentsEvenly(
+          [25, 75],
+          0,
+          100,
+        );
         expect(newValues.length, equals(2));
         expect(newValues[0], equals(33)); // 100/3 ≈ 33.33, rounded to 33
         expect(newValues[1], equals(67)); // 200/3 ≈ 66.67, rounded to 67
       });
 
       test('redistributes three values evenly', () {
-        final newValues = SegmentCalculator.redistributeSegmentsEvenly([20, 50, 80], 0, 100);
+        final newValues = SegmentCalculator.redistributeSegmentsEvenly(
+          [20, 50, 80],
+          0,
+          100,
+        );
         expect(newValues.length, equals(3));
         expect(newValues[0], equals(25)); // 100/4 = 25
         expect(newValues[1], equals(50)); // 200/4 = 50
@@ -605,39 +803,63 @@ void main() {
       });
 
       test('handles empty values list correctly', () {
-        final newValues = SegmentCalculator.redistributeSegmentsEvenly(<int>[], 0, 100);
+        final newValues = SegmentCalculator.redistributeSegmentsEvenly(
+          <int>[],
+          0,
+          100,
+        );
         expect(newValues.length, equals(0));
       });
 
       test('works with double values', () {
-        final newValues = SegmentCalculator.redistributeSegmentsEvenly([25.0, 75.0], 0.0, 100.0);
+        final newValues = SegmentCalculator.redistributeSegmentsEvenly(
+          [25.0, 75.0],
+          0.0,
+          100.0,
+        );
         expect(newValues.length, equals(2));
         expect(newValues[0], closeTo(33.33, 0.01));
         expect(newValues[1], closeTo(66.67, 0.01));
       });
 
       test('works with negative ranges', () {
-        final newValues = SegmentCalculator.redistributeSegmentsEvenly([-25, 25], -50, 50);
+        final newValues = SegmentCalculator.redistributeSegmentsEvenly(
+          [-25, 25],
+          -50,
+          50,
+        );
         expect(newValues.length, equals(2));
         expect(newValues[0], equals(-17)); // -50 + (100/3) ≈ -17
         expect(newValues[1], equals(17)); // -50 + (200/3) ≈ 17
       });
 
       test('handles small ranges correctly', () {
-        final newValues = SegmentCalculator.redistributeSegmentsEvenly([5], 0, 10);
+        final newValues = SegmentCalculator.redistributeSegmentsEvenly(
+          [5],
+          0,
+          10,
+        );
         expect(newValues.length, equals(1));
         expect(newValues[0], equals(5)); // 10/2 = 5
       });
 
       test('maintains type consistency for int values', () {
-        final newValues = SegmentCalculator.redistributeSegmentsEvenly([25, 75], 0, 100);
+        final newValues = SegmentCalculator.redistributeSegmentsEvenly(
+          [25, 75],
+          0,
+          100,
+        );
         expect(newValues.length, equals(2));
         expect(newValues[0], equals(33));
         expect(newValues[1], equals(67));
       });
 
       test('maintains type consistency for double values', () {
-        final newValues = SegmentCalculator.redistributeSegmentsEvenly([25.0, 75.0], 0.0, 100.0);
+        final newValues = SegmentCalculator.redistributeSegmentsEvenly(
+          [25.0, 75.0],
+          0.0,
+          100.0,
+        );
         expect(newValues.length, equals(2));
         expect(newValues[0], closeTo(33.33, 0.01));
         expect(newValues[1], closeTo(66.67, 0.01));
