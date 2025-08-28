@@ -19,6 +19,8 @@ void main() {
       bool? isFirst,
       bool? isLast,
       double? trackHeight,
+      bool? isOpenEnded,
+      bool? isOpenStarted,
     }) {
       return TestConfig.createTestApp(
         child: SizedBox(
@@ -33,6 +35,8 @@ void main() {
                 isFirst: isFirst ?? testIsFirst,
                 isLast: isLast ?? testIsLast,
                 trackHeight: trackHeight ?? testTrackHeight,
+                isOpenEnded: isOpenEnded ?? false,
+                isOpenStarted: isOpenStarted ?? false,
               ),
             ],
           ),
@@ -500,6 +504,224 @@ void main() {
           expect(decoration.color, equals(testCase['color']));
           expect(decoration.borderRadius, isA<BorderRadius>());
         }
+      });
+    });
+
+    group('Open Segment Parameters', () {
+      test('Widget has correct default open segment parameters', () {
+        const widget = RangeSegmentWidget(
+          left: testLeft,
+          width: testWidth,
+          color: testColor,
+          isFirst: testIsFirst,
+          isLast: testIsLast,
+          trackHeight: testTrackHeight,
+        );
+
+        expect(widget.isOpenEnded, equals(false));
+        expect(widget.isOpenStarted, equals(false));
+      });
+
+      test('Widget can be instantiated with open segment parameters', () {
+        expect(() {
+          RangeSegmentWidget(
+            left: testLeft,
+            width: testWidth,
+            color: testColor,
+            isFirst: testIsFirst,
+            isLast: testIsLast,
+            trackHeight: testTrackHeight,
+            isOpenEnded: true,
+            isOpenStarted: true,
+          );
+        }, returnsNormally);
+      });
+
+      test('Widget has correct open segment parameters when set', () {
+        const widget = RangeSegmentWidget(
+          left: testLeft,
+          width: testWidth,
+          color: testColor,
+          isFirst: testIsFirst,
+          isLast: testIsLast,
+          trackHeight: testTrackHeight,
+          isOpenEnded: true,
+          isOpenStarted: true,
+        );
+
+        expect(widget.isOpenEnded, equals(true));
+        expect(widget.isOpenStarted, equals(true));
+      });
+    });
+
+    group('Open Segment Arrow Rendering', () {
+      testWidgets('Widget renders without CustomPaint when not open', (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget(isOpenEnded: false, isOpenStarted: false));
+
+        // Look for CustomPaint specifically within the RangeSegmentWidget's Stack
+        final Finder stackFinder = find.descendant(of: find.byType(RangeSegmentWidget), matching: find.byType(Stack));
+        final Finder customPaintFinder = find.descendant(of: stackFinder, matching: find.byType(CustomPaint));
+        expect(customPaintFinder, findsNothing);
+      });
+
+      testWidgets('Widget renders CustomPaint when isOpenEnded and isLast', (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget(isOpenEnded: true, isLast: true));
+
+        final Finder stackFinder = find.descendant(of: find.byType(RangeSegmentWidget), matching: find.byType(Stack));
+        final Finder customPaintFinder = find.descendant(of: stackFinder, matching: find.byType(CustomPaint));
+        expect(customPaintFinder, findsOneWidget);
+      });
+
+      testWidgets('Widget renders CustomPaint when isOpenStarted and isFirst', (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget(isOpenStarted: true, isFirst: true));
+
+        final Finder stackFinder = find.descendant(of: find.byType(RangeSegmentWidget), matching: find.byType(Stack));
+        final Finder customPaintFinder = find.descendant(of: stackFinder, matching: find.byType(CustomPaint));
+        expect(customPaintFinder, findsOneWidget);
+      });
+
+      testWidgets('Widget renders CustomPaint when both open flags are true and segment is both first and last', (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(createTestWidget(isOpenEnded: true, isOpenStarted: true, isFirst: true, isLast: true));
+
+        final Finder stackFinder = find.descendant(of: find.byType(RangeSegmentWidget), matching: find.byType(Stack));
+        final Finder customPaintFinder = find.descendant(of: stackFinder, matching: find.byType(CustomPaint));
+        expect(customPaintFinder, findsOneWidget);
+      });
+
+      testWidgets('Widget does not render CustomPaint when isOpenEnded but not isLast', (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget(isOpenEnded: true, isLast: false));
+
+        final Finder stackFinder = find.descendant(of: find.byType(RangeSegmentWidget), matching: find.byType(Stack));
+        final Finder customPaintFinder = find.descendant(of: stackFinder, matching: find.byType(CustomPaint));
+        expect(customPaintFinder, findsNothing);
+      });
+
+      testWidgets('Widget does not render CustomPaint when isOpenStarted but not isFirst', (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget(isOpenStarted: true, isFirst: false));
+
+        final Finder stackFinder = find.descendant(of: find.byType(RangeSegmentWidget), matching: find.byType(Stack));
+        final Finder customPaintFinder = find.descendant(of: stackFinder, matching: find.byType(CustomPaint));
+        expect(customPaintFinder, findsNothing);
+      });
+
+      testWidgets('CustomPaint has correct size when rendered', (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget(isOpenEnded: true, isLast: true, trackHeight: 10.0));
+
+        final Finder stackFinder = find.descendant(of: find.byType(RangeSegmentWidget), matching: find.byType(Stack));
+        final Finder customPaintFinder = find.descendant(of: stackFinder, matching: find.byType(CustomPaint));
+        final CustomPaint customPaint = tester.widget(customPaintFinder);
+
+        expect(customPaint.size.width, equals(15.0)); // trackHeight * 1.5
+        expect(customPaint.size.height, equals(20.0)); // trackHeight * 2
+      });
+
+      testWidgets('CustomPaint is positioned correctly for open ended segment', (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget(isOpenEnded: true, isLast: true, trackHeight: 8.0));
+
+        final Finder rangeStackFinder = find.descendant(
+          of: find.byType(RangeSegmentWidget),
+          matching: find.byType(Stack),
+        );
+        final Finder positionedFinder = find
+            .descendant(of: rangeStackFinder, matching: find.byType(Positioned))
+            .last; // Get the Positioned widget containing CustomPaint
+
+        final Positioned positioned = tester.widget(positionedFinder);
+        expect(positioned.right, equals(4.0));
+        expect(positioned.top, equals(-4.0)); // -(trackHeight / 2)
+        expect(positioned.left, isNull);
+      });
+
+      testWidgets('CustomPaint is positioned correctly for open started segment', (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget(isOpenStarted: true, isFirst: true, trackHeight: 8.0));
+
+        final Finder rangeStackFinder = find.descendant(
+          of: find.byType(RangeSegmentWidget),
+          matching: find.byType(Stack),
+        );
+        final Finder positionedFinder = find
+            .descendant(of: rangeStackFinder, matching: find.byType(Positioned))
+            .last; // Get the Positioned widget containing CustomPaint
+
+        final Positioned positioned = tester.widget(positionedFinder);
+        expect(positioned.left, equals(-4.0));
+        expect(positioned.top, equals(-4.0)); // -(trackHeight / 2)
+        expect(positioned.right, isNull);
+      });
+    });
+
+    group('Open Segment Border Radius Behavior', () {
+      testWidgets('Widget has no left border radius when isFirst and isOpenStarted', (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget(isFirst: true, isOpenStarted: true));
+
+        final Finder containerFinder = find.descendant(of: find.byType(Positioned), matching: find.byType(Container));
+        final Container container = tester.widget(containerFinder);
+        final BoxDecoration decoration = container.decoration as BoxDecoration;
+        final BorderRadius borderRadius = decoration.borderRadius as BorderRadius;
+
+        expect(borderRadius.topLeft, equals(Radius.zero));
+        expect(borderRadius.bottomLeft, equals(Radius.zero));
+      });
+
+      testWidgets('Widget has no right border radius when isLast and isOpenEnded', (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget(isLast: true, isOpenEnded: true));
+
+        final Finder containerFinder = find.descendant(of: find.byType(Positioned), matching: find.byType(Container));
+        final Container container = tester.widget(containerFinder);
+        final BoxDecoration decoration = container.decoration as BoxDecoration;
+        final BorderRadius borderRadius = decoration.borderRadius as BorderRadius;
+
+        expect(borderRadius.topRight, equals(Radius.zero));
+        expect(borderRadius.bottomRight, equals(Radius.zero));
+      });
+
+      testWidgets('Widget has left border radius when isFirst but not isOpenStarted', (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget(isFirst: true, isOpenStarted: false));
+
+        final Finder containerFinder = find.descendant(of: find.byType(Positioned), matching: find.byType(Container));
+        final Container container = tester.widget(containerFinder);
+        final BoxDecoration decoration = container.decoration as BoxDecoration;
+        final BorderRadius borderRadius = decoration.borderRadius as BorderRadius;
+
+        expect(borderRadius.topLeft, equals(const Radius.circular(4)));
+        expect(borderRadius.bottomLeft, equals(const Radius.circular(4)));
+      });
+
+      testWidgets('Widget has right border radius when isLast but not isOpenEnded', (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget(isLast: true, isOpenEnded: false));
+
+        final Finder containerFinder = find.descendant(of: find.byType(Positioned), matching: find.byType(Container));
+        final Container container = tester.widget(containerFinder);
+        final BoxDecoration decoration = container.decoration as BoxDecoration;
+        final BorderRadius borderRadius = decoration.borderRadius as BorderRadius;
+
+        expect(borderRadius.topRight, equals(const Radius.circular(4)));
+        expect(borderRadius.bottomRight, equals(const Radius.circular(4)));
+      });
+    });
+
+    group('Stack and Container Structure', () {
+      testWidgets('Widget contains Stack with correct clipBehavior', (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget());
+
+        final Finder stackFinder = find.descendant(of: find.byType(RangeSegmentWidget), matching: find.byType(Stack));
+        expect(stackFinder, findsOneWidget);
+
+        final Stack stack = tester.widget(stackFinder);
+        expect(stack.clipBehavior, equals(Clip.none));
+      });
+
+      testWidgets('Widget has SizedBox with correct dimensions', (WidgetTester tester) async {
+        await tester.pumpWidget(createTestWidget(width: 150.0, trackHeight: 12.0));
+
+        final Finder sizedBoxFinder = find.descendant(of: find.byType(Positioned), matching: find.byType(SizedBox));
+        expect(sizedBoxFinder, findsOneWidget);
+
+        final SizedBox sizedBox = tester.widget(sizedBoxFinder);
+        expect(sizedBox.width, equals(150.0));
+        expect(sizedBox.height, equals(12.0));
       });
     });
   });
