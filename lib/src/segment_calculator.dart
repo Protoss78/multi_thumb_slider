@@ -31,12 +31,12 @@ class SegmentCalculator {
       // Each open segment gets a fixed proportion (e.g., 0.3 or 30%)
       const double openSegmentProportion = 0.3;
       double totalOpenProportion = 0.0;
-      if (enableOpenStartedSegment)
+      if (enableOpenStartedSegment) {
         totalOpenProportion += openSegmentProportion;
+      }
       if (enableOpenEndedSegment) totalOpenProportion += openSegmentProportion;
 
-      final double totalRangeUsed = (sortedValues.last - sortedValues.first)
-          .toDouble();
+      final double totalRangeUsed = (sortedValues.last - sortedValues.first).toDouble();
       final double scaleFactor = (1.0 - totalOpenProportion) / totalRangeUsed;
 
       // First segment: from min to first value (or open-started)
@@ -48,8 +48,7 @@ class SegmentCalculator {
 
       // Middle segments: between consecutive values
       for (int i = 0; i < sortedValues.length - 1; i++) {
-        final double width =
-            (sortedValues[i + 1] - sortedValues[i]) * scaleFactor;
+        final double width = (sortedValues[i + 1] - sortedValues[i]) * scaleFactor;
         segmentWidths.add(width);
       }
 
@@ -67,8 +66,7 @@ class SegmentCalculator {
 
       // Middle segments: between consecutive values
       for (int i = 0; i < sortedValues.length - 1; i++) {
-        final double width =
-            (sortedValues[i + 1] - sortedValues[i]) / totalRange;
+        final double width = (sortedValues[i + 1] - sortedValues[i]) / totalRange;
         segmentWidths.add(width);
       }
 
@@ -80,11 +78,7 @@ class SegmentCalculator {
   }
 
   /// Calculates the percentage each segment represents
-  static List<double> calculateSegmentPercentages<T extends num>(
-    List<T> values,
-    T min,
-    T max,
-  ) {
+  static List<double> calculateSegmentPercentages<T extends num>(List<T> values, T min, T max) {
     final widths = calculateSegmentWidths(values, min, max);
     return widths.map((width) => width * 100.0).toList();
   }
@@ -97,30 +91,22 @@ class SegmentCalculator {
     String Function(T)? formatter,
   }) {
     if (values.isEmpty) {
-      return [
-        '${_formatValue(min, formatter)} - ${_formatValue(max, formatter)}',
-      ];
+      return ['${_formatValue(min, formatter)} - ${_formatValue(max, formatter)}'];
     }
 
     final sortedValues = List<T>.from(values)..sort();
     final List<String> labels = [];
 
     // First segment label
-    labels.add(
-      '${_formatValue(min, formatter)} - ${_formatValue(sortedValues.first, formatter)}',
-    );
+    labels.add('${_formatValue(min, formatter)} - ${_formatValue(sortedValues.first, formatter)}');
 
     // Middle segment labels
     for (int i = 0; i < sortedValues.length - 1; i++) {
-      labels.add(
-        '${_formatValue(sortedValues[i], formatter)} - ${_formatValue(sortedValues[i + 1], formatter)}',
-      );
+      labels.add('${_formatValue(sortedValues[i], formatter)} - ${_formatValue(sortedValues[i + 1], formatter)}');
     }
 
     // Last segment label
-    labels.add(
-      '${_formatValue(sortedValues.last, formatter)} - ${_formatValue(max, formatter)}',
-    );
+    labels.add('${_formatValue(sortedValues.last, formatter)} - ${_formatValue(max, formatter)}');
 
     return labels;
   }
@@ -145,9 +131,7 @@ class SegmentCalculator {
           } else if (enableOpenEndedSegment) {
             return ['${_formatValue(min, formatter)}+'];
           } else {
-            return [
-              '${_formatValue(min, formatter)} - ${_formatValue(max, formatter)}',
-            ];
+            return ['${_formatValue(min, formatter)} - ${_formatValue(max, formatter)}'];
           }
         case SegmentContentType.toRange:
           if (enableOpenStartedSegment && enableOpenEndedSegment) {
@@ -177,9 +161,7 @@ class SegmentCalculator {
         if (enableOpenStartedSegment) {
           labels.add('- ${_formatValue(sortedValues.first, formatter)}');
         } else {
-          labels.add(
-            '${_formatValue(min, formatter)} - ${_formatValue(sortedValues.first, formatter)}',
-          );
+          labels.add('${_formatValue(min, formatter)} - ${_formatValue(sortedValues.first, formatter)}');
         }
         break;
       case SegmentContentType.toRange:
@@ -199,9 +181,7 @@ class SegmentCalculator {
     for (int i = 0; i < sortedValues.length - 1; i++) {
       switch (contentType) {
         case SegmentContentType.fromToRange:
-          labels.add(
-            '${_formatValue(sortedValues[i], formatter)} - ${_formatValue(sortedValues[i + 1], formatter)}',
-          );
+          labels.add('${_formatValue(sortedValues[i], formatter)} - ${_formatValue(sortedValues[i + 1], formatter)}');
           break;
         case SegmentContentType.toRange:
           labels.add('- ${_formatValue(sortedValues[i + 1], formatter)}');
@@ -286,12 +266,7 @@ class SegmentCalculator {
   /// - segmentIndex 0: Insert before first segment
   /// - segmentIndex 1: Insert between first and second segment
   /// - segmentIndex N: Insert after last segment
-  static List<T> calculateValuesAfterSegmentAdd<T extends num>(
-    List<T> currentValues,
-    T min,
-    T max,
-    int segmentIndex,
-  ) {
+  static List<T> calculateValuesAfterSegmentAdd<T extends num>(List<T> currentValues, T min, T max, int segmentIndex) {
     final sortedValues = List<T>.from(currentValues)..sort();
     final List<T> newValues = List.from(sortedValues);
 
@@ -314,8 +289,7 @@ class SegmentCalculator {
     }
 
     // Calculate the midpoint of the segment
-    final double midpoint =
-        (segmentStart.toDouble() + segmentEnd.toDouble()) / 2.0;
+    final double midpoint = (segmentStart.toDouble() + segmentEnd.toDouble()) / 2.0;
     final T newValue = _convertToType<T>(midpoint);
 
     // Insert the new value at the appropriate position
@@ -382,11 +356,7 @@ class SegmentCalculator {
   }
 
   /// Validates that the new values are within acceptable bounds and maintain order
-  static bool validateNewValues<T extends num>(
-    List<T> newValues,
-    T min,
-    T max,
-  ) {
+  static bool validateNewValues<T extends num>(List<T> newValues, T min, T max) {
     if (newValues.isEmpty) return true;
 
     final sortedValues = List<T>.from(newValues)..sort();
@@ -409,11 +379,7 @@ class SegmentCalculator {
   }
 
   /// Calculates optimal thumb positions when redistributing segments evenly
-  static List<T> redistributeSegmentsEvenly<T extends num>(
-    List<T> currentValues,
-    T min,
-    T max,
-  ) {
+  static List<T> redistributeSegmentsEvenly<T extends num>(List<T> currentValues, T min, T max) {
     if (currentValues.isEmpty) {
       return currentValues;
     }
