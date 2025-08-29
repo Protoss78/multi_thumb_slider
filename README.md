@@ -39,7 +39,6 @@ dependencies:
 ```dart
 CustomMultiThumbSlider.withInt(
   values: [20, 80],
-  onChanged: (values) => print('Values: $values'),
 )
 ```
 
@@ -50,7 +49,6 @@ CustomMultiThumbSlider.withInt(
   showTickmarks: true,
   showTooltip: true,
   showSegments: true,
-  onChanged: (values) => print('Range: ${values[0]} - ${values[1]}'),
 )
 ```
 
@@ -632,7 +630,7 @@ The main widget providing multi-thumb slider functionality with support for gene
 const CustomMultiThumbSlider<T>({
   Key? key,
   required List<T> values,
-  required ValueChanged<List<T>> onChanged,
+  ValueChanged<List<T>> onChanged,
   required T min,
   required T max,
   
@@ -721,7 +719,6 @@ const CustomMultiThumbSlider.withEnum<T extends Enum>({
 |----------|-----------|-------------|
 | **Core** | `values` | List of current thumb values |
 | | `min` / `max` | Value range boundaries |
-| | `onChanged` | Callback for value changes |
 | | `readOnly` | Disable interaction for display-only mode |
 | **Visual** | `showTickmarks` | Enable tickmark display |
 | | `showTooltip` | Enable interactive tooltips |

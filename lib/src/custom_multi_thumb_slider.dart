@@ -63,7 +63,7 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
   /// Callback function called when any thumb value changes.
   ///
   /// The callback receives a new list of values with the updated thumb positions.
-  final ValueChanged<List<T>> onChanged;
+  final ValueChanged<List<T>>? onChanged;
 
   /// The height of the slider track.
   final double height;
@@ -248,7 +248,7 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
   CustomMultiThumbSlider({
     super.key,
     required this.values,
-    required this.onChanged,
+    this.onChanged,
     required this.min,
     required this.max,
     this.height = SliderConstants.defaultHeight,
@@ -310,7 +310,7 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
   static CustomMultiThumbSlider<int> withInt({
     Key? key,
     required List<int> values,
-    required ValueChanged<List<int>> onChanged,
+    ValueChanged<List<int>>? onChanged,
     int min = 0,
     int max = 100,
     double height = SliderConstants.defaultHeight,
@@ -428,7 +428,7 @@ class CustomMultiThumbSlider<T> extends StatefulWidget {
   static CustomMultiThumbSlider<T> withEnum<T extends Enum>({
     Key? key,
     required List<T> values,
-    required ValueChanged<List<T>> onChanged,
+    ValueChanged<List<T>>? onChanged,
     required T min,
     required T max,
     required List<T> allPossibleValues,
@@ -767,7 +767,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
     // Only update if the value actually changed
     if (newValue != widget.values[thumbIndex]) {
       newValues[thumbIndex] = newValue;
-      widget.onChanged(newValues);
+      widget.onChanged?.call(newValues);
     }
   }
 
@@ -1336,7 +1336,7 @@ class _CustomMultiThumbSliderState<T> extends State<CustomMultiThumbSlider<T>> {
                       newValues[index] = newValue;
 
                       // 6. Call callback to update state in parent component
-                      widget.onChanged(newValues);
+                      widget.onChanged?.call(newValues);
                     }
                   }
                 },

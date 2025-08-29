@@ -5,6 +5,10 @@ All notable changes to the `multi_thumb_range_slider` package will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.3+1] - 2025-08-29
+### Changed
+- **onChanged**: Callback function was mistakenly required
+
 ## [1.3.2+1] - 2025-08-25
 ### Added
 - **Open-Started Segments**: New `enableOpenStartedSegment` parameter allows the first segment to be open-started (no lower bound)
